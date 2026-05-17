@@ -87,10 +87,10 @@ const Register = () => {
 
       {/* --- FLOATING IMAGES BUBBLES --- */}
       <div className="fixed inset-0 overflow-hidden pointer-events-none -z-10 flex items-center justify-center">
-        <img src="/fintrack-ai/gambar/bubble.png" className="absolute top-[-10%] left-[-5%] w-[400px] opacity-50 animate-bubble-img" alt="" />
-        <img src="/fintrack-ai/gambar/bubble.png" className="absolute top-[40%] right-[-10%] w-[300px] opacity-40 animate-bubble-img delay-2000" alt="" />
-        <img src="/fintrack-ai/gambar/bubble.png" className="absolute bottom-[-10%] left-[10%] w-[350px] opacity-30 animate-bubble-img delay-4000" alt="" />
-        <img src="/fintrack-ai/gambar/bubble.png" className="absolute w-[600px] opacity-70 animate-bubble-img" alt="" />
+        <img src="/gambar/bubble.png" className="absolute top-[-10%] left-[-5%] w-[400px] opacity-50 animate-bubble-img" alt="" />
+        <img src="/gambar/bubble.png" className="absolute top-[40%] right-[-10%] w-[300px] opacity-40 animate-bubble-img delay-2000" alt="" />
+        <img src="/gambar/bubble.png" className="absolute bottom-[-10%] left-[10%] w-[350px] opacity-30 animate-bubble-img delay-4000" alt="" />
+        <img src="/gambar/bubble.png" className="absolute w-[600px] opacity-70 animate-bubble-img" alt="" />
       </div>
 
       {/* --- BACK BUTTON --- */}
@@ -110,7 +110,7 @@ const Register = () => {
         {/* LEFT SIDE (BANNER) */}
         <div className="hidden md:flex flex-col w-[45%] bg-gradient-to-br from-[#b59cfc]/80 via-[#dcb0f9]/80 to-[#f4c4f3]/80 p-10 relative">
           <div className="mb-10 flex justify-center">
-            <img src="/fintrack-ai/gambar/logo.png" alt="FinTrack AI Logo" className="h-20 w-auto object-contain" />
+            <img src="/gambar/logo.png" alt="FinTrack AI Logo" className="h-20 w-auto object-contain" />
           </div>
           <div className="z-10">
             <h1 className="text-3xl lg:text-4xl font-bold text-white mb-4 leading-tight">
@@ -121,7 +121,7 @@ const Register = () => {
             </p>
           </div>
           <div className="mt-auto flex justify-center pt-8">
-            <img src="/fintrack-ai/gambar/gambarregis.png" alt="3D Illustration" className="w-[90%] object-contain" />
+            <img src="/gambar/gambarregis.png" alt="3D Illustration" className="w-[90%] object-contain" />
           </div>
         </div>
 

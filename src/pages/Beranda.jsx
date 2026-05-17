@@ -41,19 +41,19 @@ const Beranda = () => {
       ========================================= */}
       <div className="w-64 bg-white border-r border-[#f0f0f0] px-6 py-8 flex flex-col z-10 shadow-[4px_0_24px_rgba(0,0,0,0.02)]">
         <div className="flex flex-col items-center mb-10">
-          <img src="/fintrack-ai/gambar/logo.png" className="w-16 mb-2" alt="Logo" />
+          <img src="/gambar/logo.png" className="w-16 mb-2" alt="Logo" />
           <span className="font-bold text-lg tracking-tight text-gray-900 text-center">FinTrack AI</span>
         </div>
 
         {/* Menu Sidebar pakai Gambar Asli */}
         <nav className="space-y-4 flex-grow font-medium">
           {[
-            { n: "Beranda", img: "/fintrack-ai/gambar/beranda.png", active: true },
-            { n: "Transaksi", img: "/fintrack-ai/gambar/transaksi.png" },
-            { n: "Budget", img: "/fintrack-ai/gambar/budget.png" },
-            { n: "Goals", img: "/fintrack-ai/gambar/goals.png" },
-            { n: "AI", img: "/fintrack-ai/gambar/ai.png" },
-            { n: "Laporan", img: "/fintrack-ai/gambar/laporan.png" }
+            { n: "Beranda", img: "/gambar/beranda.png", active: true },
+            { n: "Transaksi", img: "/gambar/transaksi.png" },
+            { n: "Budget", img: "/gambar/budget.png" },
+            { n: "Goals", img: "/gambar/goals.png" },
+            { n: "AI", img: "/gambar/ai.png" },
+            { n: "Laporan", img: "/gambar/laporan.png" }
           ].map(item => (
             <div 
               key={item.n} 
@@ -76,14 +76,14 @@ const Beranda = () => {
         {/* Bagian Bawah Sidebar */}
         <div className="border-t border-gray-100 pt-6 space-y-4 font-medium">
           <div className="flex items-center gap-4 cursor-pointer p-3.5 rounded-2xl text-gray-400 hover:bg-gray-50 hover:text-gray-900 transition-all">
-            <img src="/fintrack-ai/gambar/pengaturan.png" className="w-6 h-6 object-contain grayscale opacity-70" alt="Setting" />
+            <img src="/gambar/pengaturan.png" className="w-6 h-6 object-contain grayscale opacity-70" alt="Setting" />
             <span className="text-sm">Pengaturan</span>
           </div>
           <div 
             onClick={() => navigate('/login')} 
             className="flex items-center gap-4 cursor-pointer p-3.5 rounded-2xl text-gray-400 hover:bg-red-50 hover:text-red-500 transition-all"
           >
-            <img src="/fintrack-ai/gambar/logout.png" className="w-6 h-6 object-contain grayscale opacity-70" alt="Logout" />
+            <img src="/gambar/logout.png" className="w-6 h-6 object-contain grayscale opacity-70" alt="Logout" />
             <span className="text-sm">Logout</span>
           </div>
         </div>
@@ -127,7 +127,7 @@ const Beranda = () => {
             
             {/* HERO CARD (Warna Pastel, Robot Kiri) */}
             <div className="bg-[#f0ebfc] rounded-3xl p-6 flex items-center gap-6 shadow-sm border border-[#e8dffd]">
-              <img src="/fintrack-ai/gambar/robotsapa.png" className="w-28 h-28 object-contain drop-shadow-md" alt="Robot Hero" />
+              <img src="/gambar/robotsapa.png" className="w-28 h-28 object-contain drop-shadow-md" alt="Robot Hero" />
               <div className="bg-white/60 backdrop-blur-sm px-6 py-4 rounded-2xl flex-1 border border-white">
                 <p className="text-sm font-bold text-gray-800 leading-relaxed">
                   Ayo kelola keuangan bulan Mei mu bersama Fintrack AI!
@@ -293,7 +293,7 @@ const Beranda = () => {
                   <p className="text-[9px] text-gray-600 mt-0.5">Catat setiap pengeluaran kecilmu, bisa bantu kamu lebih hemat!</p>
                 </div>
               </div>
-              <img src="/fintrack-ai/gambar/robotlaptop.png" className="w-20 h-20 object-contain self-center" alt="Robot AI" />
+              <img src="/gambar/robotlaptop.png" className="w-20 h-20 object-contain self-center" alt="Robot AI" />
             </div>
 
             {/* QUICK ACTION */}
@@ -316,7 +316,7 @@ const Beranda = () => {
               <h3 className="text-sm font-bold text-gray-900 text-left mb-4">Goals Setting</h3>
               <div className="flex items-center justify-center gap-6 mb-4">
                 <i className="fas fa-chevron-left text-gray-400 cursor-pointer hover:text-gray-900"></i>
-                <img src="/fintrack-ai/gambar/goals-laptop.png" className="w-12 h-12 object-contain" alt="Laptop Goals" />
+                <img src="/gambar/goals-laptop.png" className="w-12 h-12 object-contain" alt="Laptop Goals" />
                 <i className="fas fa-chevron-right text-gray-400 cursor-pointer hover:text-gray-900"></i>
               </div>
               <AnimatedProgressBar value={60} maxValue={100} color="#8477e4" />

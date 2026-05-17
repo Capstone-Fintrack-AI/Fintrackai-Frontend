@@ -7,7 +7,7 @@ import Beranda from './pages/Beranda';
 
 function App() {
   return (
-    <Router basename="/fintrack-ai">
+    <Router>
       <Routes>
         <Route path="/" element={<LandingPage />} />
         <Route path="/login" element={<Login />} />

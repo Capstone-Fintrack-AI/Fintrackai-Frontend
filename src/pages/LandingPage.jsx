@@ -91,9 +91,9 @@ return (
 
       {/* Gambar Bubble.png Melayang */}
       <div className="fixed inset-0 overflow-hidden pointer-events-none -z-10">
-        <img src="/fintrack-ai/gambar/bubble.png" className="absolute top-[-10%] left-[-5%] w-[400px] opacity-50 animate-bubble-img" alt="" />
-        <img src="/fintrack-ai/gambar/bubble.png" className="absolute top-[40%] right-[-10%] w-[300px] opacity-40 animate-bubble-img" style={{animationDelay: '2s'}} alt="" />
-        <img src="/fintrack-ai/gambar/bubble.png" className="absolute bottom-[-10%] left-[10%] w-[350px] opacity-30 animate-bubble-img" style={{animationDelay: '4s'}} alt="" />
+        <img src="/gambar/bubble.png" className="absolute top-[-10%] left-[-5%] w-[400px] opacity-50 animate-bubble-img" alt="" />
+        <img src="/gambar/bubble.png" className="absolute top-[40%] right-[-10%] w-[300px] opacity-40 animate-bubble-img" style={{animationDelay: '2s'}} alt="" />
+        <img src="/gambar/bubble.png" className="absolute bottom-[-10%] left-[10%] w-[350px] opacity-30 animate-bubble-img" style={{animationDelay: '4s'}} alt="" />
       </div>
 
 
@@ -101,13 +101,14 @@ return (
       <nav className="fixed w-full top-6 z-50 flex justify-center px-6">
         <div className="w-full max-w-6xl bg-white/90 backdrop-blur-md shadow-xl rounded-full px-8 py-4 flex justify-between items-center border border-white/50">
           <div className="flex items-center gap-3">
-            <img src="/fintrack-ai/gambar/logo.png" className="w-10 h-10" alt="Logo" />
+            <img src="/gambar/logo.png" className="w-10 h-10" alt="Logo" />
             <span className="font-bold text-2xl tracking-tight">FinTrack AI</span>
           </div>
           <ul className="hidden md:flex gap-8 font-semibold text-gray-600">
             <li><a href="#beranda" className="hover:text-[#8477e4]">Home</a></li>
             <li><a href="#tentang" className="hover:text-[#8477e4]">Tentang</a></li>
             <li><a href="#fitur" className="hover:text-[#8477e4]">Fitur</a></li>
+            <li><a href="#dashboard" className="hover:text-[#8477e4]">Dashboard</a></li>
             <li><a href="#tim" className="hover:text-[#8477e4]">Team</a></li>
             <li><a href="#faq" className="hover:text-[#8477e4]">FAQ</a></li>
           </ul>
@@ -139,7 +140,7 @@ return (
             </button>
           </div>
           <div className="relative scale-110">
-            <img src="/fintrack-ai/gambar/Home.png" alt="Home" className="w-full drop-shadow-2xl" />
+            <img src="/gambar/Home.png" alt="Home" className="w-full drop-shadow-2xl" />
           </div>
         </div>
       </section>
@@ -157,7 +158,7 @@ return (
             </p>
           </div>
           <div className="absolute right-0 bottom-0 opacity-20 scale-150">
-            <img src="/fintrack-ai/gambar/logo.png" className="w-96" />
+            <img src="/gambar/logo.png" className="w-96" />
           </div>
         </div>
       </section>
@@ -194,7 +195,7 @@ return (
               <SwiperSlide key={index}>
                 <div className="card-fitur-presisi">
                   <div className="w-24 h-24 bg-indigo-50 rounded-3xl flex items-center justify-center mb-8 shadow-inner">
-                    <img src={`/fintrack-ai/gambar/${item.i}`} className="w-16 h-16" alt={item.t} />
+                    <img src={`/gambar/${item.i}`} className="w-16 h-16" alt={item.t} />
                   </div>
                   <h3 className="text-3xl font-bold mb-5">{item.t}</h3>
                   <p className="text-gray-500 text-lg leading-relaxed">{item.d}</p>
@@ -215,7 +216,7 @@ return (
               className={`dashboard-item rounded-[40px] shadow-2xl flex items-center justify-center p-6 bg-white overflow-hidden ${activeDashboard === idx ? 'active' : ''}`}
               onClick={() => setActiveDashboard(idx)}
             >
-              <img src={`/fintrack-ai/gambar/${img}`} className="h-full object-contain" />
+              <img src={`/gambar/${img}`} className="h-full object-contain" />
             </div>
           ))}
         </div>
@@ -277,7 +278,7 @@ return (
           ].map((member, index) => (
             <SwiperSlide key={`${loopIdx}-${index}`}>
               <div className="team-item">
-                <img src={`/fintrack-ai/gambar/${member.i}`} alt={member.n} />
+                <img src={`/gambar/${member.i}`} alt={member.n} />
                 <div className="team-text-overlay">
                   <h3 className="text-white font-bold text-lg">{member.n}</h3>
                   <p className="text-white/80 text-sm mb-3">{member.r}</p>
@@ -337,7 +338,7 @@ return (
         <div className="max-w-7xl mx-auto grid md:grid-cols-4 gap-16">
           <div className="col-span-1 md:col-span-1 space-y-6">
             <div className="flex items-center gap-3">
-              <img src="/fintrack-ai/gambar/logo.png" className="w-12" />
+              <img src="/gambar/logo.png" className="w-12" />
               <span className="font-bold text-3xl">FinTrack AI</span>
             </div>
             <p className="text-gray-500 leading-relaxed text-lg">
