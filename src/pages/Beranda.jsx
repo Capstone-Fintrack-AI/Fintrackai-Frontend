@@ -31,6 +31,7 @@ const Beranda = () => {
   const userId = user?.id;
 
   const [totalPemasukan, setTotalPemasukan] = useState(0);
+  const [totalPengeluaran, setTotalPengeluaran] = useState(0);
   useEffect(() => {
 
     const fetchPemasukan = async () => {
@@ -59,6 +60,33 @@ const Beranda = () => {
 
     if (userId) {
       fetchPemasukan();
+    }
+
+    const fetchTotalPengeluaran = async () => {
+
+      try {
+
+        const response = await fetch(
+          `http://127.0.0.1:8080/pengeluaran/total/${userId}`
+        );
+
+        const data = await response.json();
+
+        console.log(data);
+
+        setTotalPengeluaran(
+          Number(data.total_pengeluaran || 0)
+        );
+
+      } catch (error) {
+
+        console.error('Error fetch pengeluaran:', error);
+
+      }
+    };
+
+    if (userId) {
+      fetchTotalPengeluaran();
     }
 
   }, [userId]);
@@ -278,7 +306,7 @@ const Beranda = () => {
                     </div>
                     <span className="text-sm font-bold text-gray-800 tracking-tight">Sisa Saldo</span>
                   </div>
-                  <p className="text-[20px] font-bold text-[#8477e4] mb-4">Rp {(totalPemasukan || 0).toLocaleString('id-ID')}</p>
+                  <p className="text-[20px] font-bold text-[#8477e4] mb-4">Rp {(totalPemasukan - totalPengeluaran).toLocaleString('id-ID')}</p>
                   <p className="text-[10px] text-gray-500 font-medium max-w-[150px] leading-relaxed">Sisa saldo yang bisa digunakan</p>
                 </div>
 
@@ -302,7 +330,7 @@ const Beranda = () => {
                     </div>
                     <span className="text-sm font-bold text-gray-800 tracking-tight">Total Pengeluaran</span>
                   </div>
-                  <p className="text-[20px] font-bold text-[#F44336] mb-4">Rp 1.750.000</p>
+                  <p className="text-[20px] font-bold text-[#F44336] mb-4">Rp {totalPengeluaran.toLocaleString('id-ID')}</p>
                   <p className="text-[10px] text-gray-500 font-medium max-w-[150px] leading-relaxed">Total uang keluar bulan ini</p>
                 </div>
               </div>
