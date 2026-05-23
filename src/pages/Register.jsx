@@ -4,7 +4,7 @@ import { useNavigate, Link } from 'react-router-dom';
 const Register = () => {
   const navigate = useNavigate();
   const [showPassword, setShowPassword] = useState(false);
-  
+
   // State untuk menangkap data input
   const [formData, setFormData] = useState({
     name: '',
@@ -21,19 +21,43 @@ const Register = () => {
     }));
   };
 
-  const handleRegister = (e) => {
+  const handleRegister = async (e) => {
     e.preventDefault();
-    // Menampilkan data di Console seperti permintaanmu
-    console.log("=== DATA SIAP DIKIRIM KE BACKEND ===");
-    console.log(formData);
-    
-    alert("Registrasi berhasil! Data kamu sudah tertangkap di Console.");
-    navigate('/login'); // Redirect ke halaman login setelah daftar
+
+    try {
+      const response = await fetch('http://127.0.0.1:8080/auth/register', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({
+          fullname: formData.fullname,
+          email: formData.email,
+          password: formData.password,
+        }),
+      });
+
+      const data = await response.json();
+
+      console.log("=== RESPONSE BACKEND ===");
+      console.log(data);
+
+      if (response.ok) {
+        alert('Registrasi berhasil!');
+        navigate('/login');
+      } else {
+        alert(data.message || 'Registrasi gagal');
+      }
+
+    } catch (error) {
+      console.error('Error:', error);
+      alert('Terjadi kesalahan saat koneksi ke server');
+    }
   };
 
   return (
     <div className="flex items-center justify-center min-h-screen p-4 md:p-8 font-poppins selection:bg-[#8477e4] selection:text-white overflow-hidden relative">
-      
+
       {/* --- INJECT CUSTOM CSS (BUBBLE & INPUT) --- */}
       <style>{`
         @keyframes float-bubble {
@@ -94,19 +118,19 @@ const Register = () => {
       </div>
 
       {/* --- BACK BUTTON --- */}
-      <button 
-        onClick={() => navigate('/')} 
+      <button
+        onClick={() => navigate('/')}
         className="absolute top-6 left-6 md:top-10 md:left-10 flex items-center gap-3 text-gray-500 hover:text-[#8477e4] transition-all z-50 group"
       >
         <div className="w-10 h-10 bg-white/40 backdrop-blur-md rounded-full flex items-center justify-center border border-white/60 shadow-sm group-hover:shadow-md group-hover:scale-105 transition-all">
           <i className="fas fa-arrow-left"></i>
         </div>
-        <span className="font-medium text-sm hidden sm:block">Back to Home</span>
+        {/* <span className="font-medium text-sm hidden sm:block">Back to Home</span> */}
       </button>
 
       {/* --- MAIN CONTAINER --- */}
       <div className="flex flex-col md:flex-row w-full max-w-[1000px] bg-white/30 backdrop-blur-xl border border-white/50 rounded-[30px] overflow-hidden shadow-[0_8px_32px_0_rgba(31,38,135,0.15)] relative z-10">
-        
+
         {/* LEFT SIDE (BANNER) */}
         <div className="hidden md:flex flex-col w-[45%] bg-gradient-to-br from-[#b59cfc]/80 via-[#dcb0f9]/80 to-[#f4c4f3]/80 p-10 relative">
           <div className="mb-10 flex justify-center">
@@ -131,37 +155,37 @@ const Register = () => {
 
           <form onSubmit={handleRegister} className="space-y-8">
             <div>
-              <input 
-                type="text" 
-                id="nameInput" 
-                placeholder="Full Name" 
-                className="input-underline" 
+              <input
+                type="text"
+                id="fullname"
+                placeholder="Full Name"
+                className="input-underline"
                 onChange={handleChange}
-                required 
+                required
               />
             </div>
             <div>
-              <input 
-                type="email" 
-                id="emailInput" 
-                placeholder="Email Address" 
-                className="input-underline" 
+              <input
+                type="email"
+                id="emailInput"
+                placeholder="Email Address"
+                className="input-underline"
                 onChange={handleChange}
-                required 
+                required
               />
             </div>
 
             <div className="relative">
-              <input 
-                type={showPassword ? "text" : "password"} 
-                id="passwordInput" 
-                placeholder="Password" 
-                className="input-underline pr-10" 
+              <input
+                type={showPassword ? "text" : "password"}
+                id="passwordInput"
+                placeholder="Password"
+                className="input-underline pr-10"
                 onChange={handleChange}
-                required 
+                required
               />
-              <button 
-                type="button" 
+              <button
+                type="button"
                 onClick={() => setShowPassword(!showPassword)}
                 className="absolute right-0 top-1/2 -translate-y-1/2 text-gray-400 hover:text-gray-600 focus:outline-none"
               >
@@ -170,20 +194,20 @@ const Register = () => {
             </div>
 
             <div className="flex items-center gap-3 pt-2">
-              <input 
-                type="checkbox" 
-                id="termsInput" 
-                className="accent-[#3b82f6] w-4 h-4 cursor-pointer" 
+              <input
+                type="checkbox"
+                id="agreeTermsInput"
+                className="accent-[#3b82f6] w-4 h-4 cursor-pointer"
                 onChange={handleChange}
-                required 
+                required
               />
               <label htmlFor="termsInput" className="text-xs text-gray-400 cursor-pointer">
                 I agree to terms of services and privacy policy
               </label>
             </div>
 
-            <button 
-              type="submit" 
+            <button
+              type="submit"
               className="w-full py-3.5 bg-gradient-to-r from-[#b59cfc] to-[#e584ee] hover:opacity-90 text-white text-lg font-bold rounded-full transition-all shadow-lg mt-4"
             >
               Sign Up
@@ -203,7 +227,7 @@ const Register = () => {
           </div>
 
           <p className="text-center text-xs text-gray-400 font-medium">
-            Already Have an account? 
+            Already Have an account?
             <Link to="/login" className="text-blue-700 font-bold hover:underline ml-1">Sign In</Link>
           </p>
         </div>

@@ -84,7 +84,7 @@ const Login = () => {
         <div className="w-10 h-10 bg-white/40 backdrop-blur-md rounded-full flex items-center justify-center border border-white/60 shadow-sm group-hover:shadow-md group-hover:scale-105 transition-all">
           <i className="fas fa-arrow-left"></i>
         </div>
-        <span className="font-medium text-sm hidden sm:block">Back to Home</span>
+        {/* <span className="font-medium text-sm hidden sm:block">Back to Home</span> */}
       </button>
 
       {/* --- MAIN CARD --- */}
