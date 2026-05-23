@@ -7,16 +7,61 @@ const Login = () => {
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
 
-  const handleLogin = (e) => {
+  const handleLogin = async (e) => {
     e.preventDefault();
-    alert("Login berhasil! Selamat datang kembali di FinTrack AI.");
-    // LANGSUNG KE BERANDA
-    navigate('/beranda'); 
+
+    try {
+      const response = await fetch('http://127.0.0.1:8080/auth/login', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({
+          email,
+          password,
+        }),
+      });
+
+      const data = await response.json();
+
+      console.log("=== RESPONSE LOGIN ===");
+      console.log(data);
+
+      if (response.ok) {
+
+        // Simpan token
+        if (data.token) {
+          localStorage.setItem('token', data.token);
+        }
+
+        // Simpan data user
+        localStorage.setItem(
+          'user',
+          JSON.stringify({
+            id: data.id,
+            fullname: data.fullname,
+            email: data.email,
+          })
+        );
+
+        alert('Login berhasil!');
+
+        // Redirect ke beranda
+        navigate('/beranda');
+
+      } else {
+        alert(data.message || 'Email atau password salah');
+      }
+
+    } catch (error) {
+      console.error('Error login:', error);
+      alert('Terjadi kesalahan saat koneksi ke server');
+    }
   };
 
   return (
     <div className="flex items-center justify-center min-h-screen p-4 md:p-8 font-poppins selection:bg-[#8477e4] selection:text-white overflow-hidden relative">
-      
+
       {/* --- INJECT CUSTOM CSS (BUBBLE & INPUT) --- */}
       <style>{`
         @keyframes float-bubble {
@@ -77,8 +122,8 @@ const Login = () => {
       </div>
 
       {/* --- BACK BUTTON --- */}
-      <button 
-        onClick={() => navigate('/')} 
+      <button
+        onClick={() => navigate('/')}
         className="absolute top-6 left-6 md:top-10 md:left-10 flex items-center gap-3 text-gray-500 hover:text-[#8477e4] transition-all z-50 group"
       >
         <div className="w-10 h-10 bg-white/40 backdrop-blur-md rounded-full flex items-center justify-center border border-white/60 shadow-sm group-hover:shadow-md group-hover:scale-105 transition-all">
@@ -89,7 +134,7 @@ const Login = () => {
 
       {/* --- MAIN CARD --- */}
       <div className="flex flex-col md:flex-row w-full max-w-[1000px] bg-white/30 backdrop-blur-xl border border-white/50 rounded-[30px] overflow-hidden shadow-[0_8px_32px_0_rgba(31,38,135,0.15)] relative z-10">
-        
+
         {/* LEFT SIDE (ILLUSTRATION) */}
         <div className="hidden md:flex flex-col w-[45%] bg-gradient-to-br from-[#b59cfc]/80 via-[#dcb0f9]/80 to-[#f4c4f3]/80 p-10 relative">
           <div className="mb-10 flex justify-center">
@@ -112,28 +157,28 @@ const Login = () => {
 
           <form onSubmit={handleLogin} className="space-y-8">
             <div>
-              <input 
-                type="email" 
-                placeholder="Email Address" 
-                className="input-underline" 
+              <input
+                type="email"
+                placeholder="Email Address"
+                className="input-underline"
                 value={email}
                 onChange={(e) => setEmail(e.target.value)}
-                required 
+                required
               />
             </div>
 
             <div>
               <div className="relative">
-                <input 
-                  type={showPassword ? "text" : "password"} 
-                  placeholder="Password" 
-                  className="input-underline pr-10" 
+                <input
+                  type={showPassword ? "text" : "password"}
+                  placeholder="Password"
+                  className="input-underline pr-10"
                   value={password}
                   onChange={(e) => setPassword(e.target.value)}
-                  required 
+                  required
                 />
-                <button 
-                  type="button" 
+                <button
+                  type="button"
                   onClick={() => setShowPassword(!showPassword)}
                   className="absolute right-0 top-1/2 -translate-y-1/2 text-gray-400 hover:text-gray-600 focus:outline-none"
                 >
@@ -152,8 +197,8 @@ const Login = () => {
               </label>
             </div>
 
-            <button 
-              type="submit" 
+            <button
+              type="submit"
               className="w-full py-3.5 bg-gradient-to-r from-[#b59cfc] to-[#e584ee] hover:opacity-90 text-white text-lg font-bold rounded-full transition-all shadow-lg mt-4"
             >
               Sign In
@@ -173,7 +218,7 @@ const Login = () => {
           </div>
 
           <p className="text-center text-xs text-gray-500 font-medium">
-            Don't have an account? 
+            Don't have an account?
             <Link to="/register" className="text-[#8477e4] font-bold hover:underline ml-1">Sign Up</Link>
           </p>
         </div>

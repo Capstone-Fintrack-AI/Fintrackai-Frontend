@@ -23,11 +23,58 @@ const AnimatedProgressBar = ({ value, maxValue, color }) => {
 
 const Beranda = () => {
   const navigate = useNavigate();
+  const currentMonth = new Date().toLocaleString('id-ID', {
+    month: 'long',
+  });
+  const user = JSON.parse(localStorage.getItem('user'));
+  const userName = user?.fullname || 'User';
+  const userId = user?.id;
+
+  const [totalPemasukan, setTotalPemasukan] = useState(0);
+  useEffect(() => {
+
+    const fetchPemasukan = async () => {
+      try {
+
+        const response = await fetch(
+          `http://localhost:8080/pemasukan/user/${userId}`
+        );
+
+        const result = await response.json();
+
+        console.log(result);
+
+        // hitung total jumlah
+        const total = result.data.reduce(
+          (sum, item) => sum + Number(item.jumlah),
+          0
+        );
+
+        setTotalPemasukan(total);
+
+      } catch (error) {
+        console.error(error);
+      }
+    };
+
+    if (userId) {
+      fetchPemasukan();
+    }
+
+  }, [userId]);
+
+  const handleLogout = () => {
+    localStorage.removeItem('token');
+    localStorage.removeItem('user');
+
+    navigate('/login');
+  };
+
   const [activeMenu, setActiveMenu] = useState("Beranda");
 
   return (
     <div className="min-h-screen bg-[#f8f6ff] font-poppins relative overflow-hidden flex selection:bg-[#8477e4]/20">
-      
+
       {/* =========================================
           BACKGROUND TEMA LANDING PAGE
       ========================================= */}
@@ -46,6 +93,44 @@ const Beranda = () => {
           100% { transform: translateY(0px) scale(1); }
         }
         .animate-bubble-img { animation: float 6s ease-in-out infinite; }
+        @keyframes progress-blue {
+          from {
+            stroke-dasharray: 0 100;
+          }
+          to {
+            stroke-dasharray: 48 100;
+          }
+        }
+
+        @keyframes progress-orange {
+          from {
+            stroke-dasharray: 0 100;
+          }
+          to {
+            stroke-dasharray: 28 100;
+          }
+        }
+
+        @keyframes progress-green {
+          from {
+            stroke-dasharray: 0 100;
+          }
+          to {
+            stroke-dasharray: 18 100;
+          }
+        }
+
+        .animate-progress-blue {
+          animation: progress-blue 1.2s ease forwards;
+        }
+
+        .animate-progress-orange {
+          animation: progress-orange 1.5s ease forwards;
+        }
+
+        .animate-progress-green {
+          animation: progress-green 1.8s ease forwards;
+        }
       `}</style>
 
       <div className="fixed inset-0 pointer-events-none z-0">
@@ -55,8 +140,8 @@ const Beranda = () => {
         <div className="color-bubble bubble-3"></div>
         <div className="absolute inset-0 overflow-hidden">
           <img src="/gambar/bubble.png" className="absolute top-[-5%] left-[-2%] w-[350px] opacity-60 animate-bubble-img" alt="bubble" />
-          <img src="/gambar/bubble.png" className="absolute top-[35%] right-[-5%] w-[250px] opacity-40 animate-bubble-img" style={{animationDelay: '2s'}} alt="bubble" />
-          <img src="/gambar/bubble.png" className="absolute bottom-[-5%] left-[15%] w-[300px] opacity-50 animate-bubble-img" style={{animationDelay: '4s'}} alt="bubble" />
+          <img src="/gambar/bubble.png" className="absolute top-[35%] right-[-5%] w-[250px] opacity-40 animate-bubble-img" style={{ animationDelay: '2s' }} alt="bubble" />
+          <img src="/gambar/bubble.png" className="absolute bottom-[-5%] left-[15%] w-[300px] opacity-50 animate-bubble-img" style={{ animationDelay: '4s' }} alt="bubble" />
         </div>
       </div>
 
@@ -70,12 +155,11 @@ const Beranda = () => {
         </div>
 
         <nav className="relative flex-grow font-medium flex flex-col gap-4">
-          <div 
+          <div
             className="absolute left-0 w-full h-[52px] bg-[#f0eaff] rounded-2xl shadow-sm transition-transform duration-500 ease-[cubic-bezier(0.4,0,0.2,1)]"
-            style={{ 
-              transform: `translateY(${
-                ["Beranda", "Transaksi", "Budget", "Goals", "AI", "Laporan"].indexOf(activeMenu) * 68
-              }px)` 
+            style={{
+              transform: `translateY(${["Beranda", "Transaksi", "Budget", "Goals", "AI", "Laporan"].indexOf(activeMenu) * 68
+                }px)`
             }}
           ></div>
 
@@ -87,19 +171,18 @@ const Beranda = () => {
             { n: "AI", img: "/gambar/ai.png", path: "/ai" },
             { n: "Laporan", img: "/gambar/laporan.png", path: "/laporan" }
           ].map((item) => (
-            <div 
-              key={item.n} 
-              onClick={() => { setActiveMenu(item.n); navigate(item.path); }} 
-              className={`relative z-10 flex items-center gap-4 cursor-pointer px-3.5 h-[52px] rounded-2xl transition-colors duration-300 ${
-                activeMenu === item.n 
-                ? 'text-[#8477e4] font-bold' 
+            <div
+              key={item.n}
+              onClick={() => { setActiveMenu(item.n); navigate(item.path); }}
+              className={`relative z-10 flex items-center gap-4 cursor-pointer px-3.5 h-[52px] rounded-2xl transition-colors duration-300 ${activeMenu === item.n
+                ? 'text-[#8477e4] font-bold'
                 : 'text-gray-400 hover:text-gray-900'
-              }`}
+                }`}
             >
-              <img 
-                src={item.img} 
-                className={`w-6 h-6 object-contain transition-all duration-300 ${activeMenu !== item.n ? 'grayscale opacity-70' : ''}`} 
-                alt={item.n} 
+              <img
+                src={item.img}
+                className={`w-6 h-6 object-contain transition-all duration-300 ${activeMenu !== item.n ? 'grayscale opacity-70' : ''}`}
+                alt={item.n}
               />
               <span className="text-sm">{item.n}</span>
             </div>
@@ -111,8 +194,8 @@ const Beranda = () => {
             <img src="/gambar/pengaturan.png" className="w-6 h-6 object-contain grayscale opacity-70" alt="Setting" />
             <span className="text-sm">Pengaturan</span>
           </div>
-          <div 
-            onClick={() => navigate('/login')} 
+          <div
+            onClick={handleLogout}
             className="flex items-center gap-4 cursor-pointer p-3.5 rounded-2xl text-gray-400 hover:bg-red-50 hover:text-red-500 transition-all"
           >
             <img src="/gambar/logout.png" className="w-6 h-6 object-contain grayscale opacity-70" alt="Logout" />
@@ -125,11 +208,13 @@ const Beranda = () => {
           2. MAIN CONTENT (KANAN)
       ========================================= */}
       <div className="flex-1 p-8 md:p-10 z-10 relative overflow-y-auto h-screen">
-        
+
         {/* HEADER */}
         <header className="flex justify-between items-center mb-8">
           <div className="flex items-center gap-4">
-            <h1 className="text-2xl font-bold text-gray-900">Halo, Shifa Anjani ! 👋</h1>
+            <h1 className="text-2xl font-bold text-gray-900">
+              Halo, {userName} ! 👋
+            </h1>
             <div className="flex items-center gap-1.5 text-[11px] font-bold bg-[#e8f5e9] text-[#4caf50] px-3 py-1.5 rounded-lg border border-[#4caf50]/20">
               <i className="fas fa-check-circle"></i> Status : Hemat
             </div>
@@ -152,16 +237,20 @@ const Beranda = () => {
 
         {/* GRID UTAMA LAYOUT */}
         <div className="grid grid-cols-12 gap-6 items-stretch">
-          
+
           {/* KOLOM KIRI (7/12) - INI YANG TADI DIV-NYA HILANG! SEKARANG UDAH AMAN! */}
           <div className="col-span-12 xl:col-span-7 flex flex-col gap-6">
-            
+
             {/* HERO CARD */}
             <div className="relative bg-[#ede7fdf2] rounded-3xl mt-12 pr-6 md:pr-8 flex items-center shadow-sm border border-[#e8dffd] min-h-[130px] py-5 pl-[120px] md:pl-[140px] shrink-0">
               <img src="/gambar/robotsapa.png" className="absolute -left-2 bottom-0 w-36 md:w-[160px] object-contain drop-shadow-[0_10px_15px_rgba(0,0,0,0.15)] z-10" alt="Robot Hero" />
               <div className="bg-white px-6 py-4 rounded-2xl flex-1 border border-white shadow-sm relative z-0">
                 <p className="text-sm font-bold text-gray-800 leading-relaxed">
-                  Ayo kelola keuangan bulan <span className="font-extrabold text-black">Mei</span> mu bersama Fintrack AI!
+                  Ayo kelola keuangan bulan{" "}
+                  <span className="font-extrabold text-black capitalize">
+                    {currentMonth}
+                  </span>{" "}
+                  mu bersama Fintrack AI!
                 </p>
               </div>
             </div>
@@ -171,7 +260,7 @@ const Beranda = () => {
               <div className="flex justify-between items-start mb-6">
                 <div>
                   <h3 className="text-lg font-bold text-gray-900 tracking-tight">Ringkasan Keuangan</h3>
-                  <p className="text-sm text-gray-500 mt-1">
+                  <p className="text-sm text-gray-500 mt-4">
                     Kondisi keuangan kamu hari ini terlihat <span className="text-[#4caf50] font-bold">stabil</span>
                   </p>
                 </div>
@@ -183,37 +272,37 @@ const Beranda = () => {
               <div className="grid grid-cols-1 md:grid-cols-3 gap-5">
                 {/* TOTAL SALDO */}
                 <div className="bg-[#F8F6FF] border-2 border-[#EAE8FD] p-6 rounded-[2rem] flex flex-col items-center text-center shadow-sm hover:border-[#8477e4]/20 transition-all">
-                  <div className="flex items-center justify-center gap-3 mb-5 w-full">
+                  <div className="flex items-center justify-center mb-3 w-full">
                     <div className="w-10 h-10 bg-white rounded-xl flex items-center justify-center shadow-[0_0_20px_rgba(132,119,228,0.4)] border border-[#8477e4]/10">
                       <img src="/gambar/totalsaldo.png" className="w-6 h-6 object-contain" alt="Ikon Saldo" />
                     </div>
-                    <span className="text-sm font-bold text-gray-800 tracking-tight">Total Saldo</span>
+                    <span className="text-sm font-bold text-gray-800 tracking-tight">Sisa Saldo</span>
                   </div>
-                  <p className="text-[20px] font-black text-[#8477e4] tracking-tight leading-none mb-4">Rp 3.250.000</p>
+                  <p className="text-[20px] font-bold text-[#8477e4] mb-4">Rp {(totalPemasukan || 0).toLocaleString('id-ID')}</p>
                   <p className="text-[10px] text-gray-500 font-medium max-w-[150px] leading-relaxed">Sisa saldo yang bisa digunakan</p>
                 </div>
 
                 {/* PEMASUKAN */}
                 <div className="bg-[#F1FAF2] border-2 border-[#E1F3E5] p-6 rounded-[2rem] flex flex-col items-center text-center shadow-sm hover:border-[#4caf50]/20 transition-all">
-                  <div className="flex items-center justify-center gap-3 mb-5 w-full">
+                  <div className="flex items-center justify-center gap-3 mb-3 w-full">
                     <div className="w-10 h-10 bg-white rounded-xl flex items-center justify-center shadow-[0_0_20px_rgba(76,175,80,0.4)] border border-[#4caf50]/10">
                       <img src="/gambar/pemasukan.png" className="w-6 h-6 object-contain" alt="Ikon Pemasukan" />
                     </div>
-                    <span className="text-sm font-bold text-gray-800 tracking-tight">Pemasukan</span>
+                    <span className="text-sm font-bold text-gray-800 tracking-tight">Total Pemasukan</span>
                   </div>
-                  <p className="text-[20px] font-black text-[#4caf50] tracking-tight leading-none mb-4">Rp 5.000.000</p>
+                  <p className="text-[20px] font-bold text-[#4caf50] mb-4">Rp {(totalPemasukan || 0).toLocaleString('id-ID')}</p>
                   <p className="text-[10px] text-gray-500 font-medium max-w-[150px] leading-relaxed">Total uang masuk bulan ini</p>
                 </div>
 
                 {/* PENGELUARAN */}
                 <div className="bg-[#FFF5F5] border-2 border-[#FDEAEB] p-6 rounded-[2rem] flex flex-col items-center text-center shadow-sm hover:border-[#F44336]/20 transition-all">
-                  <div className="flex items-center justify-center gap-3 mb-5 w-full">
+                  <div className="flex items-center justify-center gap-3 mb-3 w-full">
                     <div className="w-10 h-10 bg-white rounded-xl flex items-center justify-center shadow-[0_0_20px_rgba(244,67,54,0.4)] border border-[#F44336]/10">
                       <img src="/gambar/pengeluaran.png" className="w-6 h-6 object-contain" alt="Ikon Pengeluaran" />
                     </div>
-                    <span className="text-sm font-bold text-gray-800 tracking-tight">Pengeluaran</span>
+                    <span className="text-sm font-bold text-gray-800 tracking-tight">Total Pengeluaran</span>
                   </div>
-                  <p className="text-[20px] font-black text-[#F44336] tracking-tight leading-none mb-4">Rp 1.750.000</p>
+                  <p className="text-[20px] font-bold text-[#F44336] mb-4">Rp 1.750.000</p>
                   <p className="text-[10px] text-gray-500 font-medium max-w-[150px] leading-relaxed">Total uang keluar bulan ini</p>
                 </div>
               </div>
@@ -234,7 +323,7 @@ const Beranda = () => {
                   Detail Lengkap <i className="fas fa-plus"></i>
                 </button>
               </div>
-              
+
               <div className="flex flex-col justify-start space-y-6">
                 {[
                   { n: "Kebutuhan", p: "50%", d: "Makanan, Kos Kosan, dll", v: 1200000, max: 1500000, c: "#8477e4", i: "fas fa-home", used: "80%" },
@@ -242,7 +331,7 @@ const Beranda = () => {
                   { n: "Tabungan", p: "20%", d: "Dana Darurat, Investasi, dll", v: 500000, max: 1000000, c: "#f44336", i: "fas fa-piggy-bank", used: "50%" },
                 ].map((item, idx) => (
                   <div key={idx} className="flex gap-4 items-center">
-                    <div className="w-12 h-12 rounded-2xl flex items-center justify-center text-white text-xl shadow-sm" style={{backgroundColor: item.c}}>
+                    <div className="w-12 h-12 rounded-2xl flex items-center justify-center text-white text-xl shadow-sm" style={{ backgroundColor: item.c }}>
                       <i className={item.i}></i>
                     </div>
                     <div className="flex-1">
@@ -259,7 +348,7 @@ const Beranda = () => {
                         <div className="flex-1">
                           <AnimatedProgressBar value={item.v} maxValue={item.max} color={item.c} />
                         </div>
-                        <p className="text-[9px] font-bold" style={{color: item.c}}>{item.used} Terpakai</p>
+                        <p className="text-[9px] font-bold" style={{ color: item.c }}>{item.used} Terpakai</p>
                       </div>
                     </div>
                   </div>
@@ -286,23 +375,23 @@ const Beranda = () => {
 
           {/* KOLOM KANAN (5/12) */}
           <div className="col-span-12 xl:col-span-5 flex flex-col gap-6">
-            
+
             {/* INSIGHT AI - DESAIN BARU (BORDER BIRU) */}
             <div className="bg-white p-6 rounded-[2rem] border border-gray-100 shadow-sm flex flex-col shrink-0">
               <h3 className="text-base font-extrabold text-gray-900 mb-4">Insight AI</h3>
               <div className="relative bg-[#f2eefd] rounded-3xl border-2 border-[#3b82f6] p-5 pr-[110px] md:pr-[130px] min-h-[110px] flex flex-col justify-center shadow-sm">
                 <div className="space-y-3 relative z-10">
                   <p className="text-[11px] font-medium text-gray-700 leading-relaxed">
-                    Shifa, Pengeluaran kamu di kategori "Keinginan" hampir mencapai batas.
+                    {userName}, Pengeluaran kamu di kategori "Keinginan" hampir mencapai batas.
                   </p>
                   <p className="text-[11px] font-bold text-gray-900 leading-relaxed">
                     Coba tahan dulu ya, biar tabungan tetap aman.
                   </p>
                 </div>
-                <img 
-                  src="/gambar/robotlaptop.png" 
-                  className="absolute -right-4 -bottom-3 w-28 md:w-[130px] object-contain drop-shadow-[0_10px_15px_rgba(0,0,0,0.15)] z-20" 
-                  alt="Robot AI" 
+                <img
+                  src="/gambar/robotlaptop.png"
+                  className="absolute -right-4 -bottom-3 w-28 md:w-[130px] object-contain drop-shadow-[0_10px_15px_rgba(0,0,0,0.15)] z-20"
+                  alt="Robot AI"
                 />
               </div>
               <div className="mt-4 flex items-center justify-between bg-[#f8f9fb] p-4 rounded-2xl cursor-pointer hover:bg-gray-50 transition-all border border-gray-50">
@@ -318,31 +407,87 @@ const Beranda = () => {
             <div className="bg-white p-6 rounded-[2rem] border border-gray-100 shadow-sm flex flex-col shrink-0">
               <div className="flex justify-between items-center mb-6">
                 <h3 className="text-base font-bold text-gray-900">Alokasi Keuangan <span className="text-xs font-normal text-gray-400">(50 - 30 - 20)</span></h3>
-                <div className="flex items-center gap-1.5 bg-[#EAE5FB] px-4 py-2 rounded-xl text-xs font-bold text-gray-900 cursor-pointer">
+                {/* <div className="flex items-center gap-1.5 bg-[#EAE5FB] px-4 py-2 rounded-xl text-xs font-bold text-gray-900 cursor-pointer">
                   Bulan Ini <i className="fas fa-chevron-down text-[#8477e4]"></i>
-                </div>
+                </div> */}
               </div>
 
               <div className="flex flex-col items-center gap-6">
-                <div className="flex items-center justify-between w-full gap-6">
-                  <div className="w-36 h-36 relative flex-shrink-0">
-                    <svg viewBox="0 0 36 36" className="w-full h-full transform -rotate-90">
+                <div className=" w-full gap-6">
+                  <div className="w-36 h-36 relative flex-shrink-0 flex items-center justify-center mx-auto mb-4">
+                    {/* <svg viewBox="0 0 36 36" className="w-full h-full transform -rotate-90">
                       <circle cx="18" cy="18" r="14" fill="none" stroke="#f4f6f8" strokeWidth="5.5"></circle>
-                      <circle cx="18" cy="18" r="14" fill="none" stroke="#85D69E" strokeWidth="5.5" strokeDasharray="48 100" strokeDashoffset="0" strokeLinecap="round"></circle>
-                      <circle cx="18" cy="18" r="14" fill="none" stroke="#FCD166" strokeWidth="5.5" strokeDasharray="28 100" strokeDashoffset="-50" strokeLinecap="round"></circle>
-                      <circle cx="18" cy="18" r="14" fill="none" stroke="#B88FF5" strokeWidth="5.5" strokeDasharray="18 100" strokeDashoffset="-80" strokeLinecap="round"></circle>
+                      <circle cx="18" cy="18" r="14" fill="none" stroke="#3093ec" strokeWidth="5.5" strokeDasharray="48 100" strokeDashoffset="0" strokeLinecap="round"></circle>
+                      <circle cx="18" cy="18" r="14" fill="none" stroke="#f37e61" strokeWidth="5.5" strokeDasharray="28 100" strokeDashoffset="-50" strokeLinecap="round"></circle>
+                      <circle cx="18" cy="18" r="14" fill="none" stroke="#20b46b" strokeWidth="5.5" strokeDasharray="18 100" strokeDashoffset="-80" strokeLinecap="round"></circle>
+                    </svg> */}
+                    <svg
+                      viewBox="0 0 36 36"
+                      className="w-full h-full transform -rotate-90"
+                    >
+                      {/* Background */}
+                      <circle
+                        cx="18"
+                        cy="18"
+                        r="14"
+                        fill="none"
+                        stroke="#f4f6f8"
+                        strokeWidth="5.5"
+                      ></circle>
+
+                      {/* Pemasukan */}
+                      <circle
+                        cx="18"
+                        cy="18"
+                        r="14"
+                        fill="none"
+                        stroke="#3093ec"
+                        strokeWidth="5.5"
+                        strokeDasharray="48 100"
+                        strokeDashoffset="0"
+                        strokeLinecap="round"
+                        className="animate-progress-blue"
+                      ></circle>
+
+                      {/* Pengeluaran */}
+                      <circle
+                        cx="18"
+                        cy="18"
+                        r="14"
+                        fill="none"
+                        stroke="#f37e61"
+                        strokeWidth="5.5"
+                        strokeDasharray="28 100"
+                        strokeDashoffset="-50"
+                        strokeLinecap="round"
+                        className="animate-progress-orange"
+                      ></circle>
+
+                      {/* Saldo */}
+                      <circle
+                        cx="18"
+                        cy="18"
+                        r="14"
+                        fill="none"
+                        stroke="#20b46b"
+                        strokeWidth="5.5"
+                        strokeDasharray="18 100"
+                        strokeDashoffset="-80"
+                        strokeLinecap="round"
+                        className="animate-progress-green"
+                      ></circle>
                     </svg>
                   </div>
 
-                  <div className="flex-1 space-y-5">
+                  <div className="flex-1 space-y-4">
                     {[
-                      { n: "Kebutuhan (50%)", p: "45% Terpakai", v: 1200000, c: "#85D69E" },
-                      { n: "Keinginan (30%)", p: "25% Terpakai", v: 750000, c: "#FCD166" },
-                      { n: "Tabungan (20%)", p: "10% Terpakai", v: 500000, c: "#B88FF5" },
+                      { n: "Kebutuhan (50%)", p: "45% Terpakai", v: 1200000, c: "#3093ec" },
+                      { n: "Keinginan (30%)", p: "25% Terpakai", v: 750000, c: "#f37e61" },
+                      { n: "Tabungan (20%)", p: "10% Terpakai", v: 500000, c: "#20b46b" },
                     ].map((item, idx) => (
                       <div key={idx} className="flex justify-between items-center">
                         <div className="flex items-center gap-3">
-                          <div className="w-3.5 h-3.5 rounded-full" style={{backgroundColor: item.c}}></div>
+                          <div className="w-3.5 h-3.5 rounded-full" style={{ backgroundColor: item.c }}></div>
                           <div>
                             <p className="text-xs font-bold text-gray-900">{item.n}</p>
                             <p className="text-[10px] text-gray-500 mt-0.5">{item.p}</p>
