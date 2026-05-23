@@ -6,11 +6,17 @@ const Login = () => {
   const [showPassword, setShowPassword] = useState(false);
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
+  const [isLoading, setIsLoading] = useState(false);
+  const [showSuccess, setShowSuccess] = useState(false);
 
   const handleLogin = async (e) => {
     e.preventDefault();
 
+    // munculkan modal loading
+    setIsLoading(true);
+
     try {
+
       const response = await fetch('http://127.0.0.1:8080/auth/login', {
         method: 'POST',
         headers: {
@@ -24,7 +30,6 @@ const Login = () => {
 
       const data = await response.json();
 
-      console.log("=== RESPONSE LOGIN ===");
       console.log(data);
 
       if (response.ok) {
@@ -34,7 +39,7 @@ const Login = () => {
           localStorage.setItem('token', data.token);
         }
 
-        // Simpan data user
+        // Simpan user
         localStorage.setItem(
           'user',
           JSON.stringify({
@@ -44,18 +49,31 @@ const Login = () => {
           })
         );
 
-        alert('Login berhasil!');
+        // loading selesai
+        setIsLoading(false);
 
-        // Redirect ke beranda
-        navigate('/beranda');
+        // tampilkan notif sukses
+        setShowSuccess(true);
+
+        // redirect delay
+        setTimeout(() => {
+          navigate('/beranda');
+        }, 1800);
 
       } else {
+
+        setIsLoading(false);
+
         alert(data.message || 'Email atau password salah');
       }
 
     } catch (error) {
-      console.error('Error login:', error);
-      alert('Terjadi kesalahan saat koneksi ke server');
+
+      setIsLoading(false);
+
+      console.error(error);
+
+      alert('Terjadi kesalahan saat koneksi server');
     }
   };
 
@@ -103,6 +121,38 @@ const Login = () => {
         .animate-bubble-img { animation: float-bubble 15s infinite ease-in-out; }
         .delay-2000 { animation-delay: 2s; }
         .delay-4000 { animation-delay: 4s; }
+
+         @keyframes fadeIn {
+        from {
+          opacity: 0;
+          transform: scale(0.9);
+        }
+
+        to {
+          opacity: 1;
+          transform: scale(1);
+        }
+      }
+
+      .animate-fadeIn {
+        animation: fadeIn 0.3s ease;
+      }
+
+      @keyframes slideIn {
+        from {
+          opacity: 0;
+          transform: translateX(100px);
+        }
+
+        to {
+          opacity: 1;
+          transform: translateX(0);
+        }
+      }
+
+      .animate-slideIn {
+        animation: slideIn 0.5s ease;
+      }
       `}</style>
 
       {/* --- BACKGROUND BUBBLES --- */}
@@ -223,6 +273,51 @@ const Login = () => {
           </p>
         </div>
       </div>
+
+      {/* ================= LOADING MODAL ================= */}
+      {isLoading && (
+        <div className="fixed inset-0 bg-black/30 backdrop-blur-sm flex items-center justify-center z-[9999]">
+
+          <div className="bg-white rounded-3xl px-10 py-8 shadow-2xl flex flex-col items-center animate-fadeIn">
+
+            {/* Spinner */}
+            <div className="w-16 h-16 border-[6px] border-[#e9ddff] border-t-[#8477e4] rounded-full animate-spin mb-5"></div>
+
+            <h2 className="text-xl font-bold text-gray-800 mb-2">
+              Signing In...
+            </h2>
+
+            <p className="text-sm text-gray-500 text-center leading-relaxed">
+              Sedang mempersiapkan dashboard keuanganmu ✨
+            </p>
+
+          </div>
+        </div>
+      )}
+
+      {/* ================= SUCCESS NOTIFICATION ================= */}
+      {showSuccess && (
+        <div className="fixed top-6 right-6 z-[9999] animate-slideIn">
+
+          <div className="bg-green-500 text-white px-6 py-4 rounded-2xl shadow-2xl flex items-center gap-3">
+
+            <div className="w-9 h-9 bg-white/20 rounded-full flex items-center justify-center">
+              <i className="fas fa-check"></i>
+            </div>
+
+            <div>
+              <h3 className="font-bold text-sm">
+                Login Berhasil
+              </h3>
+
+              <p className="text-xs text-white/90">
+                Selamat datang kembali di FinTrack AI 🚀
+              </p>
+            </div>
+
+          </div>
+        </div>
+      )}
     </div>
   );
 };
