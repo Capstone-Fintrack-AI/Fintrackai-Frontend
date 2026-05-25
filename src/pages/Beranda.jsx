@@ -32,6 +32,10 @@ const Beranda = () => {
 
   const [totalPemasukan, setTotalPemasukan] = useState(0);
   const [totalPengeluaran, setTotalPengeluaran] = useState(0);
+
+  const kebutuhan = totalPemasukan * 0.5;
+  const keinginan = totalPemasukan * 0.3;
+  const tabungan = totalPemasukan * 0.2;
   useEffect(() => {
 
     const fetchPemasukan = async () => {
@@ -354,30 +358,90 @@ const Beranda = () => {
 
               <div className="flex flex-col justify-start space-y-6">
                 {[
-                  { n: "Kebutuhan", p: "50%", d: "Makanan, Kos Kosan, dll", v: 1200000, max: 1500000, c: "#8477e4", i: "fas fa-home", used: "80%" },
-                  { n: "Keinginan", p: "30%", d: "Jajan, Nonton, dll", v: 750000, max: 900000, c: "#4caf50", i: "fas fa-shopping-bag", used: "83%" },
-                  { n: "Tabungan", p: "20%", d: "Dana Darurat, Investasi, dll", v: 500000, max: 1000000, c: "#f44336", i: "fas fa-piggy-bank", used: "50%" },
+                  {
+                    n: "Kebutuhan",
+                    p: "50%",
+                    d: "Alokasi kebutuhan utama",
+                    v: kebutuhan,
+                    max: totalPemasukan,
+                    c: "#8477e4",
+                    i: "fas fa-home",
+                    used: "50%",
+                  },
+                  {
+                    n: "Keinginan",
+                    p: "30%",
+                    d: "Alokasi hiburan & lifestyle",
+                    v: keinginan,
+                    max: totalPemasukan,
+                    c: "#4caf50",
+                    i: "fas fa-shopping-bag",
+                    used: "30%",
+                  },
+                  {
+                    n: "Tabungan",
+                    p: "20%",
+                    d: "Alokasi simpanan masa depan",
+                    v: tabungan,
+                    max: totalPemasukan,
+                    c: "#f44336",
+                    i: "fas fa-piggy-bank",
+                    used: "20%",
+                  },
                 ].map((item, idx) => (
                   <div key={idx} className="flex gap-4 items-center">
-                    <div className="w-12 h-12 rounded-2xl flex items-center justify-center text-white text-xl shadow-sm" style={{ backgroundColor: item.c }}>
+
+                    <div
+                      className="w-12 h-12 rounded-2xl flex items-center justify-center text-white text-xl shadow-sm"
+                      style={{ backgroundColor: item.c }}
+                    >
                       <i className={item.i}></i>
                     </div>
+
                     <div className="flex-1">
+
                       <div className="flex justify-between items-end mb-1">
+
                         <div>
-                          <p className="text-xs font-bold text-gray-900">{item.n} <span className="text-gray-400 font-normal">({item.p})</span></p>
-                          <p className="text-[9px] text-gray-400 mt-0.5">{item.d}</p>
+                          <p className="text-xs font-bold text-gray-900">
+                            {item.n}
+                            <span className="text-gray-400 font-normal">
+                              {" "}({item.p})
+                            </span>
+                          </p>
+
+                          <p className="text-[9px] text-gray-400 mt-0.5">
+                            {item.d}
+                          </p>
                         </div>
+
                         <div className="text-right">
-                          <p className="text-[10px] font-bold text-gray-900">Rp {item.v.toLocaleString('id-ID')} <span className="text-gray-400 font-normal">/ {item.max.toLocaleString('id-ID')}</span></p>
+                          <p className="text-[10px] font-bold text-gray-900">
+                            Rp {item.v.toLocaleString("id-ID")}
+                          </p>
                         </div>
+
                       </div>
+
                       <div className="flex items-center gap-3">
+
                         <div className="flex-1">
-                          <AnimatedProgressBar value={item.v} maxValue={item.max} color={item.c} />
+                          <AnimatedProgressBar
+                            value={item.v}
+                            maxValue={item.max}
+                            color={item.c}
+                          />
                         </div>
-                        <p className="text-[9px] font-bold" style={{ color: item.c }}>{item.used} Terpakai</p>
+
+                        <p
+                          className="text-[9px] font-bold"
+                          style={{ color: item.c }}
+                        >
+                          {item.used} Terpakai
+                        </p>
+
                       </div>
+
                     </div>
                   </div>
                 ))}
@@ -433,8 +497,9 @@ const Beranda = () => {
 
             {/* ALOKASI KEUANGAN */}
             <div className="bg-white p-6 rounded-[2rem] border border-gray-100 shadow-sm flex flex-col shrink-0">
-              <div className="flex justify-between items-center mb-6">
+              <div className="justify-between items-center mb-6">
                 <h3 className="text-base font-bold text-gray-900">Alokasi Keuangan <span className="text-xs font-normal text-gray-400">(50 - 30 - 20)</span></h3>
+                <p className="text-xs font-normal text-gray-500 mt-1">Otomatis dari total pemasukan</p>
                 {/* <div className="flex items-center gap-1.5 bg-[#EAE5FB] px-4 py-2 rounded-xl text-xs font-bold text-gray-900 cursor-pointer">
                   Bulan Ini <i className="fas fa-chevron-down text-[#8477e4]"></i>
                 </div> */}
@@ -451,7 +516,7 @@ const Beranda = () => {
                     </svg> */}
                     <svg
                       viewBox="0 0 36 36"
-                      className="w-full h-full transform -rotate-90"
+                      className="w-full h-full -rotate-90"
                     >
                       {/* Background */}
                       <circle
@@ -459,69 +524,108 @@ const Beranda = () => {
                         cy="18"
                         r="14"
                         fill="none"
-                        stroke="#f4f6f8"
-                        strokeWidth="5.5"
-                      ></circle>
+                        stroke="#f1f5f9"
+                        strokeWidth="5"
+                      />
 
-                      {/* Pemasukan */}
+                      {/* Kebutuhan 50% */}
                       <circle
                         cx="18"
                         cy="18"
                         r="14"
                         fill="none"
                         stroke="#3093ec"
-                        strokeWidth="5.5"
-                        strokeDasharray="48 100"
+                        strokeWidth="5"
+                        pathLength="100"
+                        strokeDasharray="50 50"
                         strokeDashoffset="0"
-                        strokeLinecap="round"
-                        className="animate-progress-blue"
-                      ></circle>
+                        strokeLinecap="butt"
+                        className="cursor-pointer transition-all duration-300 hover:opacity-80"
+                      >
+                        <title>Kebutuhan (50%) - Rp 1.250.000</title>
+                      </circle>
 
-                      {/* Pengeluaran */}
+                      {/* Keinginan 30% */}
                       <circle
                         cx="18"
                         cy="18"
                         r="14"
                         fill="none"
                         stroke="#f37e61"
-                        strokeWidth="5.5"
-                        strokeDasharray="28 100"
+                        strokeWidth="5"
+                        pathLength="100"
+                        strokeDasharray="30 70"
                         strokeDashoffset="-50"
-                        strokeLinecap="round"
-                        className="animate-progress-orange"
-                      ></circle>
+                        strokeLinecap="butt"
+                        className="cursor-pointer transition-all duration-300 hover:opacity-80"
+                      >
+                        <title>Keinginan (30%) - Rp 750.000</title>
+                      </circle>
 
-                      {/* Saldo */}
+                      {/* Tabungan 20% */}
                       <circle
                         cx="18"
                         cy="18"
                         r="14"
                         fill="none"
                         stroke="#20b46b"
-                        strokeWidth="5.5"
-                        strokeDasharray="18 100"
+                        strokeWidth="5"
+                        pathLength="100"
+                        strokeDasharray="20 80"
                         strokeDashoffset="-80"
-                        strokeLinecap="round"
-                        className="animate-progress-green"
-                      ></circle>
+                        strokeLinecap="butt"
+                        className="cursor-pointer transition-all duration-300 hover:opacity-80"
+                      >
+                        <title>Tabungan (20%) - Rp 500.000</title>
+                      </circle>
                     </svg>
                   </div>
 
                   <div className="flex-1 space-y-4">
                     {[
-                      { n: "Kebutuhan (50%)", p: "45% Terpakai", v: 1200000, c: "#3093ec" },
-                      { n: "Keinginan (30%)", p: "25% Terpakai", v: 750000, c: "#f37e61" },
-                      { n: "Tabungan (20%)", p: "10% Terpakai", v: 500000, c: "#20b46b" },
+                      {
+                        n: "Kebutuhan (50%)",
+                        p: "50% dari total pemasukan",
+                        v: kebutuhan,
+                        c: "#3093ec",
+                      },
+                      {
+                        n: "Keinginan (30%)",
+                        p: "30% dari total pemasukan",
+                        v: keinginan,
+                        c: "#f37e61",
+                      },
+                      {
+                        n: "Tabungan (20%)",
+                        p: "20% dari total pemasukan",
+                        v: tabungan,
+                        c: "#20b46b",
+                      },
                     ].map((item, idx) => (
-                      <div key={idx} className="flex justify-between items-center">
+                      <div
+                        key={idx}
+                        className="flex justify-between items-center"
+                      >
                         <div className="flex items-center gap-3">
-                          <div className="w-3.5 h-3.5 rounded-full" style={{ backgroundColor: item.c }}></div>
+                          <div
+                            className="w-3.5 h-3.5 rounded-full"
+                            style={{ backgroundColor: item.c }}
+                          ></div>
+
                           <div>
-                            <p className="text-xs font-bold text-gray-900">{item.n}</p>
-                            <p className="text-[10px] text-gray-500 mt-0.5">{item.p}</p>
+                            <p className="text-xs font-bold text-gray-900">
+                              {item.n}
+                            </p>
+
+                            <p className="text-[10px] text-gray-500 mt-0.5">
+                              {item.p}
+                            </p>
                           </div>
                         </div>
-                        <p className="text-xs font-bold text-gray-900">Rp {item.v.toLocaleString('id-ID')}</p>
+
+                        <p className="text-xs font-bold text-gray-900">
+                          Rp {item.v.toLocaleString("id-ID")}
+                        </p>
                       </div>
                     ))}
                   </div>

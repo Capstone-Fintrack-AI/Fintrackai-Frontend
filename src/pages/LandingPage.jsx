@@ -125,7 +125,7 @@ return (
       <section id="beranda" className="min-h-screen flex items-center pt-32 pb-20 px-6 md:px-20">
         <div className="container mx-auto grid md:grid-cols-2 gap-16 items-center">
           <div className="space-y-10 scale-110 origin-left"> {/* Zoomed here */}
-            <h1 className="text-6xl md:text-7xl font-extrabold text-gray-900 leading-tight">
+            <h1 className="text-4xl md:text-6xl font-extrabold text-gray-900 leading-tight mt-10">
               Kelola Keuangan <br/>
               <span className="text-transparent bg-clip-text bg-gradient-to-r from-[#8477e4] to-[#e584ee]">Lebih Mudah</span>
             </h1>
@@ -140,7 +140,7 @@ return (
             </button>
           </div>
           <div className="relative scale-110">
-            <img src="/gambar/Home.png" alt="Home" className="w-full drop-shadow-2xl" />
+            <img src="/gambar/Home2.png" alt="Home" className="w-[120%] drop-shadow-2xl" />
           </div>
         </div>
       </section>
