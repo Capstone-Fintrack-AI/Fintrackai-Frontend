@@ -140,7 +140,7 @@ return (
             </button>
           </div>
           <div className="relative scale-110">
-            <img src="/gambar/Home2.png" alt="Home" className="w-[120%] drop-shadow-2xl" />
+            <img src="/gambar/Home.png" alt="Home" className="w-[120%] drop-shadow-2xl" />
           </div>
         </div>
       </section>
