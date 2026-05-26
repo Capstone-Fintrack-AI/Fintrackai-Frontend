@@ -31,7 +31,7 @@ const Register = () => {
 
     try {
 
-      const response = await fetch('https://fintrackai-backend-1yz0.onrender.com/auth/login', {
+      const response = await fetch('https://fintrackai-backend-1yz0.onrender.com/auth/register', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
