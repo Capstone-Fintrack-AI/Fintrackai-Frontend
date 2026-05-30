@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
+import TransactionModal from './TransactionModal';
 
 // Komponen Bar Animasi
 const AnimatedProgressBar = ({ value, maxValue, color }) => {
@@ -23,6 +24,7 @@ const AnimatedProgressBar = ({ value, maxValue, color }) => {
 
 const Beranda = () => {
   const navigate = useNavigate();
+  const [isModalOpen, setIsModalOpen] = useState(false);
   const currentMonth = new Date().toLocaleString('id-ID', {
     month: 'long',
   });
@@ -103,9 +105,10 @@ const Beranda = () => {
   };
 
   const [activeMenu, setActiveMenu] = useState("Beranda");
+  const [isSidebarOpen, setIsSidebarOpen] = useState(true);
 
   return (
-    <div className="min-screen bg-[#f8f6ff] font-poppins relative overflow-hidden flex selection:bg-[#8477e4]/20">
+   <div className="h-screen bg-[#f8f6ff] font-poppins flex">
 
       {/* =========================================
           BACKGROUND TEMA LANDING PAGE
@@ -178,68 +181,84 @@ const Beranda = () => {
       </div>
 
       {/* =========================================
-          1. SIDEBAR (KIRI)
-      ========================================= */}
-      <div className="w-64 bg-white border-r border-[#f0f0f0] px-6 py-8 flex flex-col z-10 shadow-[4px_0_24px_rgba(0,0,0,0.02)] relative">
-        <div className="flex flex-col items-center mb-10">
-          <img src="/gambar/logo.png" className="w-16 mb-2" alt="Logo" />
-          <span className="font-bold text-lg tracking-tight text-gray-900 text-center">FinTrack AI</span>
-        </div>
+    1. SIDEBAR (KIRI) - FINAL VERSION
+========================================= */}
+<div className={`${isSidebarOpen ? 'w-64' : 'w-20'} bg-white border-r border-[#f0f0f0] px-6 py-8 flex flex-col z-10 shadow-[4px_0_24px_rgba(0,0,0,0.02)] relative transition-all duration-300`}>
+  
+  {/* Kontainer Atas: Logo, Teks, dan Tombol Robot */}
+  <div className="flex flex-col items-center mb-10 relative">
+    <img src="/gambar/logo.png" className="w-16 mb-2" alt="Logo" />
 
-        <nav className="relative flex-grow font-medium flex flex-col gap-4">
-          <div
-            className="absolute left-0 w-full h-[52px] bg-[#f0eaff] rounded-2xl shadow-sm transition-transform duration-500 ease-[cubic-bezier(0.4,0,0.2,1)]"
-            style={{
-              transform: `translateY(${["Beranda", "Transaksi", "Budget", "Goals", "AI", "Laporan"].indexOf(activeMenu) * 68
-                }px)`
-            }}
-          ></div>
+    {/* Tombol Robot - Diposisikan Absolute agar pas di pinggir */}
+    <button 
+      onClick={() => setIsSidebarOpen(!isSidebarOpen)}
+      className="absolute -right-10 top-2 z-[60] w-16 h-16 transition-transform duration-300 hover:scale-105 focus:outline-none"
+    >
+      <img 
+        src="/gambar/robotngintip.png"
+        alt="Toggle Sidebar" 
+        className="w-full h-full object-contain"
+      />
+    </button>
+  </div>
 
-          {[
-            { n: "Beranda", img: "/gambar/beranda.png", path: "/beranda" },
-            { n: "Transaksi", img: "/gambar/transaksi.png", path: "/transaksi" },
-            { n: "Budget", img: "/gambar/budget.png", path: "/budget" },
-            { n: "Goals", img: "/gambar/goals.png", path: "/goals" },
-            { n: "AI", img: "/gambar/ai.png", path: "/ai" },
-            { n: "Laporan", img: "/gambar/laporan.png", path: "/laporan" }
-          ].map((item) => (
-            <div
-              key={item.n}
-              onClick={() => { setActiveMenu(item.n); navigate(item.path); }}
-              className={`relative z-10 flex items-center gap-4 cursor-pointer px-3.5 h-[52px] rounded-2xl transition-colors duration-300 ${activeMenu === item.n
-                ? 'text-[#8477e4] font-bold'
-                : 'text-gray-400 hover:text-gray-900'
-                }`}
-            >
-              <img
-                src={item.img}
-                className={`w-6 h-6 object-contain transition-all duration-300 ${activeMenu !== item.n ? 'grayscale opacity-70' : ''}`}
-                alt={item.n}
-              />
-              <span className="text-sm">{item.n}</span>
-            </div>
-          ))}
-        </nav>
-
-        <div className="border-t border-gray-100 pt-6 space-y-4 font-medium relative z-10 bg-white">
-          <div className="flex items-center gap-4 cursor-pointer p-3.5 rounded-2xl text-gray-400 hover:bg-gray-50 hover:text-gray-900 transition-all">
-            <img src="/gambar/pengaturan.png" className="w-6 h-6 object-contain grayscale opacity-70" alt="Setting" />
-            <span className="text-sm">Pengaturan</span>
-          </div>
-          <div
-            onClick={handleLogout}
-            className="flex items-center gap-4 cursor-pointer p-3.5 rounded-2xl text-gray-400 hover:bg-red-50 hover:text-red-500 transition-all"
-          >
-            <img src="/gambar/logout.png" className="w-6 h-6 object-contain grayscale opacity-70" alt="Logout" />
-            <span className="text-sm">Logout</span>
-          </div>
-        </div>
+  {/* Navigasi Utama */}
+  <nav className="relative flex-grow font-medium flex flex-col gap-4">
+    {/* Animasi latar belakang menu aktif */}
+    <div
+      className="absolute left-0 w-full h-[52px] bg-[#f0eaff] rounded-2xl shadow-sm transition-transform duration-500 ease-[cubic-bezier(0.4,0,0.2,1)]"
+      style={{
+        transform: `translateY(${["Beranda", "Transaksi", "Budget", "Goals", "AI", "Laporan"].indexOf(activeMenu) * 68}px)`
+      }}
+    ></div>
+    
+    {[
+      { n: "Beranda", img: "/gambar/beranda.png", path: "/beranda" },
+      { n: "Transaksi", img: "/gambar/transaksi.png", path: "/transaksi" },
+      { n: "Budget", img: "/gambar/budget.png", path: "/budget" },
+      { n: "Goals", img: "/gambar/goals.png", path: "/goals" },
+      { n: "AI", img: "/gambar/ai.png", path: "/ai" },
+      { n: "Laporan", img: "/gambar/laporan.png", path: "/laporan" }
+    ].map((item) => (
+      <div
+        key={item.n}
+        onClick={() => { setActiveMenu(item.n); navigate(item.path); }}
+        className={`relative z-10 flex items-center ${isSidebarOpen ? 'gap-4 px-3.5' : 'justify-center px-0'} cursor-pointer h-[52px] rounded-2xl transition-all duration-300 ${
+          activeMenu === item.n
+            ? 'text-[#8477e4] font-bold'
+            : 'text-gray-400 hover:text-gray-900'
+        }`}
+      >
+        <img
+          src={item.img}
+          className={`w-6 h-6 object-contain transition-all ${activeMenu !== item.n ? 'grayscale opacity-70' : ''}`}
+          alt={item.n}
+        />
+        {isSidebarOpen && <span className="text-sm">{item.n}</span>}
       </div>
+    ))}
+  </nav>
+
+  {/* Footer: Pengaturan & Logout */}
+  <div className="border-t border-gray-100 pt-6 space-y-4 font-medium relative z-10 bg-white">
+    <div className={`flex items-center ${isSidebarOpen ? 'gap-4 p-3.5' : 'justify-center p-0 h-[52px]'} cursor-pointer rounded-2xl text-gray-400 hover:bg-gray-50 hover:text-gray-900 transition-all`}>
+      <img src="/gambar/pengaturan.png" className="w-6 h-6 object-contain grayscale opacity-70" alt="Setting" />
+      {isSidebarOpen && <span className="text-sm">Pengaturan</span>}
+    </div>
+    <div
+      onClick={handleLogout}
+      className={`flex items-center ${isSidebarOpen ? 'gap-4 p-3.5' : 'justify-center p-0 h-[52px]'} cursor-pointer rounded-2xl text-gray-400 hover:bg-red-50 hover:text-red-500 transition-all`}
+    >
+      <img src="/gambar/logout.png" className="w-6 h-6 object-contain grayscale opacity-70" alt="Logout" />
+      {isSidebarOpen && <span className="text-sm">Logout</span>}
+    </div>
+  </div>
+</div>
 
       {/* =========================================
           2. MAIN CONTENT (KANAN)
       ========================================= */}
-      <div className="flex-1 p-8 md:p-10 z-10 relative overflow-y-auto h-full">
+      <div className="flex-1 h-full overflow-y-auto p-8 md:p-10 z-10">
 
         {/* HEADER */}
         <header className="flex justify-between items-center mb-8">
@@ -292,11 +311,8 @@ const Beranda = () => {
               <div className="flex justify-between items-start mb-6">
                 <div>
                   <h3 className="text-lg font-bold text-gray-900 tracking-tight">Ringkasan Keuangan</h3>
-                  <p className="text-sm text-gray-500 mt-4">
-                    Kondisi keuangan kamu hari ini terlihat <span className="text-[#4caf50] font-bold">stabil</span>
-                  </p>
                 </div>
-                <button className="text-xs font-bold text-[#8477e4] flex items-center gap-2 hover:bg-[#f4f3ff] transition-all bg-white border-2 border-[#8477e4]/20 px-4 py-2 rounded-xl shadow-sm">
+                <button onClick={() => setIsModalOpen(true)} className="text-xs font-bold text-[#8477e4] flex items-center gap-2 hover:bg-[#f4f3ff] transition-all bg-white border-2 border-[#8477e4]/20 px-4 py-2 rounded-xl shadow-sm">
                   Catat Transaksi <i className="fas fa-plus"></i>
                 </button>
               </div>
@@ -644,7 +660,7 @@ const Beranda = () => {
             <div className="bg-white p-6 rounded-3xl border border-gray-100 shadow-sm shrink-0">
               <h3 className="text-sm font-bold text-gray-900 mb-4">Quick Action</h3>
               <div className="grid grid-cols-2 gap-4">
-                <div className="bg-[#f0eaff] py-4 rounded-2xl flex flex-col items-center justify-center gap-2 cursor-pointer transition-transform hover:scale-105 border border-[#e8dffd]">
+                <div onClick={() => setIsModalOpen(true)} className="bg-[#f0eaff] py-4 rounded-2xl flex flex-col items-center justify-center gap-2 cursor-pointer transition-transform hover:scale-105 border border-[#e8dffd]">
                   <i className="fas fa-file-invoice text-xl text-[#8477e4]"></i>
                   <span className="text-[10px] font-bold text-[#8477e4]">Catat Transaksi</span>
                 </div>
@@ -666,10 +682,13 @@ const Beranda = () => {
               <AnimatedProgressBar value={60} maxValue={100} color="#8477e4" />
               <p className="text-[9px] font-bold text-gray-600 mt-2 text-left">60% Menuju mimpi kamu!</p>
             </div>
-
           </div>
         </div>
       </div>
+      <TransactionModal 
+        isOpen={isModalOpen} 
+        onClose={() => setIsModalOpen(false)} 
+      />
     </div>
   );
 };
