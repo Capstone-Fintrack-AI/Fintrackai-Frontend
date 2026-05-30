@@ -71,7 +71,7 @@ const Beranda = () => {
       try {
 
         const response = await fetch(
-          `http://127.0.0.1:8080/pengeluaran/total/${userId}`
+          `https://fintrackai-backend-1yz0.onrender.com/pengeluaran/total/${userId}`
         );
 
         const data = await response.json();
