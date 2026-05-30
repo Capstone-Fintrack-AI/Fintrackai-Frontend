@@ -105,7 +105,7 @@ const Beranda = () => {
   const [activeMenu, setActiveMenu] = useState("Beranda");
 
   return (
-    <div className="min-h-screen bg-[#f8f6ff] font-poppins relative overflow-hidden flex selection:bg-[#8477e4]/20">
+    <div className="min-screen bg-[#f8f6ff] font-poppins relative overflow-hidden flex selection:bg-[#8477e4]/20">
 
       {/* =========================================
           BACKGROUND TEMA LANDING PAGE
@@ -239,7 +239,7 @@ const Beranda = () => {
       {/* =========================================
           2. MAIN CONTENT (KANAN)
       ========================================= */}
-      <div className="flex-1 p-8 md:p-10 z-10 relative overflow-y-auto h-screen">
+      <div className="flex-1 p-8 md:p-10 z-10 relative overflow-y-auto h-full">
 
         {/* HEADER */}
         <header className="flex justify-between items-center mb-8">
