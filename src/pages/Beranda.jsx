@@ -42,7 +42,7 @@ const Beranda = () => {
       try {
 
         const response = await fetch(
-          `http://localhost:8080/pemasukan/user/${userId}`
+          `https://fintrackai-backend-1yz0.onrender.com/pemasukan/user/${userId}`
         );
 
         const result = await response.json();
