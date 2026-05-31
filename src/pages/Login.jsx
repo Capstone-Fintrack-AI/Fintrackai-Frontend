@@ -1,11 +1,11 @@
-import React, { useState } from 'react';
-import { useNavigate, Link } from 'react-router-dom';
+import React, { useState } from "react";
+import { useNavigate, Link } from "react-router-dom";
 
 const Login = () => {
   const navigate = useNavigate();
   const [showPassword, setShowPassword] = useState(false);
-  const [email, setEmail] = useState('');
-  const [password, setPassword] = useState('');
+  const [email, setEmail] = useState("");
+  const [password, setPassword] = useState("");
   const [isLoading, setIsLoading] = useState(false);
   const [showSuccess, setShowSuccess] = useState(false);
 
@@ -83,6 +83,7 @@ const Login = () => {
     setIsLoading(true);
 
     try {
+
       console.log("Mulai login...");
 
       const response = await fetch(
@@ -96,7 +97,7 @@ const Login = () => {
             email,
             password,
           }),
-        }
+        },
       );
 
       console.log("Status:", response.status);
@@ -125,7 +126,7 @@ const Login = () => {
             id: data.id,
             fullname: data.fullname,
             email: data.email,
-          })
+          }),
         );
 
         setIsLoading(false);
@@ -143,13 +144,13 @@ const Login = () => {
 
       console.error("LOGIN ERROR:", error);
 
+
       alert(`Error: ${error.message}`);
     }
   };
 
   return (
     <div className="flex items-center justify-center min-h-screen p-4 md:p-8 font-poppins selection:bg-[#8477e4] selection:text-white overflow-hidden relative">
-
       {/* --- INJECT CUSTOM CSS (BUBBLE & INPUT) --- */}
       <style>{`
         @keyframes float-bubble {
@@ -235,15 +236,31 @@ const Login = () => {
 
       {/* --- FLOATING IMAGES BUBBLES --- */}
       <div className="fixed inset-0 overflow-hidden pointer-events-none -z-10 flex items-center justify-center">
-        <img src="/gambar/bubble.png" className="absolute top-[-10%] left-[-5%] w-[400px] opacity-50 animate-bubble-img" alt="" />
-        <img src="/gambar/bubble.png" className="absolute top-[40%] right-[-10%] w-[300px] opacity-40 animate-bubble-img delay-2000" alt="" />
-        <img src="/gambar/bubble.png" className="absolute bottom-[-10%] left-[10%] w-[350px] opacity-30 animate-bubble-img delay-4000" alt="" />
-        <img src="/gambar/bubble.png" className="absolute w-[600px] opacity-70 animate-bubble-img" alt="" />
+        <img
+          src="/gambar/bubble.png"
+          className="absolute top-[-10%] left-[-5%] w-[400px] opacity-50 animate-bubble-img"
+          alt=""
+        />
+        <img
+          src="/gambar/bubble.png"
+          className="absolute top-[40%] right-[-10%] w-[300px] opacity-40 animate-bubble-img delay-2000"
+          alt=""
+        />
+        <img
+          src="/gambar/bubble.png"
+          className="absolute bottom-[-10%] left-[10%] w-[350px] opacity-30 animate-bubble-img delay-4000"
+          alt=""
+        />
+        <img
+          src="/gambar/bubble.png"
+          className="absolute w-[600px] opacity-70 animate-bubble-img"
+          alt=""
+        />
       </div>
 
       {/* --- BACK BUTTON --- */}
       <button
-        onClick={() => navigate('/')}
+        onClick={() => navigate("/")}
         className="absolute top-6 left-6 md:top-10 md:left-10 flex items-center gap-3 text-gray-500 hover:text-[#8477e4] transition-all z-50 group"
       >
         <div className="w-10 h-10 bg-white/40 backdrop-blur-md rounded-full flex items-center justify-center border border-white/60 shadow-sm group-hover:shadow-md group-hover:scale-105 transition-all">
@@ -254,26 +271,38 @@ const Login = () => {
 
       {/* --- MAIN CARD --- */}
       <div className="flex flex-col md:flex-row w-full max-w-[1000px] bg-white/30 backdrop-blur-xl border border-white/50 rounded-[30px] overflow-hidden shadow-[0_8px_32px_0_rgba(31,38,135,0.15)] relative z-10">
-
         {/* LEFT SIDE (ILLUSTRATION) */}
         <div className="hidden md:flex flex-col w-[45%] bg-gradient-to-br from-[#b59cfc]/80 via-[#dcb0f9]/80 to-[#f4c4f3]/80 p-10 relative">
           <div className="mb-10 flex justify-center">
-            <img src="/gambar/logo.png" alt="FinTrack AI Logo" className="h-20 w-auto object-contain" />
+            <img
+              src="/gambar/logo.png"
+              alt="FinTrack AI Logo"
+              className="h-20 w-auto object-contain"
+            />
           </div>
           <div className="z-10 text-center md:text-left">
-            <h1 className="text-3xl lg:text-4xl font-bold text-white mb-4 leading-tight">Welcome Back!</h1>
+            <h1 className="text-3xl lg:text-4xl font-bold text-white mb-4 leading-tight">
+              Welcome Back!
+            </h1>
             <p className="text-white/90 text-sm lg:text-base leading-relaxed max-w-[90%]">
-              Lanjutkan perjalanan finansialmu. Pantau, analisis, dan raih target keuanganmu bersama AI.
+              Lanjutkan perjalanan finansialmu. Pantau, analisis, dan raih
+              target keuanganmu bersama AI.
             </p>
           </div>
           <div className="mt-auto flex justify-center pt-8">
-            <img src="/gambar/gambarregis.png" alt="3D Illustration" className="w-[90%] object-contain" />
+            <img
+              src="/gambar/gambarregis.png"
+              alt="3D Illustration"
+              className="w-[90%] object-contain"
+            />
           </div>
         </div>
 
         {/* RIGHT SIDE (FORM) */}
         <div className="w-full md:w-[55%] p-10 lg:p-14 flex flex-col justify-center bg-white/40">
-          <h2 className="text-2xl font-bold text-gray-900 mb-10">Sign In to FinTrack</h2>
+          <h2 className="text-2xl font-bold text-gray-900 mb-10">
+            Sign In to FinTrack
+          </h2>
 
           <form onSubmit={handleLogin} className="space-y-8">
             <div>
@@ -302,17 +331,31 @@ const Login = () => {
                   onClick={() => setShowPassword(!showPassword)}
                   className="absolute right-0 top-1/2 -translate-y-1/2 text-gray-400 hover:text-gray-600 focus:outline-none"
                 >
-                  <i className={`far ${showPassword ? 'fa-eye' : 'fa-eye-slash'}`}></i>
+                  <i
+                    className={`far ${showPassword ? "fa-eye" : "fa-eye-slash"}`}
+                  ></i>
                 </button>
               </div>
               <div className="flex justify-end mt-3">
-                <a href="#" className="text-xs text-[#8477e4] hover:underline font-bold">Forgot Password?</a>
+                <a
+                  href="#"
+                  className="text-xs text-[#8477e4] hover:underline font-bold"
+                >
+                  Forgot Password?
+                </a>
               </div>
             </div>
 
             <div className="flex items-center gap-3 pt-2">
-              <input type="checkbox" id="remember" className="accent-[#3b82f6] w-4 h-4 cursor-pointer" />
-              <label htmlFor="remember" className="text-xs text-gray-500 font-medium cursor-pointer">
+              <input
+                type="checkbox"
+                id="remember"
+                className="accent-[#3b82f6] w-4 h-4 cursor-pointer"
+              />
+              <label
+                htmlFor="remember"
+                className="text-xs text-gray-500 font-medium cursor-pointer"
+              >
                 Remember me for 30 days
               </label>
             </div>
@@ -327,19 +370,30 @@ const Login = () => {
 
           <div className="flex items-center my-8">
             <div className="flex-grow border-t border-gray-300"></div>
-            <span className="px-4 text-xs font-semibold text-gray-400 uppercase tracking-wider">Or Sign In With</span>
+            <span className="px-4 text-xs font-semibold text-gray-400 uppercase tracking-wider">
+              Or Sign In With
+            </span>
             <div className="flex-grow border-t border-gray-300"></div>
           </div>
 
           <div className="flex justify-center mb-8">
             <button className="w-12 h-12 rounded-full border border-gray-200 shadow-sm flex items-center justify-center hover:shadow-md hover:bg-gray-50 transition-all bg-white/60">
-              <img src="https://www.svgrepo.com/show/475656/google-color.svg" alt="Google" className="w-5 h-5" />
+              <img
+                src="https://www.svgrepo.com/show/475656/google-color.svg"
+                alt="Google"
+                className="w-5 h-5"
+              />
             </button>
           </div>
 
           <p className="text-center text-xs text-gray-500 font-medium">
             Don't have an account?
-            <Link to="/register" className="text-[#8477e4] font-bold hover:underline ml-1">Sign Up</Link>
+            <Link
+              to="/register"
+              className="text-[#8477e4] font-bold hover:underline ml-1"
+            >
+              Sign Up
+            </Link>
           </p>
         </div>
       </div>
@@ -347,9 +401,7 @@ const Login = () => {
       {/* ================= LOADING MODAL ================= */}
       {isLoading && (
         <div className="fixed inset-0 bg-black/30 backdrop-blur-sm flex items-center justify-center z-[9999]">
-
           <div className="bg-white rounded-3xl px-10 py-8 shadow-2xl flex flex-col items-center animate-fadeIn">
-
             {/* Spinner */}
             <div className="w-16 h-16 border-[6px] border-[#e9ddff] border-t-[#8477e4] rounded-full animate-spin mb-5"></div>
 
@@ -360,7 +412,6 @@ const Login = () => {
             <p className="text-sm text-gray-500 text-center leading-relaxed">
               Sedang mempersiapkan dashboard keuanganmu ✨
             </p>
-
           </div>
         </div>
       )}
@@ -368,23 +419,18 @@ const Login = () => {
       {/* ================= SUCCESS NOTIFICATION ================= */}
       {showSuccess && (
         <div className="fixed top-6 right-6 z-[9999] animate-slideIn">
-
           <div className="bg-green-500 text-white px-6 py-4 rounded-2xl shadow-2xl flex items-center gap-3">
-
             <div className="w-9 h-9 bg-white/20 rounded-full flex items-center justify-center">
               <i className="fas fa-check"></i>
             </div>
 
             <div>
-              <h3 className="font-bold text-sm">
-                Login Berhasil
-              </h3>
+              <h3 className="font-bold text-sm">Login Berhasil</h3>
 
               <p className="text-xs text-white/90">
                 Selamat datang kembali di FinTrack AI 🚀
               </p>
             </div>
-
           </div>
         </div>
       )}
