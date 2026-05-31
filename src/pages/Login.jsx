@@ -9,39 +9,118 @@ const Login = () => {
   const [isLoading, setIsLoading] = useState(false);
   const [showSuccess, setShowSuccess] = useState(false);
 
+  // const handleLogin = async (e) => {
+  //   e.preventDefault();
+
+  //   // munculkan modal loading
+  //   setIsLoading(true);
+
+  //   try {
+
+  //     const response = await fetch('https://fintrackai-backend-1yz0.onrender.com/auth/login', {
+  //       method: 'POST',
+  //       headers: {
+  //         'Content-Type': 'application/json',
+  //       },
+  //       body: JSON.stringify({
+  //         email,
+  //         password,
+  //       }),
+  //     });
+
+  //     const data = await response.json();
+
+  //     console.log(data);
+
+  //     if (response.ok) {
+
+  //       // Simpan token
+  //       if (data.token) {
+  //         localStorage.setItem('token', data.token);
+  //       }
+
+  //       // Simpan user
+  //       localStorage.setItem(
+  //         'user',
+  //         JSON.stringify({
+  //           id: data.id,
+  //           fullname: data.fullname,
+  //           email: data.email,
+  //         })
+  //       );
+
+  //       // loading selesai
+  //       setIsLoading(false);
+
+  //       // tampilkan notif sukses
+  //       setShowSuccess(true);
+
+  //       // redirect delay
+  //       setTimeout(() => {
+  //         navigate('/beranda');
+  //       }, 1800);
+
+  //     } else {
+
+  //       setIsLoading(false);
+
+  //       alert(data.message || 'Email atau password salah');
+  //     }
+
+  //   } catch (error) {
+
+  //     setIsLoading(false);
+
+  //     console.error(error);
+
+  //     alert('Terjadi kesalahan saat koneksi server');
+  //   }
+  // };
+
   const handleLogin = async (e) => {
     e.preventDefault();
 
-    // munculkan modal loading
     setIsLoading(true);
 
     try {
+      console.log("Mulai login...");
 
-      const response = await fetch('https://fintrackai-backend-1yz0.onrender.com/auth/login', {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-        },
-        body: JSON.stringify({
-          email,
-          password,
-        }),
-      });
+      const response = await fetch(
+        "https://fintrackai-backend-1yz0.onrender.com/auth/login",
+        {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify({
+            email,
+            password,
+          }),
+        }
+      );
 
-      const data = await response.json();
+      console.log("Status:", response.status);
 
-      console.log(data);
+      const text = await response.text();
+
+      console.log("Response Text:", text);
+
+      let data = {};
+
+      try {
+        data = JSON.parse(text);
+      } catch (err) {
+        console.error("Response bukan JSON:", err);
+        throw new Error("Server mengembalikan response tidak valid");
+      }
 
       if (response.ok) {
-
-        // Simpan token
         if (data.token) {
-          localStorage.setItem('token', data.token);
+          localStorage.setItem("token", data.token);
         }
 
-        // Simpan user
         localStorage.setItem(
-          'user',
+          "user",
           JSON.stringify({
             id: data.id,
             fullname: data.fullname,
@@ -49,31 +128,22 @@ const Login = () => {
           })
         );
 
-        // loading selesai
         setIsLoading(false);
-
-        // tampilkan notif sukses
         setShowSuccess(true);
 
-        // redirect delay
         setTimeout(() => {
-          navigate('/beranda');
+          navigate("/beranda");
         }, 1800);
-
       } else {
-
         setIsLoading(false);
-
-        alert(data.message || 'Email atau password salah');
+        alert(data.message || "Email atau password salah");
       }
-
     } catch (error) {
-
       setIsLoading(false);
 
-      console.error(error);
+      console.error("LOGIN ERROR:", error);
 
-      alert('Terjadi kesalahan saat koneksi server');
+      alert(`Error: ${error.message}`);
     }
   };
 
