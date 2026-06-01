@@ -5,6 +5,7 @@ import Login from "./pages/Login";
 import Register from "./pages/Register";
 import Beranda from "./pages/Beranda";
 import Transaksi from "./pages/Transaksi";
+import Budget from "./pages/Budget";
 import Pengaturan from "./pages/Pengaturan";
 
 const App = () => {
@@ -16,6 +17,7 @@ const App = () => {
         <Route path="/register" element={<Register />} />
         <Route path="/beranda" element={<Beranda />} />
         <Route path="/transaksi" element={<Transaksi />} />
+        <Route path="/budget" element={<Budget />} />
         <Route path="/pengaturan" element={<Pengaturan />} />
       </Routes>
     </Router>
