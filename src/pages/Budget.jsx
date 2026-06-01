@@ -222,7 +222,7 @@ const Budget = () => {
       </div>
 
       {/* DASHBOARD CONTAINER */}
-      <div className="flex-1 p-6 space-y-6 z-10 relative overflow-y-auto max-h-screen">
+      <div className="flex-1 overflow-y-auto p-6 md:p-8 space-y-6 z-10 relative">
         {/* WRAPPER HEADER UTAMA */}
         <div className="flex justify-between items-center">
           {/* KIRI: HEADER TITLE */}
@@ -248,16 +248,18 @@ const Budget = () => {
         {/* HERO BANNER SMART BUDGETING */}
         <div className="bg-[#EEE8FD] rounded-2xl border border-[#e9dff9] p-4 flex flex-row items-center justify-between gap-6 w-full h-[160px] shadow-sm relative overflow-hidden">
           <div className="flex-1 min-w-0 z-10">
-            <h2 className="text-xl font-extrabold text-[#453c8a] mb-1">
+            {/* JUDUL: Menggunakan warna utama #3e3a94 dan ukuran text-lg yang ramping */}
+            <h2 className="text-lg font-extrabold text-[#3e3a94] mb-1.5 tracking-tight">
               Smart Budgeting 50-30-20
             </h2>
-            <p className="text-[13px] text-[#6b61b7] leading-tight font-medium">
-              FinTrack AI otomatis mengalokasikan pemasukanmu ke <br />
-              <span className="font-bold text-[#453c8a]">
+
+            {/* DESKRIPSI: Menggunakan text-xs, warna #685fbe, dan max-w agar teks membungkus rapi */}
+            <p className="text-xs font-medium text-[#685fbe] leading-relaxed max-w-sm">
+              FinTrack AI otomatis mengalokasikan pemasukanmu ke{" "}
+              <span className="font-extrabold text-[#3e3a94]">
                 Kebutuhan, Keinginan, dan Tabungan
               </span>{" "}
-              agar <br />
-              keuanganmu lebih sehat dan seimbang.
+              agar keuanganmu lebih sehat dan seimbang.
             </p>
           </div>
           <div className="absolute inset-y-0 left-1/2 -translate-x-1/2 h-full flex items-center justify-center">
