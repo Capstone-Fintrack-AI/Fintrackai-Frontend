@@ -405,7 +405,7 @@ const Beranda = () => {
                     Rp {(totalPemasukan || 0).toLocaleString("id-ID")}
                   </p>
                   <p className="text-[10px] text-gray-500 font-medium max-w-[150px] leading-relaxed">
-                    Total uang masuk bulan ini
+                    Total uang masuk
                   </p>
                 </div>
 
@@ -427,7 +427,7 @@ const Beranda = () => {
                     Rp {totalPengeluaran.toLocaleString("id-ID")}
                   </p>
                   <p className="text-[10px] text-gray-500 font-medium max-w-[150px] leading-relaxed">
-                    Total uang keluar bulan ini
+                    Total uang keluar
                   </p>
                 </div>
               </div>
