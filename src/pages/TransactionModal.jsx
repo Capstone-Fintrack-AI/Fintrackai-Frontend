@@ -1,4 +1,5 @@
 import React, { useState, useEffect } from "react";
+import axios from "axios";
 
 const TransactionModal = ({ isOpen, onClose, onSave }) => {
   const [type, setType] = useState("pengeluaran");
@@ -6,8 +7,9 @@ const TransactionModal = ({ isOpen, onClose, onSave }) => {
   const [date, setDate] = useState("");
   const [time, setTime] = useState("");
   const [kategori, setKategori] = useState("Kebutuhan");
-  const [detail, setDetail] = useState("");
-  const [catatan, setCatatan] = useState("");
+  const [namaTransaksi, setNamaTransaksi] = useState("");
+  const [sumberPemasukan, setSumberPemasukan] = useState("");
+  const [loading, setLoading] = useState(false);
 
   useEffect(() => {
     if (isOpen) {
@@ -31,23 +33,101 @@ const TransactionModal = ({ isOpen, onClose, onSave }) => {
     };
   }, [isOpen]);
 
-  const handleSimpan = () => {
-    const numericAmount = parseInt(amount.replace(/[^0-9]/g, ""));
+  const handleSimpan = async () => {
+    try {
+      setLoading(true);
+      if (!namaTransaksi.trim()) {
+        alert(
+          type === "pemasukan"
+            ? "Nama pemasukan wajib diisi"
+            : "Nama pengeluaran wajib diisi",
+        );
+        return;
+      }
 
-    const dataBaru = {
-      tgl: date,
-      kat: type === "pemasukan" ? "Pemasukan" : kategori,
-      desc: detail || "Transaksi Baru",
-      nominal: type === "pengeluaran" ? -numericAmount : numericAmount,
-      icon: type === "pemasukan" ? "fa-arrow-down" : "fa-shopping-cart",
-      color: type === "pengeluaran" ? "#F44336" : "#4caf50",
-      bg: type === "pengeluaran" ? "#ffebee" : "#e8f5e9",
-    };
+      if (!amount) {
+        alert("Nominal wajib diisi");
+        return;
+      }
 
-    if (onSave) {
-      onSave(dataBaru); // Mengirim data ke Transaksi.jsx
+      if (type === "pemasukan" && !sumberPemasukan) {
+        alert("Pilih sumber pemasukan");
+        return;
+      }
+
+      const numericAmount = parseInt(
+        amount.replace(/[^0-9]/g, ""),
+      );
+
+      const user = JSON.parse(
+        localStorage.getItem("user") || "{}"
+      );
+
+      const userId = user.id;
+
+      const tanggal = new Date().toISOString().split("T")[0];
+
+      // =========================
+      // TAMBAH PEMASUKAN
+      // =========================
+      if (type === "pemasukan") {
+        const payload = {
+          user_id: Number(userId),
+          nama_pemasukan: namaTransaksi,
+          sumber_pemasukan: sumberPemasukan,
+          jumlah: numericAmount,
+          tanggal,
+        };
+
+        const response = await axios.post(
+          "https://fintrackai-backend-1yz0.onrender.com/pemasukan",
+          payload,
+        );
+
+        console.log("Pemasukan berhasil", response.data);
+      }
+
+      // =========================
+      // TAMBAH PENGELUARAN
+      // =========================
+      else {
+        const payload = {
+          user_id: Number(userId),
+          nama_pengeluaran: namaTransaksi,
+          kategori,
+          jumlah: numericAmount,
+          tanggal,
+        };
+
+        const response = await axios.post(
+          "https://fintrackai-backend-1yz0.onrender.com/pengeluaran/create",
+          payload,
+        );
+
+        console.log("Pengeluaran berhasil", response.data);
+      }
+
+      // reset form
+      setAmount("");
+      setNamaTransaksi("");
+      setSumberPemasukan("");
+      setKategori("Kebutuhan");
+
+      if (onSave) {
+        onSave();
+      }
+
+      onClose();
+    } catch (error) {
+      console.error(error);
+
+      alert(
+        error?.response?.data?.message ||
+        "Terjadi kesalahan saat menyimpan transaksi",
+      );
+    } finally {
+      setLoading(false);
     }
-    onClose();
   };
 
   const handleAmountChange = (e) => {
@@ -93,16 +173,43 @@ const TransactionModal = ({ isOpen, onClose, onSave }) => {
           <div className="flex bg-gray-50 p-1 rounded-2xl">
             <button
               onClick={() => setType("pengeluaran")}
-              className={`flex-1 py-2 rounded-xl text-xs font-bold transition-all ${type === "pengeluaran" ? "bg-[#F44336] text-white shadow-md" : "text-gray-400"}`}
+              className={`flex-1 py-2 rounded-xl text-xs font-bold transition-all ${type === "pengeluaran"
+                ? "bg-[#F44336] text-white shadow-md"
+                : "text-gray-400"
+                }`}
             >
               Pengeluaran
             </button>
             <button
               onClick={() => setType("pemasukan")}
-              className={`flex-1 py-2 rounded-xl text-xs font-bold transition-all ${type === "pemasukan" ? "bg-[#4caf50] text-white shadow-md" : "text-gray-400"}`}
+              className={`flex-1 py-2 rounded-xl text-xs font-bold transition-all ${type === "pemasukan"
+                ? "bg-[#4caf50] text-white shadow-md"
+                : "text-gray-400"
+                }`}
             >
               Pemasukan
             </button>
+          </div>
+
+          {/* Nama Transaksi */}
+          <div>
+            <label className="block text-[11px] font-extrabold text-gray-400 uppercase tracking-widest mb-2">
+              {type === "pemasukan"
+                ? "Nama Pemasukan"
+                : "Nama Pengeluaran"}
+            </label>
+
+            <input
+              type="text"
+              value={namaTransaksi}
+              onChange={(e) => setNamaTransaksi(e.target.value)}
+              placeholder={
+                type === "pemasukan"
+                  ? "Contoh: Gaji Bulanan"
+                  : "Contoh: Belanja Bulanan"
+              }
+              className="w-full p-3 bg-gray-50 rounded-2xl text-xs font-medium text-gray-700 outline-none focus:ring-2 focus:ring-[#8477e4]/20"
+            />
           </div>
 
           {/* Nominal */}
@@ -110,34 +217,46 @@ const TransactionModal = ({ isOpen, onClose, onSave }) => {
             <label className="block text-[11px] font-extrabold text-gray-400 uppercase tracking-widest mb-2">
               Nominal Uang
             </label>
+
             <div className="flex items-center border-2 border-gray-100 rounded-2xl px-4 py-3 focus-within:border-[#8477e4] transition-all">
               <span
-                className={`text-xl font-black mr-2 ${type === "pengeluaran" ? "text-[#F44336]" : "text-[#4caf50]"}`}
+                className={`text-xl font-black mr-2 ${type === "pengeluaran"
+                  ? "text-[#F44336]"
+                  : "text-[#4caf50]"
+                  }`}
               >
                 Rp
               </span>
+
               <input
                 type="text"
                 value={amount}
                 onChange={handleAmountChange}
                 placeholder="0"
-                className="w-full text-xl font-bold outline-none text-gray-900"
+                className={`w-full text-xl font-bold outline-none bg-transparent placeholder:font-bold ${type === "pengeluaran"
+                  ? "text-[#F44336] placeholder:text-[#F44336]/40"
+                  : "text-[#4CAF50] placeholder:text-[#4CAF50]/40"
+                  }`}
               />
             </div>
           </div>
 
-          {/* Kategori (Hanya Pengeluaran) */}
+          {/* Kategori Alokasi (Khusus Pengeluaran) */}
           {type === "pengeluaran" && (
             <div>
               <label className="block text-[11px] font-extrabold text-gray-400 uppercase tracking-widest mb-2">
                 Kategori Alokasi
               </label>
-              <div className="grid grid-cols-3 gap-2">
-                {["Kebutuhan", "Keinginan", "Tabungan"].map((item) => (
+
+              <div className="grid grid-cols-2 gap-2">
+                {["Kebutuhan", "Keinginan"].map((item) => (
                   <button
                     key={item}
                     onClick={() => setKategori(item)}
-                    className={`py-2 rounded-xl text-[10px] font-bold border-2 transition-all ${kategori === item ? "border-[#8477e4] bg-[#f0eaff] text-[#8477e4]" : "border-gray-100 text-gray-400"}`}
+                    className={`py-2 rounded-xl text-[10px] font-bold border-2 transition-all ${kategori === item
+                      ? "border-[#8477e4] bg-[#f0eaff] text-[#8477e4]"
+                      : "border-gray-100 text-gray-400"
+                      }`}
                   >
                     {item}
                   </button>
@@ -146,19 +265,28 @@ const TransactionModal = ({ isOpen, onClose, onSave }) => {
             </div>
           )}
 
-          {/* Detail Kategori (Bebas) */}
-          <div>
-            <label className="block text-[11px] font-extrabold text-gray-400 uppercase tracking-widest mb-2">
-              Detail Kategori
-            </label>
-            <input
-              type="text"
-              value={detail}
-              onChange={(e) => setDetail(e.target.value)}
-              placeholder="Contoh: Belanja Bulanan"
-              className="w-full p-3 bg-gray-50 rounded-2xl text-xs font-medium text-gray-700 outline-none focus:ring-2 focus:ring-[#8477e4]/20"
-            />
-          </div>
+          {/* Sumber Pemasukan (Khusus Pemasukan) */}
+          {type === "pemasukan" && (
+            <div>
+              <label className="block text-[11px] font-extrabold text-gray-400 uppercase tracking-widest mb-2">
+                Sumber Pemasukan
+              </label>
+
+              <select
+                value={sumberPemasukan}
+                onChange={(e) => setSumberPemasukan(e.target.value)}
+                className="w-full p-3 bg-gray-50 rounded-2xl text-xs font-medium text-gray-700 outline-none focus:ring-2 focus:ring-[#8477e4]/20"
+              >
+                <option value="">Pilih Sumber Pemasukan</option>
+                <option value="Gaji">Gaji</option>
+                <option value="Freelance">Freelance</option>
+                <option value="Bisnis">Bisnis</option>
+                <option value="Investasi">Investasi</option>
+                <option value="Bonus">Bonus</option>
+                <option value="Lainnya">Lainnya</option>
+              </select>
+            </div>
+          )}
 
           {/* Tanggal & Jam */}
           <div className="grid grid-cols-2 gap-3">
@@ -166,16 +294,19 @@ const TransactionModal = ({ isOpen, onClose, onSave }) => {
               <label className="block text-[11px] font-extrabold text-gray-400 uppercase tracking-widest mb-2">
                 Tanggal
               </label>
+
               <input
                 disabled
                 value={date}
                 className="w-full p-3 bg-gray-50 rounded-2xl text-xs font-bold text-gray-500 border border-gray-100"
               />
             </div>
+
             <div>
               <label className="block text-[11px] font-extrabold text-gray-400 uppercase tracking-widest mb-2">
                 Jam
               </label>
+
               <input
                 disabled
                 value={time}
@@ -183,29 +314,16 @@ const TransactionModal = ({ isOpen, onClose, onSave }) => {
               />
             </div>
           </div>
-
-          {/* Catatan */}
-          <div>
-            <label className="block text-[11px] font-extrabold text-gray-400 uppercase tracking-widest mb-2">
-              Catatan
-            </label>
-            <textarea
-              rows="2"
-              value={catatan}
-              onChange={(e) => setCatatan(e.target.value)}
-              className="w-full p-3 bg-gray-50 rounded-2xl text-xs font-medium text-gray-700 outline-none focus:ring-2 focus:ring-[#8477e4]/20"
-              placeholder="Tulis catatan..."
-            />
-          </div>
         </div>
 
         {/* Footer */}
         <div className="p-6 border-t border-gray-50 shrink-0">
           <button
             onClick={handleSimpan}
-            className="w-full py-4 bg-[#8477e4] text-white rounded-2xl font-black text-xs shadow-[0_8px_16px_rgba(132,119,228,0.3)] hover:bg-[#7466d3] transition-all"
+            disabled={loading}
+            className="w-full py-4 bg-[#8477e4] text-white rounded-2xl font-black text-xs shadow-[0_8px_16px_rgba(132,119,228,0.3)] hover:bg-[#7466d3] transition-all disabled:opacity-50"
           >
-            Simpan Transaksi
+            {loading ? "Menyimpan..." : "Simpan Transaksi"}
           </button>
         </div>
       </div>

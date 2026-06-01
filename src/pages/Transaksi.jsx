@@ -29,6 +29,7 @@ const Transaksi = () => {
   const [isScanModalOpen, setIsScanModalOpen] = useState(false);
   // Tambahkan state ini agar tidak error di bagian pagination
   const [activePage, setActivePage] = useState(1);
+  const [notif, setNotif] = useState(null);
 
   const location = useLocation();
   const navigate = useNavigate();
@@ -39,19 +40,26 @@ const Transaksi = () => {
   };
 
   const dataTampil = dataTransaksi.filter((item) => {
-    const matchesSearch = item.desc
+    const desc = item?.desc || "";
+    const nominal = Number(item?.nominal || 0);
+    const kategori = item?.kat || "";
+
+    const matchesSearch = desc
       .toLowerCase()
       .includes(searchTerm.toLowerCase());
+
     const matchesType =
       activeFilter === "Semua"
         ? true
         : activeFilter === "Pemasukan"
-          ? item.nominal > 0
-          : item.nominal < 0;
+          ? nominal > 0
+          : nominal < 0;
+
     const matchesCategory =
       activeCategoryFilter === "Semua"
         ? true
-        : item.kat === activeCategoryFilter;
+        : kategori === activeCategoryFilter;
+
     return matchesSearch && matchesType && matchesCategory;
   });
 
@@ -65,6 +73,31 @@ const Transaksi = () => {
     }
   }, [location]);
 
+  {
+    notif && (
+      <div className="fixed top-6 right-6 z-[9999] animate-slideIn">
+        <div
+          className={`px-6 py-4 rounded-2xl shadow-xl text-white flex items-center gap-3 ${notif.type === "Pemasukan"
+              ? "bg-green-500"
+              : "bg-red-500"
+            }`}
+        >
+          <i className="fas fa-check-circle text-xl"></i>
+
+          <div>
+            <h3 className="font-bold">
+              {notif.type} Berhasil
+            </h3>
+
+            <p className="text-xs">
+              {notif.nama} berhasil ditambahkan
+            </p>
+          </div>
+        </div>
+      </div>
+    );
+  }
+
   return (
     <div className="h-screen bg-[#f8f6ff] font-poppins flex overflow-hidden">
       {/* MODAL */}
@@ -73,7 +106,26 @@ const Transaksi = () => {
           isOpen={isModalOpen}
           onClose={() => setIsModalOpen(false)}
           onSave={(newData) => {
-            setDataTransaksi((prev) => [...prev, newData]);
+            const transaksiBaru = {
+              tgl: new Date().toLocaleDateString("id-ID"),
+              kat: newData.kat,
+              desc: newData.desc,
+              nominal: newData.nominal,
+            };
+
+            setDataTransaksi((prev) => [transaksiBaru, ...prev]);
+
+            setNotif({
+              type: transaksiBaru.nominal > 0
+                ? "Pemasukan"
+                : "Pengeluaran",
+              nama: transaksiBaru.desc,
+            });
+
+            setTimeout(() => {
+              setNotif(null);
+            }, 3000);
+
             setIsModalOpen(false);
           }}
         />
@@ -181,11 +233,10 @@ const Transaksi = () => {
               onClick={() => {
                 navigate(item.path);
               }}
-              className={`relative z-10 flex items-center ${isSidebarOpen ? "gap-4 px-3.5" : "justify-center px-0"} cursor-pointer h-[52px] rounded-2xl transition-all duration-300 ${
-                activeMenu === item.n
-                  ? "text-[#8477e4] font-bold"
-                  : "text-gray-400 hover:text-gray-900"
-              }`}
+              className={`relative z-10 flex items-center ${isSidebarOpen ? "gap-4 px-3.5" : "justify-center px-0"} cursor-pointer h-[52px] rounded-2xl transition-all duration-300 ${activeMenu === item.n
+                ? "text-[#8477e4] font-bold"
+                : "text-gray-400 hover:text-gray-900"
+                }`}
             >
               <img
                 src={item.img}
@@ -300,20 +351,18 @@ const Transaksi = () => {
                         activeCategoryFilter === kat ? "Semua" : kat,
                       )
                     }
-                    className={`flex items-center gap-2 text-[10px] font-bold px-3 py-1.5 rounded-lg border transition-all ${
-                      activeCategoryFilter === kat
-                        ? "bg-[#f0eaff] text-[#8477e4] border-[#8477e4]"
-                        : "text-gray-400 bg-gray-50 border-gray-100"
-                    }`}
+                    className={`flex items-center gap-2 text-[10px] font-bold px-3 py-1.5 rounded-lg border transition-all ${activeCategoryFilter === kat
+                      ? "bg-[#f0eaff] text-[#8477e4] border-[#8477e4]"
+                      : "text-gray-400 bg-gray-50 border-gray-100"
+                      }`}
                   >
                     <div
-                      className={`w-2 h-2 rounded-full ${
-                        kat === "Kebutuhan"
-                          ? "bg-[#8477e4]"
-                          : kat === "Keinginan"
-                            ? "bg-[#FCD166]"
-                            : "bg-[#F44336]"
-                      }`}
+                      className={`w-2 h-2 rounded-full ${kat === "Kebutuhan"
+                        ? "bg-[#8477e4]"
+                        : kat === "Keinginan"
+                          ? "bg-[#FCD166]"
+                          : "bg-[#F44336]"
+                        }`}
                     ></div>
                     {kat}
                   </button>
@@ -476,7 +525,10 @@ const Transaksi = () => {
           </div>
         </main>
       </div>
+
+
     </div>
+
   );
 };
 
