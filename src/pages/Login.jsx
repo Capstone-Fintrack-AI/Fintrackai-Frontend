@@ -9,81 +9,12 @@ const Login = () => {
   const [isLoading, setIsLoading] = useState(false);
   const [showSuccess, setShowSuccess] = useState(false);
 
-  // const handleLogin = async (e) => {
-  //   e.preventDefault();
-
-  //   // munculkan modal loading
-  //   setIsLoading(true);
-
-  //   try {
-
-  //     const response = await fetch('https://fintrackai-backend-1yz0.onrender.com/auth/login', {
-  //       method: 'POST',
-  //       headers: {
-  //         'Content-Type': 'application/json',
-  //       },
-  //       body: JSON.stringify({
-  //         email,
-  //         password,
-  //       }),
-  //     });
-
-  //     const data = await response.json();
-
-  //     console.log(data);
-
-  //     if (response.ok) {
-
-  //       // Simpan token
-  //       if (data.token) {
-  //         localStorage.setItem('token', data.token);
-  //       }
-
-  //       // Simpan user
-  //       localStorage.setItem(
-  //         'user',
-  //         JSON.stringify({
-  //           id: data.id,
-  //           fullname: data.fullname,
-  //           email: data.email,
-  //         })
-  //       );
-
-  //       // loading selesai
-  //       setIsLoading(false);
-
-  //       // tampilkan notif sukses
-  //       setShowSuccess(true);
-
-  //       // redirect delay
-  //       setTimeout(() => {
-  //         navigate('/beranda');
-  //       }, 1800);
-
-  //     } else {
-
-  //       setIsLoading(false);
-
-  //       alert(data.message || 'Email atau password salah');
-  //     }
-
-  //   } catch (error) {
-
-  //     setIsLoading(false);
-
-  //     console.error(error);
-
-  //     alert('Terjadi kesalahan saat koneksi server');
-  //   }
-  // };
-
   const handleLogin = async (e) => {
     e.preventDefault();
 
     setIsLoading(true);
 
     try {
-
       console.log("Mulai login...");
 
       const response = await fetch(
@@ -143,7 +74,6 @@ const Login = () => {
       setIsLoading(false);
 
       console.error("LOGIN ERROR:", error);
-
 
       alert(`Error: ${error.message}`);
     }
@@ -344,20 +274,6 @@ const Login = () => {
                   Forgot Password?
                 </a>
               </div>
-            </div>
-
-            <div className="flex items-center gap-3 pt-2">
-              <input
-                type="checkbox"
-                id="remember"
-                className="accent-[#3b82f6] w-4 h-4 cursor-pointer"
-              />
-              <label
-                htmlFor="remember"
-                className="text-xs text-gray-500 font-medium cursor-pointer"
-              >
-                Remember me for 30 days
-              </label>
             </div>
 
             <button
