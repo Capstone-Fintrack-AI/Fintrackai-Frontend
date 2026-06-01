@@ -194,6 +194,31 @@ const Budget = () => {
             </div>
           ))}
         </nav>
+
+        <div className="border-t border-gray-100 pt-6 space-y-4 font-medium relative z-10 bg-white">
+          <div
+            onClick={() => navigate("/pengaturan")}
+            className={`flex items-center ${isSidebarOpen ? "gap-4 p-3.5" : "justify-center p-0 h-[52px]"} cursor-pointer rounded-2xl ${activeMenu === "Pengaturan" ? "bg-[#f0eaff] text-[#8477e4] font-bold" : "text-gray-400 hover:text-gray-900"} transition-all`}
+          >
+            <img
+              src="/gambar/pengaturan.png"
+              className={`w-6 h-6 object-contain ${activeMenu !== "Pengaturan" ? "grayscale opacity-70" : ""}`}
+              alt="Setting"
+            />
+            {isSidebarOpen && <span className="text-sm">Pengaturan</span>}
+          </div>
+          <div
+            onClick={handleLogout}
+            className={`flex items-center ${isSidebarOpen ? "gap-4 p-3.5" : "justify-center p-0 h-[52px]"} cursor-pointer rounded-2xl text-gray-400 hover:bg-red-50 hover:text-red-500 transition-all`}
+          >
+            <img
+              src="/gambar/logout.png"
+              className="w-6 h-6 object-contain grayscale opacity-70"
+              alt="Logout"
+            />
+            {isSidebarOpen && <span className="text-sm">Logout</span>}
+          </div>
+        </div>
       </div>
 
       {/* DASHBOARD CONTAINER */}
