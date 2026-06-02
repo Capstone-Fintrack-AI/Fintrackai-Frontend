@@ -16,7 +16,10 @@ import {
 } from "recharts";
 
 const Goals = () => {
-  const [goals, setGoals] = useState([]);
+  const [goals, setGoals] = useState([
+    { name: "Laptop", allocation: 2000000, color: "#8b5cf6" },
+    { name: "HP Baru", allocation: 1500000, color: "#f59e0b" },
+  ]);
   const [initialBalance, setInitialBalance] = useState(1000000);
   const [isSidebarOpen, setIsSidebarOpen] = useState(true);
   const [activeMenu, setActiveMenu] = useState("Goals");
@@ -28,13 +31,9 @@ const Goals = () => {
     color: goal.color || "#8b5cf6",
   }));
 
-  // GRAFIK LINE DINAMIS:
-  // Kamu bisa sesuaikan logic-nya sesuai kebutuhan tampilan progres bulananmu
   const lineData = goals.map((goal) => ({
     name: goal.name,
-    laptop: goal.name === "Laptop Asus Vivobook" ? goal.allocation : 0,
-    hp: goal.name === "HP Baru" ? goal.allocation : 0,
-    buku: goal.name === "Buku Kuliah" ? goal.allocation : 0,
+    value: goal.allocation,
   }));
 
   const navigate = useNavigate();
@@ -546,20 +545,23 @@ const Goals = () => {
             <h3 className="font-black text-[#1e1b4b] mb-4">
               Distribusi Dana Goals
             </h3>
-
-            {/* AREA CHART & TOTAL (Wadah utama harus relative agar absolute berfungsi) */}
-            <div className="h-40 w-full flex items-center justify-center relative overflow-hidden">
+            <div className="h-40 w-full min-h-[160px] flex items-center justify-center relative overflow-hidden">
+              {/* AREA CHART & TOTAL (Wadah utama harus relative agar absolute berfungsi) */}
               <ResponsiveContainer width="100%" height="100%">
                 <PieChart>
                   <Pie
-                    data={pieData}
+                    data={pieData.length > 0 ? pieData : [{ value: 1 }]} // Fallback data agar tidak kosong
                     innerRadius={50}
                     outerRadius={70}
                     dataKey="value"
                   >
-                    {pieData.map((entry, index) => (
-                      <Cell key={`cell-${index}`} fill={entry.color} />
-                    ))}
+                    {pieData.length > 0 ? (
+                      pieData.map((entry, index) => (
+                        <Cell key={`cell-${index}`} fill={entry.color} />
+                      ))
+                    ) : (
+                      <Cell fill="#e2e8f0" /> // Warna abu-abu saat data kosong
+                    )}
                   </Pie>
                 </PieChart>
               </ResponsiveContainer>
@@ -607,7 +609,7 @@ const Goals = () => {
           </div>
 
           {/* Progress Goals Line Chart */}
-          <div className="xl:col-span-2 bg-white p-6 rounded-3xl border border-gray-100 shadow-sm flex flex-col relative z-10">
+          <div className="xl:col-span-2 bg-white p-6 rounded-3xl border border-gray-100 shadow-sm flex flex-col relative z-10 w-full min-w-0">
             <div className="flex justify-between items-center mb-6">
               <h3 className="font-black text-[#1e1b4b]">Progress Goals</h3>
               <div className="border border-gray-200 px-3 py-1.5 rounded-lg flex items-center gap-2 text-[11px] font-bold text-gray-600 cursor-pointer">
@@ -616,12 +618,10 @@ const Goals = () => {
               </div>
             </div>
 
-            <div className="flex-1 w-full min-h-[200px] h-[300px] relative">
+            {/* Bungkus ResponsiveContainer dengan div yang memiliki tinggi tetap */}
+            <div className="w-full h-72 min-h-[288px] flex-shrink-0">
               <ResponsiveContainer width="100%" height="100%">
-                <LineChart
-                  data={lineData}
-                  margin={{ top: 5, right: 20, left: 10, bottom: 5 }}
-                >
+                <LineChart data={lineData}>
                   <CartesianGrid
                     strokeDasharray="3 3"
                     vertical={false}
@@ -638,65 +638,24 @@ const Goals = () => {
                     axisLine={false}
                     tickLine={false}
                     tick={{ fontSize: 10, fill: "#94a3b8", fontWeight: 600 }}
-                    tickFormatter={(val) =>
-                      val === 0 ? "Rp 0" : `Rp ${(val / 1000000).toFixed(1)}jt`
-                    }
                   />
                   <Tooltip
-                    formatter={(value) => `Rp ${value.toLocaleString("id-ID")}`}
                     contentStyle={{
                       borderRadius: "12px",
                       border: "none",
                       boxShadow: "0 4px 6px -1px rgb(0 0 0 / 0.1)",
                     }}
                   />
+
                   <Line
                     type="monotone"
-                    dataKey="laptop"
-                    name="Laptop Asus Vivobook"
+                    dataKey="value"
                     stroke="#8b5cf6"
-                    strokeWidth={2}
-                    dot={{ r: 4, strokeWidth: 2, fill: "#fff" }}
-                  />
-                  <Line
-                    type="monotone"
-                    dataKey="hp"
-                    name="HP Baru"
-                    stroke="#f59e0b"
-                    strokeWidth={2}
-                    dot={{ r: 4, strokeWidth: 2, fill: "#fff" }}
-                  />
-                  <Line
-                    type="monotone"
-                    dataKey="buku"
-                    name="Buku Kuliah"
-                    stroke="#10b981"
                     strokeWidth={2}
                     dot={{ r: 4, strokeWidth: 2, fill: "#fff" }}
                   />
                 </LineChart>
               </ResponsiveContainer>
-            </div>
-
-            <div className="flex justify-center gap-6 mt-2">
-              <div className="flex items-center gap-2">
-                <div className="w-4 h-0.5 bg-[#8b5cf6]"></div>
-                <span className="text-[10px] font-bold text-gray-500">
-                  Laptop Asus Vivobook
-                </span>
-              </div>
-              <div className="flex items-center gap-2">
-                <div className="w-4 h-0.5 bg-[#f59e0b]"></div>
-                <span className="text-[10px] font-bold text-gray-500">
-                  HP Baru
-                </span>
-              </div>
-              <div className="flex items-center gap-2">
-                <div className="w-4 h-0.5 bg-[#10b981]"></div>
-                <span className="text-[10px] font-bold text-gray-500">
-                  Buku Kuliah
-                </span>
-              </div>
             </div>
           </div>
         </div>
