@@ -7,6 +7,7 @@ import Beranda from "./pages/Beranda";
 import Transaksi from "./pages/Transaksi";
 import Budget from "./pages/Budget";
 import Goals from "./pages/Goals";
+import AI from "./pages/AI";
 import Pengaturan from "./pages/Pengaturan";
 
 const App = () => {
@@ -20,6 +21,7 @@ const App = () => {
         <Route path="/transaksi" element={<Transaksi />} />
         <Route path="/budget" element={<Budget />} />
         <Route path="/goals" element={<Goals />} />
+        <Route path="/ai" element={<AI />} />
         <Route path="/pengaturan" element={<Pengaturan />} />
       </Routes>
     </Router>
