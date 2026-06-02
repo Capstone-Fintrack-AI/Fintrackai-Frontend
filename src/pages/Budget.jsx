@@ -156,7 +156,7 @@ const Budget = () => {
                 "Budget",
                 "Goals",
                 "AI",
-                "Laporan",
+                // "Laporan",
               ].includes(activeMenu)
                 ? "block"
                 : "none",
@@ -173,7 +173,7 @@ const Budget = () => {
             { n: "Budget", img: "/gambar/budget.png", path: "/budget" },
             { n: "Goals", img: "/gambar/goals.png", path: "/goals" },
             { n: "AI", img: "/gambar/ai.png", path: "/ai" },
-            { n: "Laporan", img: "/gambar/laporan.png", path: "/laporan" },
+            // { n: "Laporan", img: "/gambar/laporan.png", path: "/laporan" },
           ].map((item) => (
             <div
               key={item.n}

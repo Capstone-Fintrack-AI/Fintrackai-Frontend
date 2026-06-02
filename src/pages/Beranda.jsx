@@ -302,7 +302,7 @@ const Beranda = () => {
           <div
             className="absolute left-0 w-full h-[52px] bg-[#f0eaff] rounded-2xl shadow-sm transition-transform duration-500 ease-[cubic-bezier(0.4,0,0.2,1)]"
             style={{
-              transform: `translateY(${["Beranda", "Transaksi", "Budget", "Goals", "AI", "Laporan", "Pengaturan", "Logout"].indexOf(activeMenu) * 68}px)`,
+              transform: `translateY(${["Beranda", "Transaksi", "Budget", "Goals", "AI", "Pengaturan"].indexOf(activeMenu) * 68}px)`,
             }}
           ></div>
 
@@ -312,7 +312,7 @@ const Beranda = () => {
             { n: "Budget", img: "/gambar/budget.png", path: "/budget" },
             { n: "Goals", img: "/gambar/goals.png", path: "/goals" },
             { n: "AI", img: "/gambar/ai.png", path: "/ai" },
-            { n: "Laporan", img: "/gambar/laporan.png", path: "/laporan" },
+            // { n: "Laporan", img: "/gambar/laporan.png", path: "/laporan" },
             { n: "Pengaturan", img: "/gambar/pengaturan.png", path: "/pengaturan" },
           ].map((item) => (
             <div

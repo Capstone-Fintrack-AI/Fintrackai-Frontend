@@ -1,7 +1,8 @@
-import React, { useState } from "react";
+import React, { useState} from "react";
 import { useNavigate } from "react-router-dom";
 import { Link } from "react-router-dom";
 import AddGoalPopup from "./AddGoalPopup";
+// import axios from "axios";
 import {
   ResponsiveContainer,
   PieChart,
@@ -51,7 +52,7 @@ const Goals = () => {
   const handleLogout = () => {
     navigate("/login");
   };
-
+  
   return (
     <div className="flex h-screen bg-[#fcfaff] font-poppins text-gray-800 overflow-hidden relative">
       {/* =========================================================
@@ -124,7 +125,7 @@ const Goals = () => {
                 "Budget",
                 "Goals",
                 "AI",
-                "Laporan",
+                // "Laporan",
               ].includes(activeMenu)
                 ? "block"
                 : "none",
@@ -141,18 +142,17 @@ const Goals = () => {
             { n: "Budget", img: "/gambar/budget.png", path: "/budget" },
             { n: "Goals", img: "/gambar/goals.png", path: "/goals" },
             { n: "AI", img: "/gambar/ai.png", path: "/ai" },
-            { n: "Laporan", img: "/gambar/laporan.png", path: "/laporan" },
+            // { n: "Laporan", img: "/gambar/laporan.png", path: "/laporan" },
           ].map((item) => (
             <div
               key={item.n}
               onClick={() => {
                 navigate(item.path);
               }}
-              className={`relative z-10 flex items-center ${isSidebarOpen ? "gap-4 px-3.5" : "justify-center px-0"} cursor-pointer h-[52px] rounded-2xl transition-all duration-300 ${
-                activeMenu === item.n
-                  ? "text-[#8477e4] font-bold"
-                  : "text-gray-400 hover:text-gray-900"
-              }`}
+              className={`relative z-10 flex items-center ${isSidebarOpen ? "gap-4 px-3.5" : "justify-center px-0"} cursor-pointer h-[52px] rounded-2xl transition-all duration-300 ${activeMenu === item.n
+                ? "text-[#8477e4] font-bold"
+                : "text-gray-400 hover:text-gray-900"
+                }`}
             >
               <img
                 src={item.img}
@@ -264,7 +264,7 @@ const Goals = () => {
                     </span>
                   </p>
                   <p className="text-base font-extrabold text-[#1e1b4b] mt-0.5 whitespace-nowrap">
-                    Rp 1.000.000
+                    Rp 3.000.000
                   </p>
                 </div>
               </div>
@@ -386,30 +386,30 @@ const Goals = () => {
                   className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 pb-6 border-b border-gray-100 last:border-0 last:pb-0"
                 >
                   {/* Bagian Kiri: Gambar + Detail Teks */}
-                  <div className="flex items-center gap-4 flex-1 min-w-[280px]">
+                  <div className="flex items-center gap-4 flex-1">
                     {/* Placeholder Gambar Sesuai Figma */}
-                    <div className="w-24 h-16 rounded-xl flex-shrink-0 border border-gray-100 overflow-hidden shadow-inner">
+                    {/* <div className="w-24 h-16 rounded-xl flex-shrink-0 border border-gray-100 overflow-hidden shadow-inner">
                       <img
                         src={goal.image}
                         alt={goal.name}
                         className="w-full h-full object-cover"
                       />
-                    </div>
+                    </div> */}
 
                     {/* Detail Informasi */}
                     <div className="flex flex-col gap-0.5">
                       <h4 className="font-bold text-[#1e1b4b] text-sm">
                         {goal.name}
                       </h4>
-                      <p className="text-[11px] text-gray-400 line-clamp-1">
+                      {/* <p className="text-[11px] text-[#1e1b4b] line-clamp-1">
                         {goal.desc}
-                      </p>
+                      </p> */}
                       {/* Badge Prioritas Sekarang Berada di Bawah */}
-                      <span
+                      {/* <span
                         className={`text-[9px] font-bold px-2 py-0.5 rounded-md mt-1 w-max ${goal.bgBadge} ${goal.textBadge}`}
                       >
                         {goal.priority}
-                      </span>
+                      </span> */}
                     </div>
                   </div>
 

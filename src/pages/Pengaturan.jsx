@@ -1,4 +1,4 @@
-import React, { useState, useRef } from "react";
+import React, { useState, useRef, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 
 const Pengaturan = () => {
@@ -6,8 +6,8 @@ const Pengaturan = () => {
   const fileInputRef = useRef(null);
 
   const [userData, setUserData] = useState({
-    nama: "Shifa Anjani Desha",
-    email: "sanjani462@gmail.com",
+    nama: "",
+    email: "",
     password: "••••••••",
     profilePic: null,
   });
@@ -57,6 +57,21 @@ const Pengaturan = () => {
     localStorage.removeItem("user");
     navigate("/login");
   };
+
+  useEffect(() => {
+    const user = JSON.parse(localStorage.getItem("user"));
+
+    if (user) {
+      setUserData((prev) => ({
+        ...prev,
+        nama: user.fullname || user.nama || "",
+        email: user.email || "",
+      }));
+
+      setInputNama(user.fullname || user.nama || "");
+      setInputEmail(user.email || "");
+    }
+  }, []);
 
   return (
     <div className="h-screen bg-[#f8f6ff] font-poppins flex overflow-hidden selection:bg-[#8477e4]/20">
@@ -141,18 +156,17 @@ const Pengaturan = () => {
             { n: "Budget", img: "/gambar/budget.png", path: "/budget" },
             { n: "Goals", img: "/gambar/goals.png", path: "/goals" },
             { n: "AI", img: "/gambar/ai.png", path: "/ai" },
-            { n: "Laporan", img: "/gambar/laporan.png", path: "/laporan" },
+            // { n: "Laporan", img: "/gambar/laporan.png", path: "/laporan" },
           ].map((item) => (
             <div
               key={item.n}
               onClick={() => {
                 navigate(item.path);
               }}
-              className={`relative z-10 flex items-center ${isSidebarOpen ? "gap-4 px-3.5" : "justify-center px-0"} cursor-pointer h-[52px] rounded-2xl transition-all duration-300 ${
-                activeMenu === item.n
-                  ? "text-[#8477e4] font-bold"
-                  : "text-gray-400 hover:text-gray-900"
-              }`}
+              className={`relative z-10 flex items-center ${isSidebarOpen ? "gap-4 px-3.5" : "justify-center px-0"} cursor-pointer h-[52px] rounded-2xl transition-all duration-300 ${activeMenu === item.n
+                ? "text-[#8477e4] font-bold"
+                : "text-gray-400 hover:text-gray-900"
+                }`}
             >
               <img
                 src={item.img}
@@ -235,9 +249,9 @@ const Pengaturan = () => {
             />
           </div>
 
-          <div className="grid grid-cols-12 gap-6 pb-10">
+          <div className="grid grid-cols-12 gap-6 pb-10 w-full">
             {/* col-span-12 membuat penuh, mx-auto + max-w-3xl membuat posisi di tengah & rapi */}
-            <div className="col-span-12 mx-auto w-full max-w-3xl bg-white p-8 rounded-[2rem] shadow-sm border border-gray-100/70 h-fit flex flex-col space-y-6">
+            <div className="col-span-12 w-full bg-white p-8 rounded-[2rem] shadow-sm border border-gray-100/70 h-fit flex flex-col space-y-6">
               {/* Header Kartu */}
               <div className="flex items-center gap-3.5 border-b border-gray-100 pb-4">
                 <div className="w-10 h-10 bg-[#f0eaff] text-[#8477e4] rounded-xl flex items-center justify-center text-sm shadow-sm">
