@@ -85,6 +85,9 @@ const TransactionModal = ({ isOpen, onClose, onSave }) => {
         );
 
         console.log("Pemasukan berhasil", response.data);
+        onClose();
+
+        window.location.reload();
       }
 
       // =========================
