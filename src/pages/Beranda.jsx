@@ -494,7 +494,7 @@ const Beranda = () => {
                   <div className="flex items-center justify-center gap-3 mb-3 w-full">
                     <div className="w-10 h-10 bg-white rounded-xl flex items-center justify-center shadow-[0_0_20px_rgba(76,175,80,0.4)] border border-[#4caf50]/10">
                       <img
-                        src="/gambar/pemasukan.png"
+                        src="/public/gambar/pemasukan.png"
                         className="w-6 h-6 object-contain"
                         alt="Ikon Pemasukan"
                       />
