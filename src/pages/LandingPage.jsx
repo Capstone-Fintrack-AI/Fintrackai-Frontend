@@ -163,35 +163,149 @@ const LandingPage = () => {
       {/* --- HERO (ZOOMED) --- */}
       <section
         id="beranda"
-        className="min-h-screen flex items-center pt-32 pb-20 px-6 md:px-20"
+        className="min-h-screen flex flex-col justify-center pt-32 pb-20 px-6 md:px-20 relative overflow-visible"
       >
-        <div className="container mx-auto grid md:grid-cols-2 gap-16 items-center">
-          <div className="space-y-10 scale-110 origin-left">
-            {" "}
-            {/* Zoomed here */}
-            <h1 className="text-4xl md:text-6xl font-extrabold text-gray-900 leading-tight mt-10">
+        {/* Container Utama untuk Text & Layouting */}
+        <div className="container mx-auto grid md:grid-cols-2 gap-10 items-center">
+          
+          {/* KOLOM KIRI: Teks & Tombol (Tetap aman di dalam container) */}
+          <div className="space-y-6 z-10">
+            {/* Heading Utama */}
+            <h1 className="text-4xl md:text-5xl lg:text-6xl font-extrabold text-[#1e1b4b] leading-[1.15]">
               Kelola Keuangan <br />
-              <span className="text-transparent bg-clip-text bg-gradient-to-r from-[#8477e4] to-[#e584ee]">
-                Lebih Mudah
-              </span>
+              Lebih Cerdas <br />
+              Bersama <span className="text-[#8477e4]">FinTrack AI</span>
             </h1>
-            <p className="text-gray-500 text-xl leading-relaxed max-w-lg">
-              Kelola dan pantau keuanganmu dengan cerdas melalui FinTrack AI. AI
-              kami siap menganalisis kebiasaan belanjamu.
+
+            {/* Paragraf Deskripsi */}
+            <p className="text-gray-500 text-lg md:text-xl leading-relaxed max-w-lg">
+              Pantau pengeluaran, atur budget, capai goals, dan dapatkan insight AI untuk keputusan finansial yang lebih baik setiap hari.
             </p>
-            <button
-              onClick={() => navigate("/register")}
-              className="bg-[#8477e4] text-white text-lg font-bold px-12 py-5 rounded-full shadow-2xl hover:-translate-y-2 transition-all"
-            >
-              Mulai Sekarang
-            </button>
+
+            {/* Grup Tombol */}
+            <div className="flex flex-wrap items-center gap-4 pt-2">
+              <button
+                onClick={() => navigate("/register")}
+                className="bg-[#8477e4] text-white text-sm md:text-base font-bold px-8 py-4 rounded-full shadow-lg shadow-purple-500/30 hover:-translate-y-1 transition-transform flex items-center gap-2"
+              >
+                Mulai kelola keuangan <span>→</span>
+              </button>
+              <button className="bg-white/60 backdrop-blur-sm text-[#1e1b4b] text-sm md:text-base font-bold px-6 py-4 rounded-full shadow-sm border border-white hover:bg-white transition-colors flex items-center gap-3">
+                <div className="bg-purple-100 rounded-full p-1.5 flex items-center justify-center">
+                  <span className="text-[#8477e4] text-xs">▶</span>
+                </div>
+                Lihat Fitur <span>❯</span>
+              </button>
+            </div>
+
+            {/* Deretan Fitur Mini */}
+            <div className="grid grid-cols-2 md:grid-cols-4 gap-4 pt-6">
+              <div className="flex items-center gap-2">
+                <div className="w-8 h-8 rounded-full bg-[#f3edff] flex items-center justify-center text-xl">✨</div>
+                <span className="text-xs font-bold text-[#1e1b4b] leading-tight">Insight AI<br />Real-time</span>
+              </div>
+              <div className="flex items-center gap-2">
+                <div className="w-8 h-8 rounded-full bg-[#ffe4e6] flex items-center justify-center text-xl">🥧</div>
+                <span className="text-xs font-bold text-[#1e1b4b] leading-tight">Pengelolaan<br />Budget</span>
+              </div>
+              <div className="flex items-center gap-2">
+                <div className="w-8 h-8 rounded-full bg-[#fce7f3] flex items-center justify-center text-xl">🎯</div>
+                <span className="text-xs font-bold text-[#1e1b4b] leading-tight">Target<br />Tabungan</span>
+              </div>
+              <div className="flex items-center gap-2">
+                <div className="w-8 h-8 rounded-full bg-[#e0f2fe] flex items-center justify-center text-xl">📊</div>
+                <span className="text-xs font-bold text-[#1e1b4b] leading-tight">Laporan<br />Lengkap</span>
+              </div>
+            </div>
           </div>
-          <div className="relative scale-110">
+
+          {/* KOLOM KANAN (Khusus Mobile/Tablet: Tampil normal di bawah teks) */}
+          <div className="relative z-10 mt-10 md:mt-0 flex justify-end md:hidden">
             <img
               src="/gambar/Home.png"
-              alt="Home"
-              className="w-[120%] drop-shadow-2xl"
+              alt="Home FinTrack AI"
+              className="w-full max-w-[130%] object-contain drop-shadow-2xl"
             />
+          </div>
+
+          {/* Spacer kosong di Desktop agar grid kiri tidak melebar memenuhi layar */}
+          <div className="hidden md:block w-full h-full pointer-events-none"></div>
+        </div>
+
+        {/* 🚀 GAMBAR MENTOK KANAN (Khusus Desktop: Keluar dari Container & Menempel ke Ujung Layar) */}
+        <div className="hidden md:block absolute right-0 top-[45%] -translate-y-1/2 w-[46vw] max-w-[780px] lg:max-w-[880px] xl:max-w-[980px] z-10 overflow-visible">
+          <img
+            src="/gambar/Home.png"
+            alt="Home FinTrack AI"
+            className="w-full object-contain drop-shadow-2xl scale-110 lg:scale-120 xl:scale-125 origin-right"
+          />
+        </div>
+
+        {/* BANNER STATISTIK (Bawah) */}
+        <div className="container mx-auto mt-24 z-10 px-6">
+          <div className="bg-white/70 backdrop-blur-xl border border-white/50 rounded-full px-8 py-5 md:px-12 md:py-6 shadow-[0_10px_40px_-15px_rgba(132,119,228,0.2)] flex flex-wrap md:flex-nowrap justify-between items-center gap-6">
+            
+            {/* Item 1: Pengguna Aktif */}
+            <div className="flex items-center gap-4 w-full md:w-auto justify-start md:justify-center">
+              <div className="w-14 h-14 rounded-full bg-[#f3edff] flex items-center justify-center shadow-[inset_0_2px_8px_rgba(132,119,228,0.1)]">
+                {/* SVG Icon Users */}
+                <svg xmlns="http://www.w3.org/2000/svg" className="w-7 h-7 text-[#8477e4]" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth="2">
+                  <path strokeLinecap="round" strokeLinejoin="round" d="M12 4.354a4 4 0 110 5.292M15 21H3v-1a6 6 0 0112 0v1zm0 0h6v-1a6 6 0 00-9-5.197M13 7a4 4 0 11-8 0 4 4 0 018 0z" />
+                </svg>
+              </div>
+              <div className="flex flex-col">
+                <h4 className="font-extrabold text-2xl text-[#1e1b4b] leading-tight">10K+</h4>
+                <p className="text-sm text-[#8477e4]/80 font-medium mt-0.5">Pengguna Aktif</p>
+              </div>
+            </div>
+
+            <div className="w-px h-12 bg-purple-100/50 hidden md:block"></div>
+
+            {/* Item 2: Transaksi Aman */}
+            <div className="flex items-center gap-4 w-full md:w-auto justify-start md:justify-center">
+              <div className="w-14 h-14 rounded-full bg-[#f3edff] flex items-center justify-center shadow-[inset_0_2px_8px_rgba(132,119,228,0.1)]">
+                {/* SVG Icon Shield */}
+                <svg xmlns="http://www.w3.org/2000/svg" className="w-7 h-7 text-[#8477e4]" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth="2">
+                  <path strokeLinecap="round" strokeLinejoin="round" d="M9 12l2 2 4-4m5.618-4.016A11.955 11.955 0 0112 2.944a11.956 11.956 0 01-8.618 3.04A12.02 12.02 0 003 9c0 5.591 3.824 10.29 9 11.622 5.176-1.332 9-6.03 9-11.622 0-1.042-.133-2.052-.382-3.016z" />
+                </svg>
+              </div>
+              <div className="flex flex-col">
+                <h4 className="font-extrabold text-2xl text-[#1e1b4b] leading-tight">99%</h4>
+                <p className="text-sm text-[#8477e4]/80 font-medium mt-0.5">Transaksi Aman</p>
+              </div>
+            </div>
+
+            <div className="w-px h-12 bg-purple-100/50 hidden md:block"></div>
+
+            {/* Item 3: AI Analisis Cerdas */}
+            <div className="flex items-center gap-4 w-full md:w-auto justify-start md:justify-center">
+              <div className="w-14 h-14 rounded-full bg-[#f3edff] flex items-center justify-center shadow-[inset_0_2px_8px_rgba(132,119,228,0.1)]">
+                {/* SVG Icon Robot/AI */}
+                <svg xmlns="http://www.w3.org/2000/svg" className="w-7 h-7 text-[#8477e4]" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth="2">
+                  <path strokeLinecap="round" strokeLinejoin="round" d="M9 3v2m6-2v2M9 19v2m6-2v2M5 9H3m2 6H3m18-6h-2m2 6h-2M7 19h10a2 2 0 002-2V7a2 2 0 00-2-2H7a2 2 0 00-2 2v10a2 2 0 002 2zM9 9h6v6H9V9z" />
+                </svg>
+              </div>
+              <div className="flex flex-col">
+                <h4 className="font-extrabold text-2xl text-[#1e1b4b] leading-tight">AI</h4>
+                <p className="text-sm text-[#8477e4]/80 font-medium mt-0.5">Analisis Cerdas</p>
+              </div>
+            </div>
+
+            <div className="w-px h-12 bg-purple-100/50 hidden md:block"></div>
+
+            {/* Item 4: Bantuan 24/7 */}
+            <div className="flex items-center gap-4 w-full md:w-auto justify-start md:justify-center">
+              <div className="w-14 h-14 rounded-full bg-[#f3edff] flex items-center justify-center shadow-[inset_0_2px_8px_rgba(132,119,228,0.1)]">
+                {/* SVG Icon Headset/Support */}
+                <svg xmlns="http://www.w3.org/2000/svg" className="w-7 h-7 text-[#8477e4]" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth="2">
+                  <path strokeLinecap="round" strokeLinejoin="round" d="M18.364 5.636a9 9 0 010 12.728m0 0l-2.829-2.829m2.829 2.829L21 21M15.536 8.464a5 5 0 010 7.072m0 0l-2.829-2.829m-4.243 2.829a4.978 4.978 0 01-1.414-2.83m-1.414 5.658a9 9 0 01-2.167-9.238m7.824 2.168a2 2 0 11-2.658-2.658m7.824 2.168a2 2 0 11-2.658-2.658" />
+                </svg>
+              </div>
+              <div className="flex flex-col">
+                <h4 className="font-extrabold text-2xl text-[#1e1b4b] leading-tight">24/7</h4>
+                <p className="text-sm text-[#8477e4]/80 font-medium mt-0.5">Bantuan AI</p>
+              </div>
+            </div>
           </div>
         </div>
       </section>
