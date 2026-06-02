@@ -83,6 +83,7 @@ const Budget = () => {
     return `1 - ${hariTerakhir} ${namaBulan} ${tahun}`;
   };
 
+
   return (
     <div className="h-screen bg-[#f8f6ff] font-poppins flex overflow-hidden relative">
       {/* =========================================================
@@ -179,11 +180,10 @@ const Budget = () => {
               onClick={() => {
                 navigate(item.path);
               }}
-              className={`relative z-10 flex items-center ${isSidebarOpen ? "gap-4 px-3.5" : "justify-center px-0"} cursor-pointer h-[52px] rounded-2xl transition-all duration-300 ${
-                activeMenu === item.n
-                  ? "text-[#8477e4] font-bold"
-                  : "text-gray-400 hover:text-gray-900"
-              }`}
+              className={`relative z-10 flex items-center ${isSidebarOpen ? "gap-4 px-3.5" : "justify-center px-0"} cursor-pointer h-[52px] rounded-2xl transition-all duration-300 ${activeMenu === item.n
+                ? "text-[#8477e4] font-bold"
+                : "text-gray-400 hover:text-gray-900"
+                }`}
             >
               <img
                 src={item.img}
@@ -296,79 +296,7 @@ const Budget = () => {
         </div>
 
         {/* 4 METRIC CARDS ROW */}
-        <div className="grid grid-cols-1 md:grid-cols-4 gap-4">
-          {/* Card 1: Total Pemasukan */}
-          <div className="bg-white p-4 rounded-3xl border border-[#e9dff9] shadow-sm flex items-center gap-4">
-            <div className="w-14 h-14 rounded-2xl bg-gradient-to-br from-[#a78bfa] to-[#8b5cf6] flex items-center justify-center text-white text-2xl shrink-0">
-              <i className="fas fa-wallet"></i>
-            </div>
-            <div>
-              <p className="text-[11px] font-semibold text-[#6b61b7]">
-                Total Pemasukan
-              </p>
-              <h3 className="text-lg font-extrabold text-[#453c8a] mt-0.5">
-                Rp 3.000.000
-              </h3>
-              <p className="text-[10px] text-gray-400 mt-0.5">
-                100% dari total budget
-              </p>
-            </div>
-          </div>
 
-          {/* Card 2: Kebutuhan */}
-          <div className="bg-white p-4 rounded-3xl border border-[#e9dff9] shadow-sm flex items-center gap-4">
-            <div className="w-14 h-14 rounded-2xl bg-gradient-to-br from-[#a78bfa] to-[#8b5cf6] flex items-center justify-center text-white text-2xl shrink-0">
-              <i className="fas fa-home"></i>
-            </div>
-            <div>
-              <p className="text-[11px] font-semibold text-[#6b61b7]">
-                Budget Kebutuhan (50%)
-              </p>
-              <h3 className="text-lg font-extrabold text-[#453c8a] mt-0.5">
-                Rp 1.500.000
-              </h3>
-              <p className="text-[10px] text-gray-400 mt-0.5">
-                Alokasi otomatis
-              </p>
-            </div>
-          </div>
-
-          {/* Card 3: Keinginan */}
-          <div className="bg-white p-4 rounded-3xl border border-[#e9dff9] shadow-sm flex items-center gap-4">
-            <div className="w-14 h-14 rounded-2xl bg-gradient-to-br from-[#fbbf24] to-[#f59e0b] flex items-center justify-center text-white text-2xl shrink-0">
-              <i className="fas fa-shopping-bag"></i>
-            </div>
-            <div>
-              <p className="text-[11px] font-semibold text-[#6b61b7]">
-                Budget Keinginan (30%)
-              </p>
-              <h3 className="text-lg font-extrabold text-[#453c8a] mt-0.5">
-                Rp 900.000
-              </h3>
-              <p className="text-[10px] text-gray-400 mt-0.5">
-                Alokasi otomatis
-              </p>
-            </div>
-          </div>
-
-          {/* Card 4: Tabungan */}
-          <div className="bg-white p-4 rounded-3xl border border-[#e9dff9] shadow-sm flex items-center gap-4">
-            <div className="w-14 h-14 rounded-2xl bg-gradient-to-br from-[#6ee7b7] to-[#10b981] flex items-center justify-center text-white text-2xl shrink-0">
-              <i className="fas fa-piggy-bank"></i>
-            </div>
-            <div>
-              <p className="text-[11px] font-semibold text-[#6b61b7]">
-                Budget Tabungan (20%)
-              </p>
-              <h3 className="text-lg font-extrabold text-[#453c8a] mt-0.5">
-                Rp 600.000
-              </h3>
-              <p className="text-[10px] text-gray-400 mt-0.5">
-                Dialokasikan ke Goals
-              </p>
-            </div>
-          </div>
-        </div>
 
         {/* TOP ROW: PIE CHARTS & BAR CHART */}
         <div className="grid grid-cols-1 xl:grid-cols-4 gap-4">

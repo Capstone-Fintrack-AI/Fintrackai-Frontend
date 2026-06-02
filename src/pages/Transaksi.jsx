@@ -27,6 +27,11 @@ const Transaksi = () => {
     navigate("/login");
   };
 
+  const [totalPemasukan, setTotalPemasukan] = useState(0);
+  const kebutuhan = totalPemasukan * 0.5;
+  const keinginan = totalPemasukan * 0.3;
+  const tabungan = totalPemasukan * 0.2;
+
   const dataTampil = dataTransaksi.filter((item) => {
     const desc = item?.desc || "";
     const nominal = Number(item?.nominal || 0);
@@ -55,6 +60,36 @@ const Transaksi = () => {
     alert("Struk berhasil diunggah!");
   };
 
+  const terpakaiKebutuhan = dataTransaksi
+    .filter(
+      (item) =>
+        item.nominal < 0 &&
+        item.kat?.toLowerCase() === "kebutuhan"
+    )
+    .reduce((sum, item) => sum + Math.abs(item.nominal), 0);
+
+  const terpakaiKeinginan = dataTransaksi
+    .filter(
+      (item) =>
+        item.nominal < 0 &&
+        item.kat?.toLowerCase() === "keinginan"
+    )
+    .reduce((sum, item) => sum + Math.abs(item.nominal), 0);
+
+  const terpakaiTabungan = dataTransaksi
+    .filter(
+      (item) =>
+        item.nominal < 0 &&
+        item.kat?.toLowerCase() === "tabungan"
+    )
+    .reduce((sum, item) => sum + Math.abs(item.nominal), 0);
+
+  // SISA UANG
+  const sisaKebutuhan = kebutuhan - terpakaiKebutuhan;
+  const sisaKeinginan = keinginan - terpakaiKeinginan;
+  const sisaTabungan = tabungan - terpakaiTabungan;
+  // AND SISA UANG
+
   useEffect(() => {
     if (location.state?.bukaModal) {
       setIsModalOpen(true);
@@ -76,6 +111,14 @@ const Transaksi = () => {
             `https://fintrackai-backend-1yz0.onrender.com/pengeluaran/user/${userId}`
           ),
         ]);
+
+        // Hitung total pemasukan
+        const total = pemasukanRes.data.data.reduce(
+          (sum, item) => sum + Number(item.jumlah),
+          0
+        );
+
+        setTotalPemasukan(total);
 
         // Mapping Pemasukan
         const pemasukan = pemasukanRes.data.data.map((item) => ({
@@ -120,6 +163,8 @@ const Transaksi = () => {
     };
 
     fetchTransaksi();
+
+
   }, [location]);
 
 
@@ -362,8 +407,126 @@ const Transaksi = () => {
           </div>
         </header>
 
+        {/* BUDGETING */}
+        <div className="grid grid-cols-1 md:grid-cols-3 gap-4 px-10 pb-8 w-full">
+
+          {/* Total Pemasukan */}
+          {/* <div className="bg-white p-4 rounded-3xl border border-[#e9dff9] shadow-sm flex items-center gap-4">
+            <div className="w-14 h-14 rounded-2xl bg-gradient-to-br from-[#a78bfa] to-[#8b5cf6] flex items-center justify-center text-white text-2xl shrink-0">
+              <i className="fas fa-wallet"></i>
+            </div>
+
+            <div>
+              <p className="text-[11px] font-semibold text-[#6b61b7]">
+                Total Pemasukan
+              </p>
+
+              <h3 className="text-lg font-extrabold text-[#453c8a] mt-0.5 w-full">
+                Rp {totalPemasukan.toLocaleString("id-ID")}
+              </h3>
+
+              <p className="text-[10px] text-gray-400 mt-0.5">
+                100% dari total pemasukan
+              </p>
+            </div>
+          </div> */}
+
+          {/* Kebutuhan */}
+          <div className="bg-white p-4 rounded-3xl border border-[#e9dff9] shadow-sm flex items-center gap-4">
+            <div className="w-14 h-14 rounded-2xl bg-gradient-to-br from-[#a78bfa] to-[#8b5cf6] flex items-center justify-center text-white text-2xl shrink-0">
+              <i className="fas fa-home"></i>
+            </div>
+
+            <div>
+              <p className="text-[11px] font-semibold text-[#6b61b7]">
+                Budget Kebutuhan
+              </p>
+
+              <h3 className="text-sm font-extrabold text-[#453c8a] mt-0.5">
+                Rp {terpakaiKebutuhan.toLocaleString("id-ID")}
+                <span className="text-gray-400 font-medium">
+                  {" "}
+                  / Rp {kebutuhan.toLocaleString("id-ID")}
+                </span>
+              </h3>
+
+              <p
+                className={`text-[10px] mt-0.5 ${sisaKebutuhan < 0
+                  ? "text-red-500"
+                  : "text-green-500"
+                  }`}
+              >
+                Sisa Rp {sisaKebutuhan.toLocaleString("id-ID")}
+              </p>
+            </div>
+          </div>
+
+          {/* Keinginan */}
+          <div className="bg-white p-4 rounded-3xl border border-[#e9dff9] shadow-sm flex items-center gap-4">
+            <div className="w-14 h-14 rounded-2xl bg-gradient-to-br from-[#fbbf24] to-[#f59e0b] flex items-center justify-center text-white text-2xl shrink-0">
+              <i className="fas fa-shopping-bag"></i>
+            </div>
+
+            <div>
+              <p className="text-[11px] font-semibold text-[#6b61b7]">
+                Budget Keinginan
+              </p>
+
+              <h3 className="text-sm font-extrabold text-[#453c8a] mt-0.5">
+                Rp {terpakaiKeinginan.toLocaleString("id-ID")}
+                <span className="text-gray-400 font-medium">
+                  {" "}
+                  / Rp {keinginan.toLocaleString("id-ID")}
+                </span>
+              </h3>
+
+              <p
+                className={`text-[10px] mt-0.5 ${sisaKeinginan < 0
+                  ? "text-red-500"
+                  : "text-green-500"
+                  }`}
+              >
+                Sisa Rp {sisaKeinginan.toLocaleString("id-ID")}
+              </p>
+            </div>
+          </div>
+
+          {/* Tabungan */}
+          <div className="bg-white p-4 rounded-3xl border border-[#e9dff9] shadow-sm flex items-center gap-4">
+            <div className="w-14 h-14 rounded-2xl bg-gradient-to-br from-[#6ee7b7] to-[#10b981] flex items-center justify-center text-white text-2xl shrink-0">
+              <i className="fas fa-piggy-bank"></i>
+            </div>
+
+            <div>
+              <p className="text-[11px] font-semibold text-[#6b61b7]">
+                Budget Tabungan
+              </p>
+
+              <h3 className="text-sm font-extrabold text-[#453c8a] mt-0.5">
+                Rp {terpakaiTabungan.toLocaleString("id-ID")}
+                <span className="text-gray-400 font-medium">
+                  {" "}
+                  / Rp {tabungan.toLocaleString("id-ID")}
+                </span>
+              </h3>
+
+              <p
+                className={`text-[10px] mt-0.5 ${sisaTabungan < 0
+                    ? "text-red-500"
+                    : "text-green-500"
+                  }`}
+              >
+                Sisa Rp {sisaTabungan.toLocaleString("id-ID")}
+              </p>
+            </div>
+          </div>
+
+        </div>
+
         {/* Isi Grid Utama Transaksi (Scrollable) */}
+        {/* 4 METRIC CARDS ROW */}
         <main className="flex-grow px-10 pb-8 overflow-y-auto grid grid-cols-12 gap-8 progress-clean">
+
           {/* KOLOM TABEL (KIRI - 8/12) */}
           <div className="col-span-12 xl:col-span-8 space-y-6">
             {/* FILTER BAR */}
