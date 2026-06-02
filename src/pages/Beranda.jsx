@@ -189,62 +189,17 @@ const Beranda = () => {
 
   return (
     <div className="h-screen bg-[#f8f6ff] font-poppins flex">
-      {/* =========================================
-          BACKGROUND TEMA LANDING PAGE
-      ========================================= */}
+      {/* =========================================================
+          1. BACKGROUND TEMA & BUBBLE (PERSIS BERANDA)
+      ========================================================= */}
       <style>{`
-        .bg-grid-pattern {
-          background-image: radial-gradient(#d1d5db 1px, transparent 1px);
-          background-size: 30px 30px;
-        }
+        .bg-grid-pattern { background-image: radial-gradient(#d1d5db 1px, transparent 1px); background-size: 30px 30px; }
         .color-bubble { position: absolute; border-radius: 50%; pointer-events: none; filter: blur(120px); opacity: 0.5; z-index: 0; }
         .bubble-1 { width: 500px; height: 500px; background: #e0d4fc; bottom: -10%; left: -5%; }
         .bubble-2 { width: 400px; height: 400px; background: #fce4ec; top: 20%; right: -5%; }
         .bubble-3 { width: 300px; height: 300px; background: #e0f2fe; bottom: 30%; left: 40%; }
-        @keyframes float {
-          0% { transform: translateY(0px) scale(1); }
-          50% { transform: translateY(-20px) scale(1.05); }
-          100% { transform: translateY(0px) scale(1); }
-        }
+        @keyframes float { 0% { transform: translateY(0px) scale(1); } 50% { transform: translateY(-20px) scale(1.05); } 100% { transform: translateY(0px) scale(1); } }
         .animate-bubble-img { animation: float 6s ease-in-out infinite; }
-        @keyframes progress-blue {
-          from {
-            stroke-dasharray: 0 100;
-          }
-          to {
-            stroke-dasharray: 48 100;
-          }
-        }
-
-        @keyframes progress-orange {
-          from {
-            stroke-dasharray: 0 100;
-          }
-          to {
-            stroke-dasharray: 28 100;
-          }
-        }
-
-        @keyframes progress-green {
-          from {
-            stroke-dasharray: 0 100;
-          }
-          to {
-            stroke-dasharray: 18 100;
-          }
-        }
-
-        .animate-progress-blue {
-          animation: progress-blue 1.2s ease forwards;
-        }
-
-        .animate-progress-orange {
-          animation: progress-orange 1.5s ease forwards;
-        }
-
-        .animate-progress-green {
-          animation: progress-green 1.8s ease forwards;
-        }
       `}</style>
 
       <div className="fixed inset-0 pointer-events-none z-0">
@@ -273,17 +228,14 @@ const Beranda = () => {
         </div>
       </div>
 
-      {/* =========================================
-    1. SIDEBAR (KIRI) - FINAL VERSION
-========================================= */}
+      {/* =========================================================
+          2. SIDEBAR KIRI DENGAN TOMBOL ROBOT NGINTIP (PERSIS BERANDA)
+      ========================================================= */}
       <div
         className={`${isSidebarOpen ? "w-64" : "w-20"} bg-white border-r border-[#f0f0f0] px-6 py-8 flex flex-col z-10 shadow-[4px_0_24px_rgba(0,0,0,0.02)] relative transition-all duration-300`}
       >
-        {/* Kontainer Atas: Logo, Teks, dan Tombol Robot */}
         <div className="flex flex-col items-center mb-10 relative">
           <img src="/gambar/logo.png" className="w-16 mb-2" alt="Logo" />
-
-          {/* Tombol Robot - Diposisikan Absolute agar pas di pinggir */}
           <button
             onClick={() => setIsSidebarOpen(!isSidebarOpen)}
             className="absolute -right-10 top-2 z-[60] w-16 h-16 transition-transform duration-300 hover:scale-105 focus:outline-none"
@@ -296,47 +248,45 @@ const Beranda = () => {
           </button>
         </div>
 
-        {/* Navigasi Utama */}
         <nav className="relative flex-grow font-medium flex flex-col gap-4">
-          {/* Animasi latar belakang menu aktif */}
           <div
             className="absolute left-0 w-full h-[52px] bg-[#f0eaff] rounded-2xl shadow-sm transition-transform duration-500 ease-[cubic-bezier(0.4,0,0.2,1)]"
             style={{
-              transform: `translateY(${["Beranda", "Transaksi", "Budget", "Goals", "AI", "Laporan", "Pengaturan", "Logout"].indexOf(activeMenu) * 68}px)`,
+              transform: `translateY(${["Beranda", "Transaksi", "Budget", "Goals", "AI", "Laporan"].indexOf(activeMenu) * 68}px)`,
+              display: [
+                "Beranda",
+                "Transaksi",
+                "Budget",
+                "Goals",
+                "AI",
+                "Laporan",
+              ].includes(activeMenu)
+                ? "block"
+                : "none",
             }}
           ></div>
 
           {[
             { n: "Beranda", img: "/gambar/beranda.png", path: "/beranda" },
-            { n: "Transaksi", img: "/gambar/transaksi.png", path: "/transaksi" },
+            {
+              n: "Transaksi",
+              img: "/gambar/transaksi.png",
+              path: "/transaksi",
+            },
             { n: "Budget", img: "/gambar/budget.png", path: "/budget" },
             { n: "Goals", img: "/gambar/goals.png", path: "/goals" },
             { n: "AI", img: "/gambar/ai.png", path: "/ai" },
             { n: "Laporan", img: "/gambar/laporan.png", path: "/laporan" },
-            { n: "Pengaturan", img: "/gambar/pengaturan.png", path: "/pengaturan" },
           ].map((item) => (
             <div
               key={item.n}
               onClick={() => {
-                setActiveMenu(item.n);
-
-                if (item.n === "Logout") {
-                  handleLogout();
-                } else {
-                  navigate(item.path);
-                }
+                navigate(item.path);
               }}
-              className={`
-  relative z-10 flex items-center
-  ${isSidebarOpen ? "gap-4 px-3.5" : "justify-center px-0"}
-  cursor-pointer h-[52px] rounded-2xl transition-all duration-300
-  ${item.n === "Logout"
-                  ? "text-red-400 hover:bg-red-50 hover:text-red-500"
-                  : activeMenu === item.n
-                    ? "text-[#8477e4] font-bold"
-                    : "text-gray-400 hover:text-gray-900"
-                }
-`}
+              className={`relative z-10 flex items-center ${isSidebarOpen ? "gap-4 px-3.5" : "justify-center px-0"} cursor-pointer h-[52px] rounded-2xl transition-all duration-300 ${activeMenu === item.n
+                ? "text-[#8477e4] font-bold"
+                : "text-gray-400 hover:text-gray-900"
+                }`}
             >
               <img
                 src={item.img}
@@ -348,44 +298,18 @@ const Beranda = () => {
           ))}
         </nav>
 
-        <div className="mt-auto pt-4">
-          <div
-            onClick={handleLogout}
-            className={`
-      flex items-center
-      ${isSidebarOpen ? "gap-4 px-3.5" : "justify-center"}
-      h-[52px]
-      rounded-2xl
-      cursor-pointer
-      text-red-400
-      hover:bg-red-50
-      hover:text-red-500
-      transition-all duration-300
-    `}
-          >
-            <img
-              src="/gambar/logout.png"
-              className="w-6 h-6 object-contain"
-              alt="Logout"
-            />
-            {isSidebarOpen && <span className="text-sm">Logout</span>}
-          </div>
-        </div>
-
-        {/* Footer: Pengaturan & Logout */}
-        {/* <div className="border-t border-gray-100 pt-6 space-y-4 font-medium relative z-10 bg-white">
+        <div className="border-t border-gray-100 pt-6 space-y-4 font-medium relative z-10 bg-white">
           <div
             onClick={() => navigate("/pengaturan")}
-            className={`flex items-center ${isSidebarOpen ? "gap-4 p-3.5" : "justify-center p-0 h-[52px]"} cursor-pointer rounded-2xl text-gray-400 hover:bg-gray-50 hover:text-gray-900 transition-all`}
+            className={`flex items-center ${isSidebarOpen ? "gap-4 p-3.5" : "justify-center p-0 h-[52px]"} cursor-pointer rounded-2xl ${activeMenu === "Pengaturan" ? "bg-[#f0eaff] text-[#8477e4] font-bold" : "text-gray-400 hover:text-gray-900"} transition-all`}
           >
             <img
               src="/gambar/pengaturan.png"
-              className="w-6 h-6 object-contain grayscale opacity-70"
+              className={`w-6 h-6 object-contain ${activeMenu !== "Pengaturan" ? "grayscale opacity-70" : ""}`}
               alt="Setting"
             />
             {isSidebarOpen && <span className="text-sm">Pengaturan</span>}
           </div>
-          
           <div
             onClick={handleLogout}
             className={`flex items-center ${isSidebarOpen ? "gap-4 p-3.5" : "justify-center p-0 h-[52px]"} cursor-pointer rounded-2xl text-gray-400 hover:bg-red-50 hover:text-red-500 transition-all`}
@@ -397,9 +321,8 @@ const Beranda = () => {
             />
             {isSidebarOpen && <span className="text-sm">Logout</span>}
           </div>
-        </div> */}
+        </div>
       </div>
-
       {/* =========================================
           2. MAIN CONTENT (KANAN)
       ========================================= */}

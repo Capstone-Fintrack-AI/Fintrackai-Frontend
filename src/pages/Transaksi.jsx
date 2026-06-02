@@ -37,9 +37,7 @@ const Transaksi = () => {
     const nominal = Number(item?.nominal || 0);
     const kategori = item?.kat || "";
 
-    const matchesSearch = desc
-      .toLowerCase()
-      .includes(searchTerm.toLowerCase());
+    const matchesSearch = desc.toLowerCase().includes(searchTerm.toLowerCase());
 
     const matchesType =
       activeFilter === "Semua"
@@ -62,25 +60,19 @@ const Transaksi = () => {
 
   const terpakaiKebutuhan = dataTransaksi
     .filter(
-      (item) =>
-        item.nominal < 0 &&
-        item.kat?.toLowerCase() === "kebutuhan"
+      (item) => item.nominal < 0 && item.kat?.toLowerCase() === "kebutuhan",
     )
     .reduce((sum, item) => sum + Math.abs(item.nominal), 0);
 
   const terpakaiKeinginan = dataTransaksi
     .filter(
-      (item) =>
-        item.nominal < 0 &&
-        item.kat?.toLowerCase() === "keinginan"
+      (item) => item.nominal < 0 && item.kat?.toLowerCase() === "keinginan",
     )
     .reduce((sum, item) => sum + Math.abs(item.nominal), 0);
 
   const terpakaiTabungan = dataTransaksi
     .filter(
-      (item) =>
-        item.nominal < 0 &&
-        item.kat?.toLowerCase() === "tabungan"
+      (item) => item.nominal < 0 && item.kat?.toLowerCase() === "tabungan",
     )
     .reduce((sum, item) => sum + Math.abs(item.nominal), 0);
 
@@ -97,25 +89,23 @@ const Transaksi = () => {
 
     const fetchTransaksi = async () => {
       try {
-        const user = JSON.parse(
-          localStorage.getItem("user") || "{}"
-        );
+        const user = JSON.parse(localStorage.getItem("user") || "{}");
 
         const userId = user.id;
 
         const [pemasukanRes, pengeluaranRes] = await Promise.all([
           axios.get(
-            `https://fintrackai-backend-1yz0.onrender.com/pemasukan/user/${userId}`
+            `https://fintrackai-backend-1yz0.onrender.com/pemasukan/user/${userId}`,
           ),
           axios.get(
-            `https://fintrackai-backend-1yz0.onrender.com/pengeluaran/user/${userId}`
+            `https://fintrackai-backend-1yz0.onrender.com/pengeluaran/user/${userId}`,
           ),
         ]);
 
         // Hitung total pemasukan
         const total = pemasukanRes.data.data.reduce(
           (sum, item) => sum + Number(item.jumlah),
-          0
+          0,
         );
 
         setTotalPemasukan(total);
@@ -152,8 +142,7 @@ const Transaksi = () => {
 
         // Gabungkan & urutkan terbaru
         const semuaTransaksi = [...pemasukan, ...pengeluaran].sort(
-          (a, b) =>
-            new Date(b.createdAt) - new Date(a.createdAt)
+          (a, b) => new Date(b.createdAt) - new Date(a.createdAt),
         );
 
         setDataTransaksi(semuaTransaksi);
@@ -163,74 +152,11 @@ const Transaksi = () => {
     };
 
     fetchTransaksi();
-
-
   }, [location]);
 
-
   return (
+    // Ubah menjadi overflow-hidden
     <div className="h-screen bg-[#f8f6ff] font-poppins flex overflow-hidden">
-      {notif && (
-        <div className="fixed top-6 right-6 z-[9999] animate-slideIn">
-          <div
-            className={`px-6 py-4 rounded-2xl shadow-xl text-white flex items-center gap-3 ${notif.type === "Pemasukan"
-              ? "bg-green-500"
-              : "bg-red-500"
-              }`}
-          >
-            <i className="fas fa-check-circle text-xl"></i>
-
-            <div>
-              <h3 className="font-bold">
-                {notif.type} Berhasil
-              </h3>
-
-              <p className="text-xs">
-                {notif.nama} berhasil ditambahkan
-              </p>
-            </div>
-          </div>
-        </div>
-      )}
-      {/* MODAL */}
-      {isModalOpen && (
-        <TransactionModal
-          isOpen={isModalOpen}
-          onClose={() => setIsModalOpen(false)}
-          onSave={(newData) => {
-            const transaksiBaru = {
-              tgl: new Date().toLocaleDateString("id-ID"),
-              kat: newData.kat,
-              desc: newData.desc,
-              nominal: newData.nominal,
-            };
-
-            setDataTransaksi((prev) => [transaksiBaru, ...prev]);
-
-            setNotif({
-              type: transaksiBaru.nominal > 0
-                ? "Pemasukan"
-                : "Pengeluaran",
-              nama: transaksiBaru.desc,
-            });
-
-            setTimeout(() => {
-              setNotif(null);
-            }, 3000);
-
-            setIsModalOpen(false);
-          }}
-        />
-      )}
-
-      {isScanModalOpen && (
-        <ScanStrukModal
-          isOpen={isScanModalOpen}
-          onClose={() => setIsScanModalOpen(false)}
-          onUpload={handleProcessScan}
-        />
-      )}
-
       {/* =========================================================
           1. BACKGROUND TEMA & BUBBLE (PERSIS BERANDA)
       ========================================================= */}
@@ -325,10 +251,11 @@ const Transaksi = () => {
               onClick={() => {
                 navigate(item.path);
               }}
-              className={`relative z-10 flex items-center ${isSidebarOpen ? "gap-4 px-3.5" : "justify-center px-0"} cursor-pointer h-[52px] rounded-2xl transition-all duration-300 ${activeMenu === item.n
-                ? "text-[#8477e4] font-bold"
-                : "text-gray-400 hover:text-gray-900"
-                }`}
+              className={`relative z-10 flex items-center ${isSidebarOpen ? "gap-4 px-3.5" : "justify-center px-0"} cursor-pointer h-[52px] rounded-2xl transition-all duration-300 ${
+                activeMenu === item.n
+                  ? "text-[#8477e4] font-bold"
+                  : "text-gray-400 hover:text-gray-900"
+              }`}
             >
               <img
                 src={item.img}
@@ -365,11 +292,64 @@ const Transaksi = () => {
           </div>
         </div>
       </div>
+      {notif && (
+        <div className="fixed top-6 right-6 z-[9999] animate-slideIn">
+          <div
+            className={`px-6 py-4 rounded-2xl shadow-xl text-white flex items-center gap-3 ${
+              notif.type === "Pemasukan" ? "bg-green-500" : "bg-red-500"
+            }`}
+          >
+            <i className="fas fa-check-circle text-xl"></i>
+
+            <div>
+              <h3 className="font-bold">{notif.type} Berhasil</h3>
+
+              <p className="text-xs">{notif.nama} berhasil ditambahkan</p>
+            </div>
+          </div>
+        </div>
+      )}
+      {/* MODAL */}
+      {isModalOpen && (
+        <TransactionModal
+          isOpen={isModalOpen}
+          onClose={() => setIsModalOpen(false)}
+          onSave={(newData) => {
+            const transaksiBaru = {
+              tgl: new Date().toLocaleDateString("id-ID"),
+              kat: newData.kat,
+              desc: newData.desc,
+              nominal: newData.nominal,
+            };
+
+            setDataTransaksi((prev) => [transaksiBaru, ...prev]);
+
+            setNotif({
+              type: transaksiBaru.nominal > 0 ? "Pemasukan" : "Pengeluaran",
+              nama: transaksiBaru.desc,
+            });
+
+            setTimeout(() => {
+              setNotif(null);
+            }, 3000);
+
+            setIsModalOpen(false);
+          }}
+        />
+      )}
+
+      {isScanModalOpen && (
+        <ScanStrukModal
+          isOpen={isScanModalOpen}
+          onClose={() => setIsScanModalOpen(false)}
+          onUpload={handleProcessScan}
+        />
+      )}
 
       {/* =========================================================
           3. AREA KONTEN UTAMA (KORIDOR KANAN - ISI TRANSAKSI)
       ========================================================= */}
-      <div className="flex-1 flex flex-col h-full overflow-hidden z-10 relative">
+      <div className="flex-1 flex flex-col h-screen overflow-y-auto z-10 relative pb-20">
         <header className="flex justify-between items-center px-10 pt-8 pb-4 bg-transparent">
           <div>
             <h1 className="text-3xl font-bold text-gray-800">Transaksi</h1>
@@ -408,29 +388,7 @@ const Transaksi = () => {
         </header>
 
         {/* BUDGETING */}
-        <div className="grid grid-cols-1 md:grid-cols-3 gap-4 px-10 pb-8 w-full">
-
-          {/* Total Pemasukan */}
-          {/* <div className="bg-white p-4 rounded-3xl border border-[#e9dff9] shadow-sm flex items-center gap-4">
-            <div className="w-14 h-14 rounded-2xl bg-gradient-to-br from-[#a78bfa] to-[#8b5cf6] flex items-center justify-center text-white text-2xl shrink-0">
-              <i className="fas fa-wallet"></i>
-            </div>
-
-            <div>
-              <p className="text-[11px] font-semibold text-[#6b61b7]">
-                Total Pemasukan
-              </p>
-
-              <h3 className="text-lg font-extrabold text-[#453c8a] mt-0.5 w-full">
-                Rp {totalPemasukan.toLocaleString("id-ID")}
-              </h3>
-
-              <p className="text-[10px] text-gray-400 mt-0.5">
-                100% dari total pemasukan
-              </p>
-            </div>
-          </div> */}
-
+        <div className="grid grid-cols-1 md:grid-cols-3 gap-4 px-10 pb-8 flex-shrink-0">
           {/* Kebutuhan */}
           <div className="bg-white p-4 rounded-3xl border border-[#e9dff9] shadow-sm flex items-center gap-4">
             <div className="w-14 h-14 rounded-2xl bg-gradient-to-br from-[#a78bfa] to-[#8b5cf6] flex items-center justify-center text-white text-2xl shrink-0">
@@ -451,10 +409,9 @@ const Transaksi = () => {
               </h3>
 
               <p
-                className={`text-[10px] mt-0.5 ${sisaKebutuhan < 0
-                  ? "text-red-500"
-                  : "text-green-500"
-                  }`}
+                className={`text-[10px] mt-0.5 ${
+                  sisaKebutuhan < 0 ? "text-red-500" : "text-green-500"
+                }`}
               >
                 Sisa Rp {sisaKebutuhan.toLocaleString("id-ID")}
               </p>
@@ -481,10 +438,9 @@ const Transaksi = () => {
               </h3>
 
               <p
-                className={`text-[10px] mt-0.5 ${sisaKeinginan < 0
-                  ? "text-red-500"
-                  : "text-green-500"
-                  }`}
+                className={`text-[10px] mt-0.5 ${
+                  sisaKeinginan < 0 ? "text-red-500" : "text-green-500"
+                }`}
               >
                 Sisa Rp {sisaKeinginan.toLocaleString("id-ID")}
               </p>
@@ -511,48 +467,46 @@ const Transaksi = () => {
               </h3>
 
               <p
-                className={`text-[10px] mt-0.5 ${sisaTabungan < 0
-                    ? "text-red-500"
-                    : "text-green-500"
-                  }`}
+                className={`text-[10px] mt-0.5 ${
+                  sisaTabungan < 0 ? "text-red-500" : "text-green-500"
+                }`}
               >
                 Sisa Rp {sisaTabungan.toLocaleString("id-ID")}
               </p>
             </div>
           </div>
-
         </div>
 
         {/* Isi Grid Utama Transaksi (Scrollable) */}
         {/* 4 METRIC CARDS ROW */}
-        <main className="flex-grow px-10 pb-8 overflow-y-auto grid grid-cols-12 gap-8 progress-clean">
-
-          {/* KOLOM TABEL (KIRI - 8/12) */}
-          <div className="col-span-12 xl:col-span-8 space-y-6">
-            {/* FILTER BAR */}
-            <div className="bg-white p-4 rounded-3xl shadow-sm border border-gray-50 flex justify-between gap-4">
-              <div className="relative w-64">
-                <input
-                  type="text"
-                  placeholder="Cari Transaksi..."
-                  value={searchTerm}
-                  onChange={(e) => setSearchTerm(e.target.value)}
-                  className="w-full bg-[#f8f9fb] px-4 py-2 rounded-xl text-xs outline-none border border-transparent focus:border-[#8477e4]/20"
-                />
-                <i className="fas fa-search absolute right-4 top-1/2 -translate-y-1/2 text-gray-400 text-xs"></i>
-              </div>
-              <div className="flex items-center gap-2">
-                {["Semua", "Pemasukan", "Pengeluaran"].map((f) => (
-                  <button
-                    key={f}
-                    onClick={() => setActiveFilter(f)}
-                    className={`px-5 py-2 rounded-xl text-xs font-bold transition-all ${activeFilter === f ? "bg-[#8477e4] text-white shadow-md" : "bg-[#f8f9fb] text-gray-500 hover:bg-gray-100"}`}
-                  >
-                    {f}
-                  </button>
-                ))}
-              </div>
-              {/* <div className="flex gap-2">
+        <div className="px-10 flex-grow">
+          <main className="flex-grow px-10 pb-8 overflow-y-auto grid grid-cols-12 gap-8 progress-clean">
+            {/* KOLOM TABEL (KIRI - 8/12) */}
+            <div className="col-span-12 xl:col-span-8 space-y-6">
+              {/* FILTER BAR */}
+              <div className="bg-white p-4 rounded-3xl shadow-sm border border-gray-50 flex justify-between gap-4">
+                <div className="relative w-64">
+                  <input
+                    type="text"
+                    placeholder="Cari Transaksi..."
+                    value={searchTerm}
+                    onChange={(e) => setSearchTerm(e.target.value)}
+                    className="w-full bg-[#f8f9fb] px-4 py-2 rounded-xl text-xs outline-none border border-transparent focus:border-[#8477e4]/20"
+                  />
+                  <i className="fas fa-search absolute right-4 top-1/2 -translate-y-1/2 text-gray-400 text-xs"></i>
+                </div>
+                <div className="flex items-center gap-2">
+                  {["Semua", "Pemasukan", "Pengeluaran"].map((f) => (
+                    <button
+                      key={f}
+                      onClick={() => setActiveFilter(f)}
+                      className={`px-5 py-2 rounded-xl text-xs font-bold transition-all ${activeFilter === f ? "bg-[#8477e4] text-white shadow-md" : "bg-[#f8f9fb] text-gray-500 hover:bg-gray-100"}`}
+                    >
+                      {f}
+                    </button>
+                  ))}
+                </div>
+                {/* <div className="flex gap-2">
                 {["Kebutuhan", "Keinginan", "Tabungan"].map((kat) => (
                   <button
                     key={kat}
@@ -578,168 +532,165 @@ const Transaksi = () => {
                   </button>
                 ))}
               </div> */}
-            </div>
+              </div>
 
-            {/* TABEL RIWAYAT TRANSAKSI */}
-            <div className="bg-white rounded-[2rem] shadow-sm border border-gray-50 overflow-hidden">
-              <table className="w-full text-left border-collapse">
-                <thead className="bg-[#fcfcff] border-b border-gray-50">
-                  <tr>
-                    <th className="px-6 py-5 text-[11px] font-extrabold text-gray-400 uppercase tracking-widest">
-                      Tanggal
-                    </th>
-                    <th className="px-6 py-5 text-[11px] font-extrabold text-gray-400 uppercase tracking-widest">
-                      Kategori
-                    </th>
-                    <th className="px-6 py-5 text-[11px] font-extrabold text-gray-400 uppercase tracking-widest">
-                      Keterangan
-                    </th>
-                    <th className="px-6 py-5 text-[11px] font-extrabold text-gray-400 uppercase tracking-widest text-right">
-                      Nominal
-                    </th>
-                  </tr>
-                </thead>
-                <tbody className="divide-y divide-gray-50">
-                  {dataTampil.map((item, idx) => (
-                    <tr key={idx} className="hover:bg-gray-50 transition-all">
-                      <td className="px-6 py-5 text-[12px] font-bold text-gray-500">
-                        {item.tgl}
-                      </td>
-                      <td className="px-6 py-5">
-                        <span className="text-[10px] font-bold px-3 py-1 rounded-lg bg-gray-100 text-gray-600">
-                          {item.kat}
-                        </span>
-                      </td>
-                      <td className="px-6 py-5 text-[12px] font-bold text-gray-900">
-                        {item.desc}
-                      </td>
-                      <td
-                        className={`px-6 py-5 text-[12px] font-black text-right ${item.nominal < 0 ? "text-[#F44336]" : "text-[#4caf50]"}`}
-                      >
-                        {item.nominal.toLocaleString("id-ID", {
-                          style: "currency",
-                          currency: "IDR",
-                        })}
-                      </td>
+              {/* TABEL RIWAYAT TRANSAKSI */}
+              <div className="bg-white rounded-[2rem] shadow-sm border border-gray-50 overflow-hidden">
+                <table className="w-full text-left border-collapse">
+                  <thead className="bg-[#fcfcff] border-b border-gray-50">
+                    <tr>
+                      <th className="px-6 py-5 text-[11px] font-extrabold text-gray-400 uppercase tracking-widest">
+                        Tanggal
+                      </th>
+                      <th className="px-6 py-5 text-[11px] font-extrabold text-gray-400 uppercase tracking-widest">
+                        Kategori
+                      </th>
+                      <th className="px-6 py-5 text-[11px] font-extrabold text-gray-400 uppercase tracking-widest">
+                        Keterangan
+                      </th>
+                      <th className="px-6 py-5 text-[11px] font-extrabold text-gray-400 uppercase tracking-widest text-right">
+                        Nominal
+                      </th>
                     </tr>
-                  ))}
-                </tbody>
-              </table>
+                  </thead>
+                  <tbody className="divide-y divide-gray-50">
+                    {dataTampil.map((item, idx) => (
+                      <tr key={idx} className="hover:bg-gray-50 transition-all">
+                        <td className="px-6 py-5 text-[12px] font-bold text-gray-500">
+                          {item.tgl}
+                        </td>
+                        <td className="px-6 py-5">
+                          <span className="text-[10px] font-bold px-3 py-1 rounded-lg bg-gray-100 text-gray-600">
+                            {item.kat}
+                          </span>
+                        </td>
+                        <td className="px-6 py-5 text-[12px] font-bold text-gray-900">
+                          {item.desc}
+                        </td>
+                        <td
+                          className={`px-6 py-5 text-[12px] font-black text-right ${item.nominal < 0 ? "text-[#F44336]" : "text-[#4caf50]"}`}
+                        >
+                          {item.nominal.toLocaleString("id-ID", {
+                            style: "currency",
+                            currency: "IDR",
+                          })}
+                        </td>
+                      </tr>
+                    ))}
+                  </tbody>
+                </table>
 
-              {/* PAGINATION */}
-              <div className="p-6 flex justify-center items-center gap-3 bg-[#fcfcff] border-t border-gray-50">
-                <button className="w-8 h-8 rounded-lg border border-gray-200 flex items-center justify-center text-gray-400 hover:bg-white">
-                  <i className="fas fa-chevron-left text-[10px]"></i>
-                </button>
-                {[1, 2, 3, "...", 10].map((p, i) => (
-                  <button
-                    key={i}
-                    onClick={() => typeof p === "number" && setActivePage(p)}
-                    className={`w-8 h-8 rounded-lg text-xs font-bold transition-all ${activePage === p ? "bg-[#8477e4] text-white" : "text-gray-400 hover:bg-white"}`}
-                  >
-                    {p}
+                {/* PAGINATION */}
+                <div className="p-6 flex justify-center items-center gap-3 bg-[#fcfcff] border-t border-gray-50">
+                  <button className="w-8 h-8 rounded-lg border border-gray-200 flex items-center justify-center text-gray-400 hover:bg-white">
+                    <i className="fas fa-chevron-left text-[10px]"></i>
                   </button>
-                ))}
-                <button className="w-8 h-8 rounded-lg border border-gray-200 flex items-center justify-center text-gray-400 hover:bg-white">
-                  <i className="fas fa-chevron-right text-[10px]"></i>
-                </button>
+                  {[1, 2, 3, "...", 10].map((p, i) => (
+                    <button
+                      key={i}
+                      onClick={() => typeof p === "number" && setActivePage(p)}
+                      className={`w-8 h-8 rounded-lg text-xs font-bold transition-all ${activePage === p ? "bg-[#8477e4] text-white" : "text-gray-400 hover:bg-white"}`}
+                    >
+                      {p}
+                    </button>
+                  ))}
+                  <button className="w-8 h-8 rounded-lg border border-gray-200 flex items-center justify-center text-gray-400 hover:bg-white">
+                    <i className="fas fa-chevron-right text-[10px]"></i>
+                  </button>
+                </div>
               </div>
             </div>
-          </div>
 
-          {/* KOLOM KANAN (KONTEN STRUK & TIPS AI) */}
-          <div className="col-span-12 xl:col-span-4 flex flex-col gap-6">
-            {/* KARTU SCAN STRUK / NOTA */}
-            <div className="bg-white p-7 rounded-[2.5rem] shadow-[0_4px_24px_rgba(132,119,228,0.05)] border border-gray-100 flex flex-col space-y-6 relative overflow-hidden">
-              <div className="flex justify-between items-start mb-1 shrink-0 relative z-10">
-                <div className="space-y-1">
-                  <div className="flex items-center gap-2.5">
-                    <h3 className="text-xl font-extrabold text-gray-900 tracking-tight">
-                      Scan Struk / Nota
-                    </h3>
-                    <span className="bg-[#ede7fdf2] text-[#8477e4] text-[10px] font-black px-3 py-1 rounded-full border border-[#8477e4]/20 shadow-sm">
-                      AI
-                    </span>
+            {/* KOLOM KANAN (KONTEN STRUK & TIPS AI) */}
+            <div className="col-span-12 xl:col-span-4 flex flex-col gap-6">
+              {/* KARTU SCAN STRUK / NOTA */}
+              <div className="bg-white p-7 rounded-[2.5rem] shadow-[0_4px_24px_rgba(132,119,228,0.05)] border border-gray-100 flex flex-col space-y-6 relative overflow-hidden">
+                <div className="flex justify-between items-start mb-1 shrink-0 relative z-10">
+                  <div className="space-y-1">
+                    <div className="flex items-center gap-2.5">
+                      <h3 className="text-xl font-extrabold text-gray-900 tracking-tight">
+                        Scan Struk / Nota
+                      </h3>
+                      <span className="bg-[#ede7fdf2] text-[#8477e4] text-[10px] font-black px-3 py-1 rounded-full border border-[#8477e4]/20 shadow-sm">
+                        AI
+                      </span>
+                    </div>
+                    <p className="text-xs font-medium text-gray-500 leading-relaxed max-w-[240px]">
+                      Foto struk belanja untuk catat otomatis dengan AI
+                    </p>
                   </div>
-                  <p className="text-xs font-medium text-gray-500 leading-relaxed max-w-[240px]">
-                    Foto struk belanja untuk catat otomatis dengan AI
+                </div>
+
+                {/* Box Upload */}
+                <div className="border-2 border-dashed border-[#d1c8f3] bg-[#f9f6ff] rounded-[2rem] p-8 flex flex-col items-center text-center space-y-6 flex-1 justify-center relative z-10 hover:border-[#8477e4]/50 transition-all duration-300">
+                  <img
+                    src="/gambar/robothp.png"
+                    alt="Robot Upload"
+                    className="w-[100px] object-contain animate-bubble-img"
+                  />
+                  <div className="space-y-1">
+                    <p className="text-sm font-bold text-gray-700 tracking-tight">
+                      Upload atau ambil foto struk
+                    </p>
+                    <p className="text-[10px] font-medium text-gray-400">
+                      PNG, JPG maks. 5MB
+                    </p>
+                  </div>
+                  <button
+                    onClick={() => setIsScanModalOpen(true)}
+                    className="bg-gradient-to-r from-[#8477e4] to-[#7466d3] text-white px-8 py-3.5 rounded-2xl flex items-center gap-3.5 text-xs font-black shadow-lg hover:translate-y-[-2px] transition-all duration-300"
+                  >
+                    <i className="fas fa-camera text-base"></i>
+                    Scan Struck
+                  </button>
+                </div>
+
+                <div className="flex items-center gap-3 bg-[#f4f1fe] p-4.5 px-5 rounded-2xl border-2 border-[#d1c8f3]/20 shadow-sm relative z-10">
+                  <div className="w-5 h-5 bg-white rounded-full flex items-center justify-center shadow-md">
+                    <i className="fas fa-star text-[9px] text-[#8477e4]"></i>
+                  </div>
+                  <p className="text-[10px] font-bold text-[#7a72bc] tracking-tight">
+                    AI akan membaca detail dan mengisi form untukmu!
                   </p>
                 </div>
               </div>
 
-              {/* Box Upload */}
-              <div className="border-2 border-dashed border-[#d1c8f3] bg-[#f9f6ff] rounded-[2rem] p-8 flex flex-col items-center text-center space-y-6 flex-1 justify-center relative z-10 hover:border-[#8477e4]/50 transition-all duration-300">
-                <img
-                  src="/gambar/robothp.png"
-                  alt="Robot Upload"
-                  className="w-[100px] object-contain animate-bubble-img"
-                />
-                <div className="space-y-1">
-                  <p className="text-sm font-bold text-gray-700 tracking-tight">
-                    Upload atau ambil foto struk
-                  </p>
-                  <p className="text-[10px] font-medium text-gray-400">
-                    PNG, JPG maks. 5MB
-                  </p>
+              {/* KARTU TIPS AI */}
+              <div className="bg-white p-7 rounded-[2.5rem] shadow-[0_4px_24px_rgba(132,119,228,0.05)] border border-gray-100 flex flex-col relative overflow-hidden">
+                <div className="flex items-center gap-4.5 mb-7 shrink-0 relative z-10">
+                  <div className="w-11 h-11 bg-[#fffbe6] rounded-xl flex items-center justify-center border-2 border-[#ffec99] shadow-md">
+                    <i className="fas fa-lightbulb text-2xl text-[#fab005]"></i>
+                  </div>
+                  <h3 className="text-base font-extrabold text-gray-900 tracking-tight">
+                    Tips AI
+                  </h3>
                 </div>
-                <button
-                  onClick={() => setIsScanModalOpen(true)}
-                  className="bg-gradient-to-r from-[#8477e4] to-[#7466d3] text-white px-8 py-3.5 rounded-2xl flex items-center gap-3.5 text-xs font-black shadow-lg hover:translate-y-[-2px] transition-all duration-300"
-                >
-                  <i className="fas fa-camera text-base"></i>
-                  Scan Struck
-                </button>
-              </div>
 
-              <div className="flex items-center gap-3 bg-[#f4f1fe] p-4.5 px-5 rounded-2xl border-2 border-[#d1c8f3]/20 shadow-sm relative z-10">
-                <div className="w-5 h-5 bg-white rounded-full flex items-center justify-center shadow-md">
-                  <i className="fas fa-star text-[9px] text-[#8477e4]"></i>
+                <div className="bg-[#f8f9fb] p-6 rounded-2xl flex items-center relative z-0 border border-gray-50 min-h-[120px]">
+                  <p className="text-[11px] font-medium text-gray-700 leading-relaxed max-w-[170px] relative z-10">
+                    Gunakan scan struk untuk menghemat waktu dan menghindari
+                    salah ketik. AI akan bantu kamu mencatat dengan akurat!
+                  </p>
+                  <img
+                    src="/gambar/robothewo.png"
+                    alt="Robot Tips"
+                    className="absolute -right-6 -bottom-6 w-[150px] object-contain animate-bubble-img z-20"
+                  />
                 </div>
-                <p className="text-[10px] font-bold text-[#7a72bc] tracking-tight">
-                  AI akan membaca detail dan mengisi form untukmu!
-                </p>
+
+                {/* Pagination Titik */}
+                <div className="mt-8 flex justify-center items-center gap-2.5 relative z-10">
+                  <div className="w-2.5 h-2.5 bg-[#8477e4] rounded-full"></div>
+                  <div className="w-2.5 h-2.5 bg-gray-200 rounded-full"></div>
+                  <div className="w-2.5 h-2.5 bg-gray-200 rounded-full"></div>
+                  <div className="w-2.5 h-2.5 bg-gray-200 rounded-full"></div>
+                </div>
               </div>
             </div>
-
-            {/* KARTU TIPS AI */}
-            <div className="bg-white p-7 rounded-[2.5rem] shadow-[0_4px_24px_rgba(132,119,228,0.05)] border border-gray-100 flex flex-col relative overflow-hidden">
-              <div className="flex items-center gap-4.5 mb-7 shrink-0 relative z-10">
-                <div className="w-11 h-11 bg-[#fffbe6] rounded-xl flex items-center justify-center border-2 border-[#ffec99] shadow-md">
-                  <i className="fas fa-lightbulb text-2xl text-[#fab005]"></i>
-                </div>
-                <h3 className="text-base font-extrabold text-gray-900 tracking-tight">
-                  Tips AI
-                </h3>
-              </div>
-
-              <div className="bg-[#f8f9fb] p-6 rounded-2xl flex items-center relative z-0 border border-gray-50 min-h-[120px]">
-                <p className="text-[11px] font-medium text-gray-700 leading-relaxed max-w-[170px] relative z-10">
-                  Gunakan scan struk untuk menghemat waktu dan menghindari salah
-                  ketik. AI akan bantu kamu mencatat dengan akurat!
-                </p>
-                <img
-                  src="/gambar/robothewo.png"
-                  alt="Robot Tips"
-                  className="absolute -right-6 -bottom-6 w-[150px] object-contain animate-bubble-img z-20"
-                />
-              </div>
-
-              {/* Pagination Titik */}
-              <div className="mt-8 flex justify-center items-center gap-2.5 relative z-10">
-                <div className="w-2.5 h-2.5 bg-[#8477e4] rounded-full"></div>
-                <div className="w-2.5 h-2.5 bg-gray-200 rounded-full"></div>
-                <div className="w-2.5 h-2.5 bg-gray-200 rounded-full"></div>
-                <div className="w-2.5 h-2.5 bg-gray-200 rounded-full"></div>
-              </div>
-            </div>
-          </div>
-        </main>
+          </main>
+        </div>
       </div>
-
-
     </div>
-
-
   );
 };
 

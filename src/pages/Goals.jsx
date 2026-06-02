@@ -2,6 +2,8 @@ import React, { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { Link } from "react-router-dom";
 import AddGoalPopup from "./AddGoalPopup";
+import EditGoalPopup from "./EditGoalPopup";
+import DeleteConfirmationModal from "./DeleteConfirmationModal";
 import {
   ResponsiveContainer,
   PieChart,
@@ -16,14 +18,30 @@ import {
 } from "recharts";
 
 const Goals = () => {
+  // Semua data harus di dalam array [] ini!
   const [goals, setGoals] = useState([
-    { name: "Laptop", allocation: 2000000, color: "#8b5cf6" },
-    { name: "HP Baru", allocation: 1500000, color: "#f59e0b" },
+    {
+      name: "Laptop",
+      allocation: 2000000,
+      targetPrice: 10000000,
+      progress: 20,
+      color: "#8b5cf6",
+    },
+    {
+      name: "HP Baru",
+      allocation: 1500000,
+      targetPrice: 5000000,
+      progress: 30,
+      color: "#f59e0b",
+    },
   ]);
   const [initialBalance, setInitialBalance] = useState(1000000);
   const [isSidebarOpen, setIsSidebarOpen] = useState(true);
   const [activeMenu, setActiveMenu] = useState("Goals");
   const [isPopupOpen, setIsPopupOpen] = useState(false);
+  const [isEditPopupOpen, setIsEditPopupOpen] = useState(false);
+  const [selectedGoal, setSelectedGoal] = useState(null);
+  const [isDeleteModalOpen, setIsDeleteModalOpen] = useState(false);
 
   const pieData = goals.map((goal) => ({
     name: goal.name,
@@ -46,6 +64,21 @@ const Goals = () => {
 
     // Kurangi saldo otomatis
     setInitialBalance((prev) => prev - newGoal.allocation);
+  };
+  const handleOpenEdit = (goal) => {
+    setSelectedGoal(goal);
+    setIsEditPopupOpen(true);
+  };
+
+  // Fungsi untuk membuka modal
+  const openDeleteModal = (goal) => {
+    setSelectedGoal(goal);
+    setIsDeleteModalOpen(true);
+  };
+
+  const handleDeleteGoal = (goalToDelete) => {
+    setGoals((prev) => prev.filter((g) => g !== goalToDelete));
+    setIsDeleteModalOpen(false);
   };
 
   const handleLogout = () => {
@@ -453,10 +486,16 @@ const Goals = () => {
 
                   {/* Bagian Kanan: Aksi Edit & Hapus */}
                   <div className="flex gap-2 sm:ml-2 justify-end">
-                    <button className="w-8 h-8 rounded-lg border border-purple-100 text-[#8b5cf6] flex items-center justify-center hover:bg-purple-50 transition shadow-sm">
+                    <button
+                      onClick={() => handleOpenEdit(goal)} // Hubungkan ke fungsi buka popup
+                      className="w-8 h-8 rounded-lg border border-purple-100 text-[#8b5cf6] flex items-center justify-center hover:bg-purple-50 transition shadow-sm"
+                    >
                       <i className="fas fa-edit text-xs"></i>
                     </button>
-                    <button className="w-8 h-8 rounded-lg border border-red-100 text-red-400 flex items-center justify-center hover:bg-red-50 transition shadow-sm">
+                    <button
+                      onClick={() => openDeleteModal(goal)}
+                      className="w-8 h-8 rounded-lg border border-red-100 text-red-400 flex items-center justify-center hover:bg-red-50 transition shadow-sm"
+                    >
                       <i className="fas fa-trash text-xs"></i>
                     </button>
                   </div>
@@ -465,7 +504,10 @@ const Goals = () => {
             </div>
 
             {/* Tombol Berubah Menjadi Solid Border Sesuai Figma */}
-            <button className="w-full mt-6 py-2.5 border border-purple-200 text-[#8b5cf6] bg-white rounded-xl text-xs font-bold hover:bg-[#fcfbff] transition flex items-center justify-center gap-2 shadow-sm">
+            <button
+              onClick={() => setIsPopupOpen(true)} // Tambahkan baris ini
+              className="w-full mt-6 py-2.5 border border-purple-200 text-[#8b5cf6] bg-white rounded-xl text-xs font-bold hover:bg-[#fcfbff] transition flex items-center justify-center gap-2 shadow-sm"
+            >
               <i className="fas fa-plus text-[10px]"></i> Tambah Goals
             </button>
           </div>
@@ -666,6 +708,34 @@ const Goals = () => {
         onClose={() => setIsPopupOpen(false)}
         initialBalance={initialBalance}
         onSave={handleAddGoal}
+      />
+      <EditGoalPopup
+        isOpen={isEditPopupOpen}
+        onClose={() => setIsEditPopupOpen(false)}
+        goal={selectedGoal}
+        totalTabungan={initialBalance || 0}
+        onSave={(updatedGoal) => {
+          setGoals((prev) =>
+            prev.map((g) => (g.name === updatedGoal.name ? updatedGoal : g)),
+          );
+          setIsEditPopupOpen(false);
+        }}
+      />
+      <DeleteConfirmationModal
+        isOpen={isDeleteModalOpen}
+        onClose={() => setIsDeleteModalOpen(false)}
+        onConfirm={() => {
+          handleDeleteGoal(selectedGoal);
+          setIsDeleteModalOpen(false);
+        }}
+        goal={
+          selectedGoal || {
+            name: "Loading...",
+            allocation: 0,
+            targetPrice: 0,
+            progress: 0,
+          }
+        }
       />
     </div>
   );
