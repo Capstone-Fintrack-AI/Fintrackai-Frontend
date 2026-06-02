@@ -87,7 +87,7 @@ const Goals = () => {
   };
   
   return (
-    <div className="flex h-screen bg-[#fcfaff] font-poppins text-gray-800 overflow-hidden relative">
+    <div className="h-screen bg-[#f8f6ff] font-poppins flex overflow-hidden relative">
       {/* =========================================================
           1. BACKGROUND TEMA & BUBBLE (PERSIS BERANDA)
       ========================================================= */}
