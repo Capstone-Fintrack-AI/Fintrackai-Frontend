@@ -3,22 +3,10 @@ import { useLocation, useNavigate } from "react-router-dom";
 import TransactionModal from "./TransactionModal";
 import ScanStrukModal from "./ScanStrukModal";
 import { Link } from "react-router-dom";
+import axios from "axios";
 
 const Transaksi = () => {
-  const [dataTransaksi, setDataTransaksi] = useState([
-    {
-      tgl: "24 Mei 2024",
-      kat: "Kebutuhan",
-      desc: "Bayar Kos Mei 2024",
-      nominal: -1200000,
-    },
-    {
-      tgl: "24 Mei 2024",
-      kat: "Pemasukan",
-      desc: "Gaji Bulanan",
-      nominal: 5000000,
-    },
-  ]);
+  const [dataTransaksi, setDataTransaksi] = useState([]);
 
   const [isSidebarOpen, setIsSidebarOpen] = useState(true);
   const [activeMenu, setActiveMenu] = useState("Transaksi");
@@ -71,35 +59,94 @@ const Transaksi = () => {
     if (location.state?.bukaModal) {
       setIsModalOpen(true);
     }
+
+    const fetchTransaksi = async () => {
+      try {
+        const user = JSON.parse(
+          localStorage.getItem("user") || "{}"
+        );
+
+        const userId = user.id;
+
+        const [pemasukanRes, pengeluaranRes] = await Promise.all([
+          axios.get(
+            `https://fintrackai-backend-1yz0.onrender.com/pemasukan/user/${userId}`
+          ),
+          axios.get(
+            `https://fintrackai-backend-1yz0.onrender.com/pengeluaran/user/${userId}`
+          ),
+        ]);
+
+        // Mapping Pemasukan
+        const pemasukan = pemasukanRes.data.data.map((item) => ({
+          id: `p-${item.id}`,
+          tipe: "Pemasukan",
+          tgl: new Date(item.tanggal).toLocaleDateString("id-ID", {
+            day: "numeric",
+            month: "long",
+            year: "numeric",
+          }),
+          kat: item.sumber_pemasukan,
+          desc: item.nama_pemasukan,
+          nominal: Number(item.jumlah),
+          createdAt: item.created_at,
+        }));
+
+        // Mapping Pengeluaran
+        const pengeluaran = pengeluaranRes.data.data.map((item) => ({
+          id: `g-${item.id}`,
+          tipe: "Pengeluaran",
+          tgl: new Date(item.tanggal).toLocaleDateString("id-ID", {
+            day: "numeric",
+            month: "long",
+            year: "numeric",
+          }),
+          kat: item.kategori,
+          desc: item.nama_pengeluaran,
+          nominal: -Number(item.jumlah), // negatif
+          createdAt: item.created_at,
+        }));
+
+        // Gabungkan & urutkan terbaru
+        const semuaTransaksi = [...pemasukan, ...pengeluaran].sort(
+          (a, b) =>
+            new Date(b.createdAt) - new Date(a.createdAt)
+        );
+
+        setDataTransaksi(semuaTransaksi);
+      } catch (error) {
+        console.error("Gagal mengambil transaksi", error);
+      }
+    };
+
+    fetchTransaksi();
   }, [location]);
 
-  {
-    notif && (
-      <div className="fixed top-6 right-6 z-[9999] animate-slideIn">
-        <div
-          className={`px-6 py-4 rounded-2xl shadow-xl text-white flex items-center gap-3 ${notif.type === "Pemasukan"
-              ? "bg-green-500"
-              : "bg-red-500"
-            }`}
-        >
-          <i className="fas fa-check-circle text-xl"></i>
-
-          <div>
-            <h3 className="font-bold">
-              {notif.type} Berhasil
-            </h3>
-
-            <p className="text-xs">
-              {notif.nama} berhasil ditambahkan
-            </p>
-          </div>
-        </div>
-      </div>
-    );
-  }
 
   return (
     <div className="h-screen bg-[#f8f6ff] font-poppins flex overflow-hidden">
+      {notif && (
+        <div className="fixed top-6 right-6 z-[9999] animate-slideIn">
+          <div
+            className={`px-6 py-4 rounded-2xl shadow-xl text-white flex items-center gap-3 ${notif.type === "Pemasukan"
+              ? "bg-green-500"
+              : "bg-red-500"
+              }`}
+          >
+            <i className="fas fa-check-circle text-xl"></i>
+
+            <div>
+              <h3 className="font-bold">
+                {notif.type} Berhasil
+              </h3>
+
+              <p className="text-xs">
+                {notif.nama} berhasil ditambahkan
+              </p>
+            </div>
+          </div>
+        </div>
+      )}
       {/* MODAL */}
       {isModalOpen && (
         <TransactionModal
@@ -320,7 +367,7 @@ const Transaksi = () => {
           {/* KOLOM TABEL (KIRI - 8/12) */}
           <div className="col-span-12 xl:col-span-8 space-y-6">
             {/* FILTER BAR */}
-            <div className="bg-white p-4 rounded-3xl shadow-sm border border-gray-50 flex flex-wrap items-center justify-between gap-4">
+            <div className="bg-white p-4 rounded-3xl shadow-sm border border-gray-50 flex justify-between gap-4">
               <div className="relative w-64">
                 <input
                   type="text"
@@ -342,7 +389,7 @@ const Transaksi = () => {
                   </button>
                 ))}
               </div>
-              <div className="flex gap-2">
+              {/* <div className="flex gap-2">
                 {["Kebutuhan", "Keinginan", "Tabungan"].map((kat) => (
                   <button
                     key={kat}
@@ -367,7 +414,7 @@ const Transaksi = () => {
                     {kat}
                   </button>
                 ))}
-              </div>
+              </div> */}
             </div>
 
             {/* TABEL RIWAYAT TRANSAKSI */}
@@ -528,6 +575,7 @@ const Transaksi = () => {
 
 
     </div>
+
 
   );
 };

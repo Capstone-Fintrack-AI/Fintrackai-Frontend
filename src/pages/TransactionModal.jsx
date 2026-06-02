@@ -114,7 +114,18 @@ const TransactionModal = ({ isOpen, onClose, onSave }) => {
       setKategori("Kebutuhan");
 
       if (onSave) {
-        onSave();
+        onSave({
+          kat: type === "pemasukan"
+            ? sumberPemasukan
+            : kategori,
+
+          desc: namaTransaksi,
+
+          nominal:
+            type === "pemasukan"
+              ? numericAmount
+              : -numericAmount,
+        });
       }
 
       onClose();
