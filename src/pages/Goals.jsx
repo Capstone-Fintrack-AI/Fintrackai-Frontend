@@ -1,4 +1,5 @@
-import React, { useState} from "react";
+import React, { useState, useEffect } from "react";
+import axios from "axios";
 import { useNavigate } from "react-router-dom";
 import { Link } from "react-router-dom";
 import AddGoalPopup from "./AddGoalPopup";
@@ -20,22 +21,7 @@ import {
 
 const Goals = () => {
   // Semua data harus di dalam array [] ini!
-  const [goals, setGoals] = useState([
-    {
-      name: "Laptop",
-      allocation: 2000000,
-      targetPrice: 10000000,
-      progress: 20,
-      color: "#8b5cf6",
-    },
-    {
-      name: "HP Baru",
-      allocation: 1500000,
-      targetPrice: 5000000,
-      progress: 30,
-      color: "#f59e0b",
-    },
-  ]);
+  const [goals, setGoals] = useState([]);
   const [initialBalance, setInitialBalance] = useState(1000000);
   const [isSidebarOpen, setIsSidebarOpen] = useState(true);
   const [activeMenu, setActiveMenu] = useState("Goals");
@@ -43,6 +29,43 @@ const Goals = () => {
   const [isEditPopupOpen, setIsEditPopupOpen] = useState(false);
   const [selectedGoal, setSelectedGoal] = useState(null);
   const [isDeleteModalOpen, setIsDeleteModalOpen] = useState(false);
+  const [sudahDialokasikan, setSudahDialokasikan] = useState(0);
+
+
+  const getGoalsUser = async () => {
+    try {
+      const response = await axios.get(
+        `https://fintrackai-backend-1yz0.onrender.com/target-tabungan/user/${userId}`
+      );
+
+      const data = response.data.data.map((item) => ({
+        id: item.id,
+        name: item.nama_target,
+        allocation: Number(item.jumlah_terkumpul),
+        targetPrice: Number(item.jumlah_target),
+        progress:
+          Number(item.jumlah_target) > 0
+            ? Math.round(
+              (Number(item.jumlah_terkumpul) /
+                Number(item.jumlah_target)) *
+              100
+            )
+            : 0,
+        status: item.status,
+        color:
+          item.status === "selesai"
+            ? "#10b981"
+            : "#8b5cf6",
+      }));
+
+      setGoals(data);
+    } catch (error) {
+      console.log(error);
+    }
+  };
+
+
+
 
   const pieData = goals.map((goal) => ({
     name: goal.name,
@@ -85,7 +108,95 @@ const Goals = () => {
   const handleLogout = () => {
     navigate("/login");
   };
-  
+
+  const user = JSON.parse(localStorage.getItem("user"));
+  const userId = user?.id;
+
+  const [totalPemasukan, setTotalPemasukan] = useState(0);
+  const [totalPengeluaran, setTotalPengeluaran] = useState(0);
+  const [pengeluaran, setPengeluaran] = useState([]);
+
+  useEffect(() => {
+    if (!userId) return;
+
+    const fetchData = async () => {
+      try {
+        // ambil pemasukan
+        const pemasukanRes = await fetch(
+          `https://fintrackai-backend-1yz0.onrender.com/pemasukan/user/${userId}`
+        );
+        const pemasukanJson = await pemasukanRes.json();
+
+        const totalPemasukanCalc = pemasukanJson.data.reduce(
+          (sum, item) => sum + Number(item.jumlah),
+          0
+        );
+
+        setTotalPemasukan(totalPemasukanCalc);
+
+        // ambil total pengeluaran
+        const pengeluaranTotalRes = await fetch(
+          `https://fintrackai-backend-1yz0.onrender.com/pengeluaran/total/${userId}`
+        );
+        const pengeluaranTotalJson = await pengeluaranTotalRes.json();
+
+        setTotalPengeluaran(Number(pengeluaranTotalJson.total_pengeluaran || 0));
+
+        // ambil list pengeluaran
+        const pengeluaranRes = await fetch(
+          `https://fintrackai-backend-1yz0.onrender.com/pengeluaran/user/${userId}`
+        );
+        const pengeluaranJson = await pengeluaranRes.json();
+
+        setPengeluaran(pengeluaranJson.data || []);
+      } catch (error) {
+        console.error("Error fetch data Goals:", error);
+      }
+    };
+
+    fetchData();
+  }, [userId]);
+
+  const getTotalDialokasikan = async () => {
+    try {
+      console.log("USER ID:", userId);
+
+      const response = await axios.get(
+        `https://fintrackai-backend-1yz0.onrender.com/api/tabungan/${userId}/total`
+      );
+
+      console.log("RESPONSE:", response.data);
+
+      setSudahDialokasikan(
+        Number(response?.data?.data?.total || 0)
+      );
+    } catch (error) {
+      console.log(error);
+    }
+  };
+
+  useEffect(() => {
+    if (userId) {
+      getTotalDialokasikan();
+      getGoalsUser();
+    }
+  }, [userId]);
+
+
+
+  const targetTabungan = totalPemasukan * 0.2;
+
+  const totalTabungan = pengeluaran
+    .filter((item) => item.kategori === "Tabungan")
+    .reduce((sum, item) => sum + Number(item.jumlah), 0);
+  const tersedia = targetTabungan - sudahDialokasikan;
+
+  useEffect(() => {
+    console.log("Sudah Dialokasikan:", sudahDialokasikan);
+  }, [sudahDialokasikan]);
+
+
+
   return (
     <div className="h-screen bg-[#f8f6ff] font-poppins flex overflow-hidden relative">
       {/* =========================================================
@@ -297,7 +408,7 @@ const Goals = () => {
                     </span>
                   </p>
                   <p className="text-base font-extrabold text-[#1e1b4b] mt-0.5 whitespace-nowrap">
-                    Rp 3.000.000
+                    Rp {targetTabungan.toLocaleString("id-ID")}
                   </p>
                 </div>
               </div>
@@ -312,7 +423,7 @@ const Goals = () => {
                     Sudah Dialokasikan
                   </p>
                   <p className="text-base font-extrabold text-[#f59e0b] mt-0.5 whitespace-nowrap">
-                    Rp 800.000
+                    Rp {sudahDialokasikan.toLocaleString("id-ID")}
                   </p>
                 </div>
               </div>
@@ -327,7 +438,7 @@ const Goals = () => {
                     Tersedia
                   </p>
                   <p className="text-base font-extrabold text-[#10b981] mt-0.5 whitespace-nowrap">
-                    Rp 200.000
+                    Rp {tersedia.toLocaleString("id-ID")}
                   </p>
                 </div>
               </div>
