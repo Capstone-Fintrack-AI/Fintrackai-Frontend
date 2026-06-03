@@ -9,7 +9,6 @@ const AnimatedProgressBar = ({ value, maxValue, color }) => {
   const percentage = (value / maxValue) * 100;
 
   useEffect(() => {
-
     const timer = setTimeout(
       () => setWidth(percentage > 100 ? 100 : percentage),
       150,
@@ -35,15 +34,30 @@ const Beranda = () => {
   const handleSearch = (e) => {
     setSearchTerm(e.target.value);
     console.log("Mencari:", e.target.value);
-    // Tambahkan logika filter data di sini
   };
 
-  // Fungsi untuk klik notifikasi (menghilangkan titik merah)
   const handleNotificationClick = () => {
     setHasNotification(false);
   };
 
   const navigate = useNavigate();
+  const [activeGoal, setActiveGoal] = useState({
+    title: "Mimpi Kamu",
+    current: 60,
+    target: 100,
+    image: "/gambar/goals.png"
+  });
+
+  useEffect(() => {
+    const savedGoal = localStorage.getItem("active_goal");
+    if (savedGoal) {
+      setActiveGoal(JSON.parse(savedGoal)); 
+    }
+  }, []);
+
+  const percentage = activeGoal.target > 0 
+    ? Math.round((activeGoal.current / activeGoal.target) * 100) 
+    : 0;
   const [isModalOpen, setIsModalOpen] = useState(false);
   const currentMonth = new Date().toLocaleString("id-ID", {
     month: "long",
@@ -126,7 +140,7 @@ const Beranda = () => {
     const fetchPengeluaran = async () => {
       try {
         const response = await fetch(
-          `https://fintrackai-backend-1yz0.onrender.com/pengeluaran/user/${userId}`
+          `https://fintrackai-backend-1yz0.onrender.com/pengeluaran/user/${userId}`,
         );
 
         const result = await response.json();
@@ -158,23 +172,19 @@ const Beranda = () => {
   const persenKeinginan =
     keinginan > 0 ? (totalKeinginan / keinginan) * 100 : 0;
 
-  const persenTabungan =
-    tabungan > 0 ? (totalTabungan / tabungan) * 100 : 0;
+  const persenTabungan = tabungan > 0 ? (totalTabungan / tabungan) * 100 : 0;
 
   let insightTitle = "Keuanganmu masih aman 🎉";
   let insightMessage = `${userName}, pengeluaranmu masih sesuai dengan alokasi budget yang telah ditentukan.`;
-  let insightAdvice = "Pertahankan kebiasaan baik ini agar tujuan keuanganmu tercapai.";
+  let insightAdvice =
+    "Pertahankan kebiasaan baik ini agar tujuan keuanganmu tercapai.";
 
   let statusColor = "#4caf50";
   let statusBg = "#e8f5e9";
   let statusText = "Masih Aman";
 
   // JIKA MELEBIHI BUDGET
-  if (
-    persenKebutuhan > 100 ||
-    persenKeinginan > 100 ||
-    persenTabungan > 100
-  ) {
+  if (persenKebutuhan > 100 || persenKeinginan > 100 || persenTabungan > 100) {
     insightTitle = "Budget Terlampaui 🚨";
 
     insightMessage = `${userName}, salah satu kategori pengeluaran sudah melebihi batas yang disarankan.`;
@@ -188,7 +198,7 @@ const Beranda = () => {
   }
 
   return (
-    <div className="h-screen bg-[#f8f6ff] font-poppins flex">
+    <div className="h-screen bg-[#f8f6ff] font-poppins flex overflow-hidden relative">
       {/* =========================================================
           1. BACKGROUND TEMA & BUBBLE (PERSIS BERANDA)
       ========================================================= */}
@@ -283,10 +293,11 @@ const Beranda = () => {
               onClick={() => {
                 navigate(item.path);
               }}
-              className={`relative z-10 flex items-center ${isSidebarOpen ? "gap-4 px-3.5" : "justify-center px-0"} cursor-pointer h-[52px] rounded-2xl transition-all duration-300 ${activeMenu === item.n
-                ? "text-[#8477e4] font-bold"
-                : "text-gray-400 hover:text-gray-900"
-                }`}
+              className={`relative z-10 flex items-center ${isSidebarOpen ? "gap-4 px-3.5" : "justify-center px-0"} cursor-pointer h-[52px] rounded-2xl transition-all duration-300 ${
+                activeMenu === item.n
+                  ? "text-[#8477e4] font-bold"
+                  : "text-gray-400 hover:text-gray-900"
+              }`}
             >
               <img
                 src={item.img}
@@ -476,7 +487,11 @@ const Beranda = () => {
                 <h3 className="text-base font-bold text-gray-900">
                   Smart Budgeting
                 </h3>
-                <button className="text-[10px] font-bold text-gray-400 flex items-center gap-1.5 border border-gray-100 px-3 py-1.5 rounded-lg hover:text-[#8477e4] transition-all">
+                <button
+                  type="button"
+                  onClick={() => navigate("/budget")}
+                  className="text-[10px] font-bold text-gray-400 flex items-center gap-1.5 border border-gray-100 px-3 py-1.5 rounded-lg hover:text-[#8477e4] transition-all"
+                >
                   Detail Lengkap <i className="fas fa-plus"></i>
                 </button>
               </div>
@@ -598,9 +613,21 @@ const Beranda = () => {
           <div className="col-span-12 xl:col-span-5 flex flex-col gap-6">
             {/* INSIGHT AI - DESAIN BARU (BORDER BIRU) */}
             <div className="bg-white p-6 rounded-[2rem] border border-gray-100 shadow-sm flex flex-col shrink-0">
-              <h3 className="text-base font-extrabold text-gray-900 mb-4">
-                Insight AI
-              </h3>
+              {/* SEBARIS: Judul Insight AI dan Tombol Detail Lengkap ke halaman AI */}
+              <div className="flex justify-between items-center mb-4">
+                <h3 className="text-base font-extrabold text-gray-900">
+                  Insight AI
+                </h3>
+                <button
+                  type="button"
+                  onClick={() => navigate("/ai")} // <-- Mengarah ke halaman AI
+                  className="text-[10px] font-bold text-gray-400 flex items-center gap-1.5 border border-gray-100 px-3 py-1.5 rounded-lg hover:text-[#8477e4] transition-all shrink-0"
+                >
+                  Detail Lengkap <i className="fas fa-plus"></i>
+                </button>
+              </div>
+
+              {/* Box Konten AI */}
               <div className="relative bg-[#f2eefd] rounded-3xl border-2 border-[#3b82f6] p-5 pr-[110px] md:pr-[130px] min-h-[110px] flex flex-col justify-center shadow-sm">
                 <div className="space-y-2 relative z-10">
                   <h4 className="text-sm font-bold text-gray-900">
@@ -621,7 +648,9 @@ const Beranda = () => {
                   alt="Robot AI"
                 />
               </div>
-              <div className="mt-4 flex items-center justify-between bg-[#f8f9fb] p-4 rounded-2xl cursor-pointer hover:bg-gray-50 transition-all border border-gray-50">
+
+              {/* Box Tips Hari Ini (Tanda panah > sudah dihapus) */}
+              <div className="mt-4 bg-[#f8f9fb] p-4 rounded-2xl cursor-pointer hover:bg-gray-50 transition-all border border-gray-50">
                 <div>
                   <h4 className="text-[11px] font-extrabold text-gray-900 mb-1">
                     Tips hari ini
@@ -631,25 +660,34 @@ const Beranda = () => {
                     hemat!
                   </p>
                 </div>
-                <i className="fas fa-chevron-right text-gray-300 text-xs ml-2"></i>
               </div>
             </div>
 
             {/* ALOKASI KEUANGAN */}
             <div className="bg-white p-6 rounded-[2rem] border border-gray-100 shadow-sm flex flex-col shrink-0">
-              <div className="justify-between items-center mb-6">
-                <h3 className="text-base font-bold text-gray-900">
-                  Alokasi Keuangan{" "}
-                  <span className="text-xs font-normal text-gray-400">
-                    (50 - 30 - 20)
-                  </span>
-                </h3>
-                <p className="text-xs font-normal text-gray-500 mt-1">
-                  Otomatis dari total pemasukan
-                </p>
-                {/* <div className="flex items-center gap-1.5 bg-[#EAE5FB] px-4 py-2 rounded-xl text-xs font-bold text-gray-900 cursor-pointer">
-                  Bulan Ini <i className="fas fa-chevron-down text-[#8477e4]"></i>
-                </div> */}
+              {/* SEBARIS: Ditambahkan flex, justify-between, dan items-center */}
+              <div className="flex justify-between items-center mb-6">
+                {/* Teks Judul & Deskripsi dikelompokkan di kiri */}
+                <div>
+                  <h3 className="text-base font-bold text-gray-900">
+                    Alokasi Keuangan{" "}
+                    <span className="text-xs font-normal text-gray-400">
+                      (50 - 30 - 20)
+                    </span>
+                  </h3>
+                  <p className="text-xs font-normal text-gray-500 mt-0.5">
+                    Otomatis dari total pemasukan
+                  </p>
+                </div>
+
+                {/* Tombol Detail Lengkap otomatis di kanan */}
+                <button
+                  type="button"
+                  onClick={() => navigate("/transaksi")}
+                  className="text-[10px] font-bold text-gray-400 flex items-center gap-1.5 border border-gray-100 px-3 py-1.5 rounded-lg hover:text-[#8477e4] transition-all shrink-0"
+                >
+                  Detail Lengkap <i className="fas fa-plus"></i>
+                </button>
               </div>
 
               <div className="flex flex-col items-center gap-6">
@@ -831,23 +869,37 @@ const Beranda = () => {
 
             {/* GOALS SETTING */}
             <div className="bg-white p-6 rounded-3xl border border-gray-100 shadow-sm text-center relative flex-1 flex flex-col justify-center">
-              <h3 className="text-sm font-bold text-gray-900 text-left mb-4">
-                Goals Setting
-              </h3>
-              <div className="flex items-center justify-center gap-6 mb-4">
-                <i className="fas fa-chevron-left text-gray-400 cursor-pointer hover:text-gray-900"></i>
-                <img
-                  src="/gambar/goals.png"
-                  className="w-12 h-12 object-contain"
-                  alt="Laptop Goals"
-                />
-                <i className="fas fa-chevron-right text-gray-400 cursor-pointer hover:text-gray-900"></i>
-              </div>
-              <AnimatedProgressBar value={60} maxValue={100} color="#8477e4" />
-              <p className="text-[9px] font-bold text-gray-600 mt-2 text-left">
-                60% Menuju mimpi kamu!
-              </p>
-            </div>
+      {/* SEBARIS: Judul Goals Setting dan Tombol Detail Lengkap */}
+      <div className="flex justify-between items-center mb-4">
+        <h3 className="text-sm font-bold text-gray-900">
+          Goals Setting
+        </h3>
+        <button
+          type="button"
+          onClick={() => navigate("/goals")}
+          className="text-[10px] font-bold text-gray-400 flex items-center gap-1.5 border border-gray-100 px-3 py-1.5 rounded-lg hover:text-[#8477e4] transition-all shrink-0"
+        >
+          Detail Lengkap <i className="fas fa-plus"></i>
+        </button>
+      </div>
+
+      {/* Konten Slider Goals */}
+      <div className="flex items-center justify-center gap-6 mb-4">
+        <i className="fas fa-chevron-left text-gray-400 cursor-pointer hover:text-gray-900"></i>
+        <img
+          src={activeGoal.image || "/gambar/goals.png"}
+          className="w-12 h-12 object-contain"
+          alt="Icon Goals"
+        />
+        <i className="fas fa-chevron-right text-gray-400 cursor-pointer hover:text-gray-900"></i>
+      </div>
+
+      {/* Progress Bar & Teks otomatis membaca dari state */}
+      <AnimatedProgressBar value={percentage} maxValue={100} color="#8477e4" />
+      <p className="text-[9px] font-bold text-gray-600 mt-2 text-left">
+        {percentage}% Menuju {activeGoal.title}!
+      </p>
+    </div>
           </div>
         </div>
       </div>

@@ -378,10 +378,6 @@ const Pengaturan = () => {
                   className="absolute bottom-[-6px] right-0 h-[110px] max-w-none object-contain object-bottom z-20"
                 />
               </div>
-              <button className="bg-gradient-to-r from-[#a294f9] to-[#8477e4] text-white px-6 py-3 rounded-xl text-xs font-bold shadow-[0_6px_20px_rgba(132,119,228,0.25)] hover:opacity-95 transition-all flex items-center gap-2 whitespace-nowrap">
-                Pelajari Selengkapnya{" "}
-                <i className="fas fa-arrow-right text-[10px]"></i>
-              </button>
             </div>
           </div>
         </main>

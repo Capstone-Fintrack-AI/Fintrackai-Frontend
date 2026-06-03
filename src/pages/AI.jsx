@@ -73,7 +73,7 @@ const AI = () => {
   const tabs = ["Semua", "Dashboard", "Budget", "Goals", "Laporan"];
 
   return (
-    <div className="h-screen bg-[#f8f6ff] font-poppins flex overflow-hidden relative text-[#1e1b4b] antialiased">
+    <div className="h-screen bg-[#f8f6ff] font-poppins flex overflow-hidden relative">
       {/* =========================================================
           1. BACKGROUND TEMA & BUBBLE (PERSIS BERANDA)
       ========================================================= */}
@@ -211,9 +211,10 @@ const AI = () => {
           <div className="flex justify-between items-center">
             {/* KIRI: HEADER TITLE */}
             <div>
-              <h1 className="text-3xl font-bold text-gray-800">Budget</h1>
+              <h1 className="text-3xl font-bold text-gray-800">AI Assistant</h1>
               <p className="text-sm text-gray-500">
-                Atur alokasi dana dan pantau kesehatan keuanganmu setiap bulan.
+                Pusat analisis pintar untuk membantumu membuat keputusan
+                terbaik.
               </p>
             </div>
 
@@ -291,10 +292,8 @@ const AI = () => {
 
           {/* ROW 2: CHART & ESTIMASI */}
           <div className="grid grid-cols-1 xl:grid-cols-2 gap-4 mb-6 relative z-20">
-            
             {/* Prediksi Area Chart */}
             <div className="bg-white rounded-[24px] p-6 shadow-[0_2px_10px_rgba(0,0,0,0.02)] border border-gray-100 flex flex-col md:flex-row gap-6">
-              
               {/* Kiri: Info & Insight */}
               <div className="w-full md:w-[40%] flex flex-col justify-between">
                 <div>
@@ -330,12 +329,30 @@ const AI = () => {
                       margin={{ top: 10, right: 10, left: -20, bottom: 0 }}
                     >
                       <defs>
-                        <linearGradient id="colorVal" x1="0" y1="0" x2="0" y2="1">
-                          <stop offset="5%" stopColor="#8b5cf6" stopOpacity={0.15} />
-                          <stop offset="95%" stopColor="#8b5cf6" stopOpacity={0} />
+                        <linearGradient
+                          id="colorVal"
+                          x1="0"
+                          y1="0"
+                          x2="0"
+                          y2="1"
+                        >
+                          <stop
+                            offset="5%"
+                            stopColor="#8b5cf6"
+                            stopOpacity={0.15}
+                          />
+                          <stop
+                            offset="95%"
+                            stopColor="#8b5cf6"
+                            stopOpacity={0}
+                          />
                         </linearGradient>
                       </defs>
-                      <CartesianGrid strokeDasharray="3 3" vertical={false} stroke="#f3f4f6" />
+                      <CartesianGrid
+                        strokeDasharray="3 3"
+                        vertical={false}
+                        stroke="#f3f4f6"
+                      />
                       <XAxis
                         dataKey="name"
                         tick={{ fontSize: 10, fill: "#9ca3af" }}
@@ -350,8 +367,16 @@ const AI = () => {
                         tickLine={false}
                       />
                       <Tooltip
-                        cursor={{ stroke: "#8b5cf6", strokeWidth: 1, strokeDasharray: "4 4" }}
-                        contentStyle={{ borderRadius: "8px", border: "none", boxShadow: "0 4px 6px -1px rgb(0 0 0 / 0.1)" }}
+                        cursor={{
+                          stroke: "#8b5cf6",
+                          strokeWidth: 1,
+                          strokeDasharray: "4 4",
+                        }}
+                        contentStyle={{
+                          borderRadius: "8px",
+                          border: "none",
+                          boxShadow: "0 4px 6px -1px rgb(0 0 0 / 0.1)",
+                        }}
                       />
                       <Area
                         type="monotone"
@@ -360,7 +385,12 @@ const AI = () => {
                         strokeWidth={2}
                         fillOpacity={1}
                         fill="url(#colorVal)"
-                        activeDot={{ r: 6, fill: "#8b5cf6", stroke: "#fff", strokeWidth: 2 }}
+                        activeDot={{
+                          r: 6,
+                          fill: "#8b5cf6",
+                          stroke: "#fff",
+                          strokeWidth: 2,
+                        }}
                         animationDuration={1500}
                       />
                     </AreaChart>
@@ -371,7 +401,6 @@ const AI = () => {
 
             {/* Estimasi Saldo */}
             <div className="bg-white rounded-[24px] p-6 shadow-[0_2px_10px_rgba(0,0,0,0.02)] border border-gray-100 flex flex-col md:flex-row gap-6">
-              
               {/* Kiri: Nominal & Progress Bar */}
               <div className="w-full md:w-[55%] flex flex-col justify-between">
                 <div>
@@ -424,7 +453,6 @@ const AI = () => {
                   </p>
                 </div>
               </div>
-
             </div>
           </div>
 
@@ -576,13 +604,12 @@ const AI = () => {
 
           {/* ROW 4: INSIGHTS & REKOMENDASI */}
           <div className="grid grid-cols-1 xl:grid-cols-12 gap-6 relative z-20 pb-8">
-            
             {/* Kiri: Semua Insight AI */}
             <div className="xl:col-span-7 bg-white rounded-[24px] p-6 shadow-[0_2px_10px_rgba(0,0,0,0.02)] border border-gray-100 flex flex-col gap-4">
               <h3 className="font-bold text-[16px] text-[#1e1b4b]">
                 Semua Insight AI
               </h3>
-              
+
               {/* Tabs */}
               <div className="flex gap-2 mb-2 overflow-x-auto pb-2 scrollbar-hide">
                 {tabs.map((tab) => (
@@ -647,7 +674,7 @@ const AI = () => {
                   Lihat Semua <span className="text-[10px]">❯</span>
                 </button>
               </div>
-              
+
               <div className="grid grid-cols-1 md:grid-cols-3 gap-3 flex-1">
                 <RecomCard
                   num="1"
@@ -724,7 +751,9 @@ const InsightMiniCard = ({ icon, iconBg, iconColor, title, text, date }) => (
   <div className="border border-gray-100 rounded-[16px] p-4 flex flex-col justify-between h-full hover:shadow-sm transition-shadow bg-white">
     <div>
       <div className="flex items-center gap-2 mb-3">
-        <div className={`w-7 h-7 rounded-full flex items-center justify-center text-[14px] ${iconBg} ${iconColor}`}>
+        <div
+          className={`w-7 h-7 rounded-full flex items-center justify-center text-[14px] ${iconBg} ${iconColor}`}
+        >
           {icon}
         </div>
         <span className="font-bold text-[12px] text-[#1e1b4b]">{title}</span>
@@ -740,28 +769,52 @@ const InsightMiniCard = ({ icon, iconBg, iconColor, title, text, date }) => (
 // Komponen RecomCard
 const RecomCard = ({ num, icon, color, title, text }) => {
   const colorStyles = {
-    purple: { bg: "bg-[#faf5ff]", text: "text-[#8b5cf6]", numBg: "bg-[#8b5cf6]", border: "border-[#f0eaff]" },
-    orange: { bg: "bg-[#fffcf5]", text: "text-orange-500", numBg: "bg-orange-500", border: "border-[#fff4e6]" },
-    green: { bg: "bg-[#f5fbf7]", text: "text-green-600", numBg: "bg-green-600", border: "border-[#e6f8f0]" },
-  }[color] || { bg: "bg-gray-50", text: "text-gray-600", numBg: "bg-gray-600", border: "border-gray-100" };
+    purple: {
+      bg: "bg-[#faf5ff]",
+      text: "text-[#8b5cf6]",
+      numBg: "bg-[#8b5cf6]",
+      border: "border-[#f0eaff]",
+    },
+    orange: {
+      bg: "bg-[#fffcf5]",
+      text: "text-orange-500",
+      numBg: "bg-orange-500",
+      border: "border-[#fff4e6]",
+    },
+    green: {
+      bg: "bg-[#f5fbf7]",
+      text: "text-green-600",
+      numBg: "bg-green-600",
+      border: "border-[#e6f8f0]",
+    },
+  }[color] || {
+    bg: "bg-gray-50",
+    text: "text-gray-600",
+    numBg: "bg-gray-600",
+    border: "border-gray-100",
+  };
 
   return (
-    <div className={`${colorStyles.bg} border ${colorStyles.border} rounded-[16px] p-4 flex flex-col h-full relative`}>
+    <div
+      className={`${colorStyles.bg} border ${colorStyles.border} rounded-[16px] p-4 flex flex-col h-full relative`}
+    >
       {/* Number Badge */}
-      <div className={`absolute top-4 left-4 w-5 h-5 rounded-full flex items-center justify-center text-white text-[11px] font-bold ${colorStyles.numBg}`}>
+      <div
+        className={`absolute top-4 left-4 w-5 h-5 rounded-full flex items-center justify-center text-white text-[11px] font-bold ${colorStyles.numBg}`}
+      >
         {num}
       </div>
-      
+
       {/* Large Icon Centered */}
       <div className="flex justify-center mt-5 mb-4">
-        <div className={`text-[32px] ${colorStyles.text}`}>
-          {icon}
-        </div>
+        <div className={`text-[32px] ${colorStyles.text}`}>{icon}</div>
       </div>
 
       {/* Text Content */}
       <div className="mt-auto">
-        <h4 className={`text-[11px] font-bold mb-1.5 ${colorStyles.text}`}>{title}</h4>
+        <h4 className={`text-[11px] font-bold mb-1.5 ${colorStyles.text}`}>
+          {title}
+        </h4>
         <p className="text-[10.5px] text-[#1e1b4b]/80 leading-[1.5] font-medium">
           {text}
         </p>
