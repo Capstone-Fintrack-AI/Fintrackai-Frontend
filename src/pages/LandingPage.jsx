@@ -166,19 +166,19 @@ const LandingPage = () => {
         className="min-h-screen flex flex-col justify-center pt-32 pb-20 px-6 md:px-20 relative overflow-visible"
       >
         {/* Container Utama untuk Text & Layouting */}
-        <div className="container mx-auto grid md:grid-cols-2 gap-10 items-center">
+        <div className="container mx-auto grid md:grid-cols-2 items-center">
           
           {/* KOLOM KIRI: Teks & Tombol (Tetap aman di dalam container) */}
-          <div className="space-y-6 z-10">
+          <div className="space-y-6 z-10 mt-10">
             {/* Heading Utama */}
-            <h1 className="text-4xl md:text-5xl lg:text-6xl font-extrabold text-[#1e1b4b] leading-[1.15]">
+            <h1 className="text-4xl md:text-4xl lg:text-6xl font-extrabold text-gray-800 leading-[1.15]">
               Kelola Keuangan <br />
               Lebih Cerdas <br />
               Bersama <span className="text-[#8477e4]">FinTrack AI</span>
             </h1>
 
             {/* Paragraf Deskripsi */}
-            <p className="text-gray-500 text-lg md:text-xl leading-relaxed max-w-lg">
+            <p className="text-gray-500 text-lg md:text-xl leading-relaxed w-full">
               Pantau pengeluaran, atur budget, capai goals, dan dapatkan insight AI untuk keputusan finansial yang lebih baik setiap hari.
             </p>
 
@@ -224,7 +224,7 @@ const LandingPage = () => {
             <img
               src="/gambar/Home.png"
               alt="Home FinTrack AI"
-              className="w-full max-w-[130%] object-contain drop-shadow-2xl"
+              className="w-full object-contain drop-shadow-2xl"
             />
           </div>
 

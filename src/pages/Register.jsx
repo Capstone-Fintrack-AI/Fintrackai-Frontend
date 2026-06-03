@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { useNavigate, Link } from "react-router-dom";
 
 const Register = () => {
@@ -74,6 +74,70 @@ const Register = () => {
       alert("Terjadi kesalahan saat koneksi server");
     }
   };
+
+  const handleGoogleRegister = () => {
+    const client = window.google.accounts.oauth2.initTokenClient({
+      client_id:
+        "851842541176-633b6em5p61s94487sue3tj3ed0ip4ho.apps.googleusercontent.com",
+
+      scope: "openid email profile",
+
+      callback: (response) => {
+        console.log("Google Success");
+        console.log(response);
+      },
+    });
+
+    client.requestAccessToken();
+  };
+
+  const handleGoogleCallback = async (response) => {
+    try {
+      setIsLoading(true);
+
+      const res = await fetch(
+        "https://fintrackai-backend-1yz0.onrender.com/auth/google",
+        {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify({
+            token: response.credential, // JWT dari Google
+          }),
+        }
+      );
+
+      const data = await res.json();
+
+      console.log(data);
+
+      if (res.ok) {
+        setShowSuccess(true);
+
+        setTimeout(() => {
+          navigate("/login"); // atau langsung dashboard kalau mau
+        }, 1500);
+      } else {
+        alert(data.message || "Google register gagal");
+      }
+    } catch (error) {
+      console.error(error);
+      alert("Error Google login");
+    } finally {
+      setIsLoading(false);
+    }
+  };
+
+  useEffect(() => {
+    if (!window.google) return;
+
+    window.google.accounts.id.initialize({
+      client_id:
+        "851842541176-633b6em5p61s94487sue3tj3ed0ip4ho.apps.googleusercontent.com",
+      callback: handleGoogleCallback,
+    });
+  }, []);
 
   return (
     <div className="flex items-center justify-center min-h-screen p-4 md:p-8 font-poppins selection:bg-[#8477e4] selection:text-white overflow-hidden relative">
@@ -305,7 +369,11 @@ const Register = () => {
           </div>
 
           <div className="flex justify-center mb-8">
-            <button className="w-12 h-12 rounded-full border border-gray-100 shadow-sm flex items-center justify-center hover:shadow-md transition-all bg-white">
+            <button
+              onClick={handleGoogleRegister}
+              type="button"
+              className="w-12 h-12 rounded-full border border-gray-100 shadow-sm flex items-center justify-center hover:shadow-md transition-all bg-white"
+            >
               <img
                 src="https://www.svgrepo.com/show/475656/google-color.svg"
                 alt="Google"

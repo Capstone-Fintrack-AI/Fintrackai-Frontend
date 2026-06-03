@@ -479,8 +479,8 @@ const Transaksi = () => {
 
         {/* Isi Grid Utama Transaksi (Scrollable) */}
         {/* 4 METRIC CARDS ROW */}
-        <div className="px-10 flex-grow">
-          <main className="flex-grow px-10 pb-8 overflow-y-auto grid grid-cols-12 gap-8 progress-clean">
+        <div className="px-10">
+          <main className="flex-grow pb-8 overflow-y-auto grid grid-cols-12 gap-8 progress-clean w-full">
             {/* KOLOM TABEL (KIRI - 8/12) */}
             <div className="col-span-12 xl:col-span-8 space-y-6">
               {/* FILTER BAR */}
