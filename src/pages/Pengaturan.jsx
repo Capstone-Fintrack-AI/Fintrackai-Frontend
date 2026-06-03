@@ -1,5 +1,13 @@
 import React, { useState, useRef, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
+import axios from "axios";
+import { ToastContainer, toast } from "react-toastify";
+import "react-toastify/dist/ReactToastify.css";
+
+
+const user = JSON.parse(localStorage.getItem("user"));
+const userId = user?.id;
+
 
 const Pengaturan = () => {
   const navigate = useNavigate();
@@ -8,7 +16,7 @@ const Pengaturan = () => {
   const [userData, setUserData] = useState({
     nama: "",
     email: "",
-    password: "••••••••",
+    password: "",
     profilePic: null,
   });
 
@@ -20,34 +28,84 @@ const Pengaturan = () => {
   const [inputEmail, setInputEmail] = useState(userData.email);
   const [inputPasswordBaru, setInputPasswordBaru] = useState("");
   const [previewFoto, setPreviewFoto] = useState(null);
+  const [selectedFile, setSelectedFile] = useState(null);
+  const [saving, setSaving] = useState(false);
 
   const [appLanguage, setAppLanguage] = useState("Bahasa Indonesia");
   const [appTheme, setAppTheme] = useState("FinTrack Purple");
   const [appFontSize, setAppFontSize] = useState("Sedang");
+  const [showPassword, setShowPassword] = useState(false);
 
   const toggleAccordion = (itemKey) => {
     setExpandedItem(expandedItem === itemKey ? null : itemKey);
   };
-  const handleSaveAllProfile = (e) => {
+  const handleSaveAllProfile = async (e) => {
     e.preventDefault();
-    setUserData({
-      ...userData,
-      nama: inputNama,
-      email: inputEmail,
-      profilePic: previewFoto || userData.profilePic,
-      password: inputPasswordBaru !== "" ? "••••••••" : userData.password,
-    });
-    setInputPasswordBaru("");
-    alert("Perubahan profil berhasil disimpan");
+
+    try {
+      const user = JSON.parse(localStorage.getItem("user"));
+
+      const formData = new FormData();
+
+      formData.append("fullname", inputNama);
+      formData.append("email", inputEmail);
+
+      if (inputPasswordBaru.trim() !== "") {
+        formData.append("password", inputPasswordBaru);
+      }
+
+      if (selectedFile) {
+        formData.append("photo", selectedFile);
+      }
+
+      const response = await axios.put(
+        `http://localhost:8080/auth/user/${user.id}`,
+        formData,
+        {
+          headers: {
+            "Content-Type": "multipart/form-data",
+          },
+        }
+      );
+
+      // alert("Profil berhasil diperbarui");
+      toast.success("Profil berhasil diperbarui");
+
+      const updatedUser = {
+        ...user,
+        fullname: inputNama,
+        email: inputEmail,
+      };
+
+      localStorage.setItem(
+        "user",
+        JSON.stringify(updatedUser)
+      );
+
+      setInputPasswordBaru("");
+
+    } catch (error) {
+      console.error(error);
+
+      alert(
+        error.response?.data?.message ||
+        "Gagal memperbarui profil"
+      );
+    }
   };
 
   const handleFileChange = (e) => {
     const file = e.target.files[0];
+
     if (file) {
+      setSelectedFile(file);
+
       const reader = new FileReader();
+
       reader.onloadend = () => {
         setPreviewFoto(reader.result);
       };
+
       reader.readAsDataURL(file);
     }
   };
@@ -58,20 +116,41 @@ const Pengaturan = () => {
     navigate("/login");
   };
 
-  useEffect(() => {
-    const user = JSON.parse(localStorage.getItem("user"));
+  const fetchUser = async () => {
+    try {
+      const user = JSON.parse(
+        localStorage.getItem("user")
+      );
 
-    if (user) {
-      setUserData((prev) => ({
-        ...prev,
-        nama: user.fullname || user.nama || "",
-        email: user.email || "",
-      }));
+      const response = await axios.get(
+        `https://fintrackai-backend-1yz0.onrender.com/auth/user/${user.id}`
+      );
 
-      setInputNama(user.fullname || user.nama || "");
-      setInputEmail(user.email || "");
+      const data = response.data.data;
+
+      setInputNama(data.fullname);
+      setInputEmail(data.email);
+      setInputPasswordBaru("");
+
+      setUserData({
+        nama: data.fullname,
+        email: data.email,
+        profilePic: data.photo
+          ? `https://fintrackai-backend-1yz0.onrender.com/uploads/profile/${data.photo}`
+          : null,
+      });
+
+
+    } catch (error) {
+      console.error(error);
     }
+  };
+  useEffect(() => {
+    setInputPasswordBaru("");
+    fetchUser();
   }, []);
+
+
 
   return (
     <div className="h-screen bg-[#f8f6ff] font-poppins flex overflow-hidden selection:bg-[#8477e4]/20">
@@ -217,7 +296,11 @@ const Pengaturan = () => {
             <div className="w-10 h-10 bg-white rounded-xl flex items-center justify-center border border-gray-100 shadow-sm overflow-hidden">
               {previewFoto || userData.profilePic ? (
                 <img
-                  src={previewFoto || userData.profilePic}
+                  src={
+                    previewFoto ||
+                    userData.profilePic ||
+                    "/gambar/default-profile.png"
+                  }
                   alt="Avatar"
                   className="w-full h-full object-cover"
                 />
@@ -234,7 +317,7 @@ const Pengaturan = () => {
           <div className="bg-gradient-to-r from-[#e3dafc] to-[#f3e7fa] rounded-[2.5rem] p-8 pr-12 shadow-[0_8px_30px_rgba(132,119,228,0.03)] border border-white/60 flex justify-between items-center relative overflow-hidden shrink-0 min-h-[160px] mb-6">
             <div className="space-y-2 z-10 max-w-[55%]">
               <h2 className="text-xl font-bold text-gray-800 tracking-tight flex items-center gap-2">
-                Halo, {userData.nama.split(" ")[0]} !{" "}
+                Halo, {inputNama}
                 <span className="inline-block animate-bounce">👋</span>
               </h2>
               <p className="text-xs font-medium text-gray-500 leading-relaxed">
@@ -336,20 +419,37 @@ const Pengaturan = () => {
                   <label className="text-[10px] font-extrabold text-gray-400 tracking-wider uppercase">
                     Ganti Password (Kosongkan jika tidak diubah)
                   </label>
-                  <input
-                    type="password"
-                    placeholder="Masukkan password baru"
-                    value={inputPasswordBaru}
-                    onChange={(e) => setInputPasswordBaru(e.target.value)}
-                    className="w-full bg-white border border-gray-200 px-3 py-2.5 rounded-xl font-semibold outline-none focus:border-[#8477e4]"
-                  />
+
+                  <div className="relative">
+                    <input
+                      type={showPassword ? "text" : "password"}
+                      placeholder="Kosongkan jika tidak ingin mengubah password"
+                      value={inputPasswordBaru}
+                      onChange={(e) => setInputPasswordBaru(e.target.value)}
+                      className="w-full bg-white border border-gray-200 px-3 py-2.5 pr-12 rounded-xl font-semibold outline-none focus:border-[#8477e4]"
+                    />
+
+                    <button
+                      type="button"
+                      onClick={() => setShowPassword(!showPassword)}
+                      className="absolute right-3 top-1/2 -translate-y-1/2 text-gray-400 hover:text-[#8477e4] transition-colors"
+                    >
+                      <i
+                        className={`fas ${showPassword ? "fa-eye-slash" : "fa-eye"
+                          }`}
+                      ></i>
+                    </button>
+                  </div>
                 </div>
 
                 <button
                   type="submit"
-                  className="w-full bg-[#8477e4] text-white py-3 rounded-xl font-bold shadow-md hover:bg-[#7466d3] transition-all text-center text-xs mt-2"
+                  disabled={saving}
+                  className="w-full bg-[#8477e4] text-white py-3 rounded-xl font-bold shadow-md hover:bg-[#7466d3] transition-all text-center text-xs mt-2 disabled:opacity-50"
                 >
-                  Simpan Perubahan Akun
+                  {saving
+                    ? "Menyimpan..."
+                    : "Simpan Perubahan Akun"}
                 </button>
               </form>
             </div>
@@ -386,6 +486,8 @@ const Pengaturan = () => {
           </div>
         </main>
       </div>
+
+      <ToastContainer position="top-right" autoClose={3000} />
     </div>
   );
 };
