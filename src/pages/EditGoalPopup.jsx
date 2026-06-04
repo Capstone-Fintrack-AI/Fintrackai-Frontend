@@ -10,20 +10,73 @@ const EditGoalPopup = ({ isOpen, onClose, goal, totalTabungan, onSave }) => {
   const [tambahDana, setTambahDana] = useState(0);
   const fileInputRef = useRef(null);
 
+
   useEffect(() => {
     if (goal) setFormData(goal);
   }, [goal]);
 
   const formatRupiah = (number) =>
     new Intl.NumberFormat("id-ID").format(number);
-  
+
   const totalTabunganSafe = totalTabungan || 0;
   const tambahDanaSafe = Number(tambahDana) || 0;
+  const isOverLimit = tambahDanaSafe > totalTabunganSafe;
 
   const danaSetelah = (formData.allocation || 0) + tambahDanaSafe;
   const sisaTabungan = totalTabunganSafe - tambahDanaSafe;
 
+  const user = JSON.parse(localStorage.getItem("user"));
+  const userId = user?.id;
+  const handleSave = async () => {
+    try {
+      // update target tabungan
+      await fetch(
+        `https://fintrackai-backend-1yz0.onrender.com/target-tabungan/${goal.id}`,
+        {
+          method: "PUT",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify({
+            user_id: userId,
+            nama_target: formData.name,
+            jumlah_target: Number(formData.targetPrice),
+            jumlah_terkumpul: Number(formData.allocation),
+            status:
+              Number(formData.allocation) >= Number(formData.targetPrice)
+                ? "selesai"
+                : "proses",
+          }),
+        }
+      );
+
+      // tambah dana jika ada
+      if (tambahDanaSafe > 0) {
+        await fetch(
+          `https://fintrackai-backend-1yz0.onrender.com/api/tabungan/${goal.id}/tambah-dana`,
+          {
+            method: "POST",
+            headers: {
+              "Content-Type": "application/json",
+            },
+            body: JSON.stringify({
+              nominal: tambahDanaSafe,
+            }),
+          }
+        );
+      }
+
+      onSave();
+
+      onClose();
+    } catch (error) {
+      console.error(error);
+    }
+  };
+
   if (!isOpen) return null;
+
+
 
   return (
     <div className="fixed inset-0 bg-black/40 backdrop-blur-sm z-50 flex items-center justify-center p-4">
@@ -102,7 +155,8 @@ const EditGoalPopup = ({ isOpen, onClose, goal, totalTabungan, onSave }) => {
             </label>
             <input
               type="number"
-              className="w-full border p-3 rounded-xl"
+              className={`w-full border p-3 rounded-xl ${isOverLimit ? "border-red-500" : ""
+                }`}
               onChange={(e) => setTambahDana(Number(e.target.value))}
               placeholder="0"
             />
@@ -144,8 +198,12 @@ const EditGoalPopup = ({ isOpen, onClose, goal, totalTabungan, onSave }) => {
             Batal
           </button>
           <button
-            onClick={() => onSave({ ...formData, allocation: danaSetelah })}
-            className="flex-1 py-3 bg-[#8b5cf6] text-white rounded-xl font-bold"
+            disabled={isOverLimit}
+            onClick={handleSave}
+            className={`flex-1 py-3 rounded-xl font-bold text-white ${isOverLimit
+              ? "bg-gray-400 cursor-not-allowed"
+              : "bg-[#8b5cf6]"
+              }`}
           >
             Simpan Perubahan
           </button>

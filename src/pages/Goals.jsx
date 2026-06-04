@@ -31,6 +31,7 @@ const Goals = () => {
   const [selectedGoal, setSelectedGoal] = useState(null);
   const [isDeleteModalOpen, setIsDeleteModalOpen] = useState(false);
   const [sudahDialokasikan, setSudahDialokasikan] = useState(0);
+  const [isDeleting, setIsDeleting] = useState(false);
 
 
   const getGoalsUser = async () => {
@@ -102,9 +103,24 @@ const Goals = () => {
     setIsDeleteModalOpen(true);
   };
 
-  const handleDeleteGoal = (goalToDelete) => {
-    setGoals((prev) => prev.filter((g) => g !== goalToDelete));
-    setIsDeleteModalOpen(false);
+  const handleDeleteGoal = async () => {
+    try {
+      setIsDeleting(true);
+
+      await axios.delete(
+        `https://fintrackai-backend-1yz0.onrender.com/target-tabungan/${selectedGoal.id}`
+      );
+
+      await getGoalsUser();
+      await getTotalDialokasikan();
+
+      setIsDeleteModalOpen(false);
+      setSelectedGoal(null);
+    } catch (error) {
+      console.log(error);
+    } finally {
+      setIsDeleting(false);
+    }
   };
 
   const handleLogout = () => {
@@ -158,6 +174,7 @@ const Goals = () => {
 
     fetchData();
   }, [userId]);
+
 
   const getTotalDialokasikan = async () => {
     try {
@@ -921,29 +938,19 @@ const Goals = () => {
         isOpen={isEditPopupOpen}
         onClose={() => setIsEditPopupOpen(false)}
         goal={selectedGoal}
-        totalTabungan={initialBalance || 0}
-        onSave={(updatedGoal) => {
-          setGoals((prev) =>
-            prev.map((g) => (g.name === updatedGoal.name ? updatedGoal : g)),
-          );
+        totalTabungan={tersedia}
+        onSave={() => {
+          getGoalsUser();
+          getTotalDialokasikan();
           setIsEditPopupOpen(false);
         }}
       />
       <DeleteConfirmationModal
         isOpen={isDeleteModalOpen}
         onClose={() => setIsDeleteModalOpen(false)}
-        onConfirm={() => {
-          handleDeleteGoal(selectedGoal);
-          setIsDeleteModalOpen(false);
-        }}
-        goal={
-          selectedGoal || {
-            name: "Loading...",
-            allocation: 0,
-            targetPrice: 0,
-            progress: 0,
-          }
-        }
+        onConfirm={handleDeleteGoal}
+        isDeleting={isDeleting}
+        goal={selectedGoal}
       />
     </div>
   );

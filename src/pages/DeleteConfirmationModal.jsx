@@ -1,6 +1,6 @@
 import React from "react";
 
-const DeleteConfirmationModal = ({ isOpen, onClose, onConfirm, goal }) => {
+const DeleteConfirmationModal = ({ isOpen, onClose, onConfirm, goal, isDeleting }) => {
   if (!isOpen) return null;
 
   console.log("Data goal yang diterima modal:", goal);
@@ -25,11 +25,11 @@ const DeleteConfirmationModal = ({ isOpen, onClose, onConfirm, goal }) => {
 
         {/* Info Goal */}
         <div className="bg-white border border-gray-100 p-4 rounded-2xl mb-6 shadow-sm flex gap-4">
-          <img
+          {/* <img
             src={goal.image || "/gambar/placeholder.png"}
             alt="goal"
             className="w-16 h-16 rounded-xl object-cover"
-          />
+          /> */}
           <div className="flex flex-col justify-center">
             <h3 className="font-bold text-gray-800">{goal.name}</h3>
             <p className="text-xs text-gray-400">
@@ -66,9 +66,10 @@ const DeleteConfirmationModal = ({ isOpen, onClose, onConfirm, goal }) => {
           </button>
           <button
             onClick={onConfirm}
-            className="flex-1 py-3 rounded-xl bg-red-500 text-white font-bold hover:bg-red-600 transition shadow-lg shadow-red-200"
+            disabled={isDeleting}
+            className="flex-1 py-3 rounded-xl bg-red-500 text-white font-bold"
           >
-            Ya, Hapus Goals
+            {isDeleting ? "Menghapus..." : "Ya, Hapus Goals"}
           </button>
         </div>
       </div>
