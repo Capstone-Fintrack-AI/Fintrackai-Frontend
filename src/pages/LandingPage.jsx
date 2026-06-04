@@ -597,7 +597,7 @@ const LandingPage = () => {
             "transaksitampilan.jpeg",
             "budgettampilan.jpeg",
             "goalstampilan.jpeg",
-            "path-mobile-3.png",
+            "aitampilan.jpeg",
           ].map((img, idx) => (
             <div
               key={idx}
