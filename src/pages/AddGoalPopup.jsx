@@ -10,6 +10,7 @@ const AddGoalPopup = ({ isOpen, onClose, initialBalance = 1000000, onSave }) => 
   const fileInputRef = useRef(null);
   const textareaRef = useRef(null);
 
+  const [sudahDialokasikan, setSudahDialokasikan] = useState(0);
   const [totalPemasukan, setTotalPemasukan] = useState(0);
   const [totalPengeluaran, setTotalPengeluaran] = useState(0);
   const [pengeluaran, setPengeluaran] = useState([]);
@@ -56,15 +57,11 @@ const AddGoalPopup = ({ isOpen, onClose, initialBalance = 1000000, onSave }) => 
     };
 
     fetchData();
+    getTotalDialokasikan();
   }, [userId]);
 
   const targetTabungan = totalPemasukan * 0.2;
-
-  const totalTabungan = pengeluaran
-    .filter((item) => item.kategori === "Tabungan")
-    .reduce((sum, item) => sum + Number(item.jumlah), 0);
-
-  const tersedia = targetTabungan - totalTabungan;
+  const tersedia = targetTabungan - sudahDialokasikan;
 
   const formatRupiah = (number) => {
     return new Intl.NumberFormat("id-ID").format(number);
@@ -118,6 +115,29 @@ const AddGoalPopup = ({ isOpen, onClose, initialBalance = 1000000, onSave }) => 
 
       console.log("Response API:", data);
 
+      const targetId = data.data.insertId;
+
+      // jika user mengisi alokasi dana
+      if (Number(allocation) > 0) {
+        const tambahDanaRes = await fetch(
+          `https://fintrackai-backend-1yz0.onrender.com/api/tabungan/${targetId}/tambah-dana`,
+          {
+            method: "POST",
+            headers: {
+              "Content-Type": "application/json",
+            },
+            body: JSON.stringify({
+              nominal: Number(allocation),
+            }),
+          }
+        );
+
+        const tambahDanaData = await tambahDanaRes.json();
+
+        console.log("Status:", tambahDanaRes.status);
+        console.log("Tambah Dana:", tambahDanaData);
+      }
+
       // tetap update UI lokal juga
       const newGoal = {
         id: Date.now(),
@@ -127,7 +147,12 @@ const AddGoalPopup = ({ isOpen, onClose, initialBalance = 1000000, onSave }) => 
         allocation: Number(allocation),
         image,
         color: "#8b5cf6",
-        progress: 0,
+        progress:
+          Number(targetPrice) > 0
+            ? Math.round(
+              (Number(allocation) / Number(targetPrice)) * 100
+            )
+            : 0,
       };
 
       onSave(newGoal);
@@ -142,6 +167,22 @@ const AddGoalPopup = ({ isOpen, onClose, initialBalance = 1000000, onSave }) => 
       onClose();
     } catch (error) {
       console.error("Gagal tambah goal:", error);
+    }
+  };
+
+  const getTotalDialokasikan = async () => {
+    try {
+      const response = await fetch(
+        `https://fintrackai-backend-1yz0.onrender.com/api/tabungan/${userId}/total`
+      );
+
+      const data = await response.json();
+
+      setSudahDialokasikan(
+        Number(data?.data?.total || 0)
+      );
+    } catch (error) {
+      console.error(error);
     }
   };
 

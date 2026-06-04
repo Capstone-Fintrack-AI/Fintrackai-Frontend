@@ -35,9 +35,9 @@ const EditGoalPopup = ({ isOpen, onClose, goal, totalTabungan, onSave }) => {
           </button>
         </div>
 
-        <div className="grid grid-cols-2 gap-6">
+        <div className=" gap-6">
           {/* Foto */}
-          <div className="h-40 bg-gray-100 rounded-2xl flex items-center justify-center border-2 border-dashed border-purple-200">
+          {/* <div className="h-40 bg-gray-100 rounded-2xl flex items-center justify-center border-2 border-dashed border-purple-200">
             {formData.image ? (
               <img
                 src={formData.image}
@@ -46,9 +46,9 @@ const EditGoalPopup = ({ isOpen, onClose, goal, totalTabungan, onSave }) => {
             ) : (
               "Foto"
             )}
-          </div>
+          </div> */}
           {/* Nama & Catatan */}
-          <div className="flex flex-col gap-3">
+          <div className="w-full">
             <input
               className="w-full border p-3 rounded-xl"
               value={formData.name}
@@ -57,14 +57,14 @@ const EditGoalPopup = ({ isOpen, onClose, goal, totalTabungan, onSave }) => {
               }
               placeholder="Nama Goals"
             />
-            <textarea
+            {/* <textarea
               className="w-full border p-3 rounded-xl h-20"
               value={formData.note}
               onChange={(e) =>
                 setFormData({ ...formData, note: e.target.value })
               }
               placeholder="Catatan"
-            />
+            /> */}
           </div>
         </div>
 

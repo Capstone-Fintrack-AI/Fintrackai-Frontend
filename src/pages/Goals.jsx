@@ -37,6 +37,7 @@ const Goals = () => {
       const response = await axios.get(
         `https://fintrackai-backend-1yz0.onrender.com/target-tabungan/user/${userId}`
       );
+      console.log(response.data.data);
 
       const data = response.data.data.map((item) => ({
         id: item.id,
@@ -363,7 +364,7 @@ const Goals = () => {
         {/* =========================================================
               BANNER DANA GOALS (ROBOT PRESISI MENYENTUH ATAS BAWAH)
             ========================================================= */}
-        <div className="bg-[#EEE8FD] rounded-2xl border border-[#e9dff9] p-4 flex flex-row items-center justify-between gap-6 w-full h-[160px] shadow-sm relative overflow-hidden">
+        <div className="bg-[#EEE8FD] rounded-2xl border border-[#e9dff9] p-3 flex flex-row items-center justify-between gap-2 w-full h-[160px] shadow-sm relative overflow-hidden">
           {/* KIRI: Teks Judul & Deskripsi */}
           <div className="z-10 max-w-md text-center xl:text-left">
             {/* JUDUL: Menggunakan warna deep indigo/purple dan font yang lebih tegas */}
@@ -372,14 +373,14 @@ const Goals = () => {
             </h4>
 
             {/* DESKRIPSI: Menggunakan warna ungu medium, dengan penekanan font-bold pada kategori alokasi */}
-            <p className="text-sm font-medium text-[#685fbe] leading-relaxed">
+            {/* <p className="text-sm font-medium text-[#685fbe] leading-relaxed">
               Atur dana tabungan mu untuk mencapai{" "}
               <span className="font-black text-[#3e3a94]">
                 {" "}
                 target keuangan
               </span>{" "}
               yang kamu impikan.
-            </p>
+            </p> */}
           </div>
 
           {/* TENGAH: Maskot Robot (Menyentuh Atas & Bawah Container) */}
@@ -392,9 +393,9 @@ const Goals = () => {
           </div>
 
           {/* KANAN: Blok Kartu Finansial & Tombol */}
-          <div className="flex flex-col gap-3 z-10 w-full xl:w-auto">
+          <div className="flex flex-col gap-3 z-10 w-full ">
             {/* Baris 3 Kartu */}
-            <div className="flex flex-col sm:flex-row gap-3 w-full">
+            <div className="flex flex-col sm:flex-row gap-2">
               {/* Kartu 1: Total Tabungan */}
               <div className="bg-white py-2.5 px-4 rounded-xl border border-purple-50 shadow-sm flex items-center gap-3 flex-1 min-w-[180px] xl:min-w-[195px]">
                 <div className="w-9 h-9 rounded-lg bg-[#f3f0ff] flex items-center justify-center text-[#8b5cf6] text-base flex-shrink-0">
@@ -457,7 +458,7 @@ const Goals = () => {
         </div>
 
         {/* SUMMARY CARDS (4 Kolom) */}
-        <div className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-4 gap-4 mb-6">
+        <div className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-4 mb-6">
           {[
             {
               title: "Total Goals",
@@ -483,14 +484,14 @@ const Goals = () => {
               color: "text-[#f59e0b]",
               bg: "bg-[#fff7ed]",
             },
-            {
-              title: "Dana Tersedia",
-              value: "Rp 200.000",
-              desc: "Belum dialokasikan",
-              icon: "fa-check-circle",
-              color: "text-[#8b5cf6]",
-              bg: "bg-[#f3f0ff]",
-            },
+            // {
+            //   title: "Dana Tersedia",
+            //   value: "Rp 200.000",
+            //   desc: "Belum dialokasikan",
+            //   icon: "fa-check-circle",
+            //   color: "text-[#8b5cf6]",
+            //   bg: "bg-[#f3f0ff]",
+            // },
           ].map((card, idx) => (
             <div
               key={idx}
