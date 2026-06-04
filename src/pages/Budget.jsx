@@ -1,6 +1,7 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import { Link } from "react-router-dom";
+import axios from "axios";
 import {
   PieChart,
   Pie,
@@ -16,47 +17,82 @@ import {
   Line,
 } from "recharts";
 
-const dataAlokasiPie = [
-  { name: "Kebutuhan", value: 1500000, color: "#8477e4" },
-  { name: "Keinginan", value: 900000, color: "#ffb224" },
-  { name: "Tabungan", value: 600000, color: "#4caf50" },
-];
-
-const dataRealisasiPie = [
-  { name: "Kebutuhan", value: 1275000, color: "#8477e4" },
-  { name: "Keinginan", value: 787000, color: "#ffb224" },
-  { name: "Tabungan", value: 400000, color: "#4caf50" },
-];
-
-const dataBudgetVsAktual = [
-  { name: "Kebutuhan", percentage: "(50%)", Target: 1500000, Aktual: 1275000 },
-  { name: "Keinginan", percentage: "(30%)", Target: 900000, Aktual: 787000 },
-  { name: "Tabungan", percentage: "(20%)", Target: 600000, Aktual: 400000 },
-];
-
-const dataTrenBulanan = [
-  { name: "Des 2024", Target: 3000000, Realisasi: 2100000 },
-  { name: "Jan 2025", Target: 3000000, Realisasi: 2400000 },
-  { name: "Feb 2025", Target: 3000000, Realisasi: 2850000 },
-  { name: "Mar 2025", Target: 3000000, Realisasi: 2200000 },
-  { name: "Apr 2025", Target: 3000000, Realisasi: 2600000 },
-  { name: "Mei 2025", Target: 3000000, Realisasi: 2462000 },
-];
-
-const dataGauge = [
-  { value: 87, color: "#4caf50" },
-  { value: 13, color: "#eef2f6" },
-];
 
 const Budget = () => {
   const [isSidebarOpen, setIsSidebarOpen] = useState(true);
   const navigate = useNavigate();
   const activeMenu = "Budget";
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
+  const user = JSON.parse(localStorage.getItem("user"));
+  const userId = user?.id;
+  const [totalPemasukan, setTotalPemasukan] = useState(0);
+  const [dataTransaksi, setDataTransaksi] = useState([]);
+  const [dataTrenBulanan, setDataTrenBulanan] = useState([]);
 
   const handleLogout = () => {
     navigate("/login");
   };
+
+
+  const [alokasi, setAlokasi] = useState({
+    kebutuhan: 0,
+    keinginan: 0,
+    tabungan: 0,
+  });
+
+  const [realisasi, setRealisasi] = useState({
+    kebutuhan: 0,
+    keinginan: 0,
+    tabungan: 0,
+  });
+
+  const dataBudgetVsAktual = [
+    {
+      name: "Kebutuhan",
+      percentage: "(50%)",
+      Target: alokasi.kebutuhan,
+      Aktual: realisasi.kebutuhan,
+    },
+    {
+      name: "Keinginan",
+      percentage: "(30%)",
+      Target: alokasi.keinginan,
+      Aktual: realisasi.keinginan,
+    },
+    {
+      name: "Tabungan",
+      percentage: "(20%)",
+      Target: alokasi.tabungan,
+      Aktual: realisasi.tabungan,
+    },
+  ];
+
+  const totalBudget =
+    alokasi.kebutuhan +
+    alokasi.keinginan +
+    alokasi.tabungan;
+
+  const totalAktual =
+    realisasi.kebutuhan +
+    realisasi.keinginan +
+    realisasi.tabungan;
+
+  const selisihOver = Math.max(0, totalAktual - totalBudget);
+
+  const overPercentage =
+    totalBudget > 0
+      ? (selisihOver / totalBudget) * 100
+      : 0;
+
+  const healthScore = Math.max(
+    0,
+    Math.min(100, Math.round(100 - overPercentage))
+  );
+
+  const dataGauge = [
+    { value: healthScore },
+    { value: 100 - healthScore },
+  ];
 
   const maxDataValue = Math.max(
     ...dataBudgetVsAktual.flatMap((item) => [item.Target, item.Aktual]),
@@ -84,26 +120,223 @@ const Budget = () => {
     return `1 - ${hariTerakhir} ${namaBulan} ${tahun}`;
   };
 
-  const totalPemasukan = pemasukan.reduce(
-    (sum, item) => sum + Number(item.jumlah),
-    0
-  );
 
-  const kebutuhan = totalPemasukan * 0.5;
-  const keinginan = totalPemasukan * 0.3;
-  const tabungan = totalPemasukan * 0.2;
 
-  const terpakaiKebutuhan = pengeluaran
-    .filter((item) => item.kategori?.toLowerCase() === "kebutuhan")
-    .reduce((sum, item) => sum + Number(item.jumlah), 0);
+  const dataAlokasiPie = [
+    { name: "Kebutuhan", value: alokasi.kebutuhan, color: "#8477e4" },
+    { name: "Keinginan", value: alokasi.keinginan, color: "#ffb224" },
+    { name: "Tabungan", value: alokasi.tabungan, color: "#4caf50" },
+  ];
 
-  const terpakaiKeinginan = pengeluaran
-    .filter((item) => item.kategori?.toLowerCase() === "keinginan")
-    .reduce((sum, item) => sum + Number(item.jumlah), 0);
+  useEffect(() => {
+    const fetchBudgetData = async () => {
+      if (!userId) return;
 
-  const terpakaiTabungan = pengeluaran
-    .filter((item) => item.kategori?.toLowerCase() === "tabungan")
-    .reduce((sum, item) => sum + Number(item.jumlah), 0);
+      try {
+        const resIncome = await axios.get(
+          `https://fintrackai-backend-1yz0.onrender.com/pemasukan/total/${userId}`
+        );
+
+        const income = Number(resIncome.data?.total_pemasukan) || 0;
+        setTotalPemasukan(income);
+
+        // ✅ HITUNG ALOKASI 50-30-20
+        setAlokasi({
+          kebutuhan: income * 0.5,
+          keinginan: income * 0.3,
+          tabungan: income * 0.2,
+        });
+
+      } catch (error) {
+        console.log("Error fetch pemasukan:", error);
+      }
+    };
+
+    fetchBudgetData();
+  }, [userId]);
+
+  const formatRupiah = (num) =>
+    "Rp " + num.toLocaleString("id-ID");
+
+  const terpakaiKebutuhan = dataTransaksi
+    .filter((item) => item.kat?.trim() === "kebutuhan")
+    .reduce((sum, item) => sum + item.nominal, 0);
+
+  const terpakaiKeinginan = dataTransaksi
+    .filter((item) => item.kat?.trim() === "keinginan")
+    .reduce((sum, item) => sum + item.nominal, 0);
+
+  const terpakaiTabungan = dataTransaksi
+    .filter((item) => item.kat?.trim() === "tabungan")
+    .reduce((sum, item) => sum + item.nominal, 0);
+
+  useEffect(() => {
+    const fetchTransaksi = async () => {
+      if (!userId) return;
+
+      try {
+        const res = await axios.get(
+          `https://fintrackai-backend-1yz0.onrender.com/pengeluaran/user/${userId}`
+        );
+
+        const transaksi = res.data?.data || [];
+
+        const totalKategori = {
+          kebutuhan: 0,
+          keinginan: 0,
+          tabungan: 0,
+        };
+
+        transaksi.forEach((item) => {
+          const kategori = item.kategori?.toLowerCase().trim();
+          const jumlah = Number(item.jumlah) || 0;
+
+          if (kategori === "kebutuhan") {
+            totalKategori.kebutuhan += jumlah;
+          }
+
+          if (kategori === "keinginan") {
+            totalKategori.keinginan += jumlah;
+          }
+
+          if (kategori === "tabungan") {
+            totalKategori.tabungan += jumlah;
+          }
+        });
+
+        setRealisasi(totalKategori);
+
+        console.log("TOTAL KATEGORI:", totalKategori);
+      } catch (error) {
+        console.log(error);
+      }
+    };
+
+    fetchTransaksi();
+  }, [userId]);
+
+
+
+  const dataRealisasiPie = [
+    {
+      name: "Kebutuhan",
+      value: realisasi.kebutuhan,
+      color: "#8477e4",
+    },
+    {
+      name: "Keinginan",
+      value: realisasi.keinginan,
+      color: "#ffb224",
+    },
+    {
+      name: "Tabungan",
+      value: realisasi.tabungan,
+      color: "#4caf50",
+    },
+  ];
+
+
+
+  useEffect(() => {
+    const fetchPemasukan = async () => {
+      try {
+        const user = JSON.parse(localStorage.getItem("user") || "{}");
+        const userId = user.id;
+
+        const res = await axios.get(
+          `https://fintrackai-backend-1yz0.onrender.com/pemasukan/user/${userId}`
+        );
+
+        const total = res.data.data.reduce(
+          (sum, item) => sum + Number(item.jumlah),
+          0
+        );
+
+        setTotalPemasukan(total);
+
+      } catch (err) {
+        console.error("Error fetch pemasukan:", err);
+      }
+    };
+
+    fetchPemasukan();
+  }, []);
+
+  useEffect(() => {
+    const fetchTrenBulanan = async () => {
+      if (!userId) return;
+
+      try {
+        const res = await axios.get(
+          `https://fintrackai-backend-1yz0.onrender.com/pengeluaran/user/${userId}`
+        );
+
+        const transaksi = res.data?.data || [];
+
+        const grouped = {};
+
+        transaksi.forEach((item) => {
+          const date = new Date(item.tanggal);
+
+          const key =
+            date.getFullYear() +
+            "-" +
+            String(date.getMonth() + 1).padStart(2, "0");
+
+          if (!grouped[key]) {
+            grouped[key] = {
+              total: 0,
+              label: date.toLocaleDateString("id-ID", {
+                month: "short",
+              }),
+            };
+          }
+
+          grouped[key].total += Number(item.jumlah);
+        });
+
+        const trendData = Object.entries(grouped)
+          .sort(([a], [b]) => a.localeCompare(b))
+          .slice(-5)
+          .map(([_, data]) => ({
+            name: data.label,
+            Target: totalPemasukan,
+            Realisasi: data.total,
+          }));
+
+        setDataTrenBulanan(trendData);
+
+        console.log("TREND:", trendData);
+      } catch (error) {
+        console.log(error);
+      }
+    };
+
+    fetchTrenBulanan();
+  }, [userId, totalPemasukan]);
+
+  // HEALTH SCORE
+  let healthLabel = "";
+  let healthColor = "";
+  let healthMessage = "";
+
+  if (healthScore >= 80) {
+    healthLabel = "Sangat Baik 😊";
+    healthColor = "#4caf50";
+    healthMessage = "Budget kamu dikelola dengan baik!";
+  } else if (healthScore >= 60) {
+    healthLabel = "Cukup Baik 🙂";
+    healthColor = "#ffb224";
+    healthMessage = "Masih sesuai budget, tapi perlu dijaga.";
+  } else if (healthScore >= 40) {
+    healthLabel = "Perlu Perhatian 😐";
+    healthColor = "#ff9800";
+    healthMessage = "Beberapa pengeluaran mulai melebihi rencana.";
+  } else {
+    healthLabel = "Kurang Sehat 😟";
+    healthColor = "#ef4444";
+    healthMessage = "Pengeluaran melebihi budget yang ditetapkan.";
+  }
 
   return (
     <div className="h-screen bg-[#f8f6ff] font-poppins flex overflow-hidden relative">
@@ -202,8 +435,8 @@ const Budget = () => {
                 navigate(item.path);
               }}
               className={`relative z-10 flex items-center ${isSidebarOpen ? "gap-4 px-3.5" : "justify-center px-0"} cursor-pointer h-[52px] rounded-2xl transition-all duration-300 ${activeMenu === item.n
-                  ? "text-[#8477e4] font-bold"
-                  : "text-gray-400 hover:text-gray-900"
+                ? "text-[#8477e4] font-bold"
+                : "text-gray-400 hover:text-gray-900"
                 }`}
             >
               <img
@@ -267,8 +500,8 @@ const Budget = () => {
                   setIsMobileMenuOpen(false); // Otomatis tutup pop-up setelah diklik
                 }}
                 className={`p-2 rounded-xl transition-all duration-200 cursor-pointer ${activeMenu === item.n
-                    ? "bg-[#f0eaff] scale-110"
-                    : "opacity-60"
+                  ? "bg-[#f0eaff] scale-110"
+                  : "opacity-60"
                   }`}
               >
                 <img
@@ -289,8 +522,8 @@ const Budget = () => {
                 setIsMobileMenuOpen(false);
               }}
               className={`p-2 rounded-xl transition-all duration-200 cursor-pointer ${activeMenu === "Pengaturan"
-                  ? "bg-[#f0eaff] scale-110"
-                  : "opacity-60"
+                ? "bg-[#f0eaff] scale-110"
+                : "opacity-60"
                 }`}
             >
               <img
@@ -394,7 +627,7 @@ const Budget = () => {
               <span className="text-[#6b61b7] font-semibold">
                 Total Pemasukan
               </span>
-              <span className="text-[#4caf50] font-bold">Rp 3.000.000</span>
+              <span className="text-[#4caf50] font-bold">{formatRupiah(totalPemasukan)}</span>
             </div>
             <div className="border-t border-[#f0edff]"></div>
             <div className="flex justify-between items-center text-[11px]">
@@ -463,7 +696,7 @@ const Budget = () => {
                       </span>
                     </div>
                     <span className="text-gray-900 ml-1">
-                      Rp {(item.value / 1000000).toFixed(1)}jt
+                      Rp {item.value.toLocaleString("id-ID")}
                     </span>
                   </div>
                 ))}
@@ -566,7 +799,7 @@ const Budget = () => {
         </div>
 
         {/* MIDDLE ROW: 3 SEJAJAR */}
-        <div className="grid grid-cols-1 sm:grid-cols-3 xl:grid-cols-3 gap-3 md:gap-6">
+        <div className="grid grid-cols-1 sm:grid-cols-2 xl:grid-cols-2 gap-3 md:gap-6">
           {/* 1. TREN BUDGET BULANAN */}
           <div className="bg-white p-4 md:p-6 rounded-3xl border border-gray-100 shadow-sm flex flex-col justify-between min-h-[220px] md:min-h-[260px]">
             <div className="flex justify-between items-center mb-2">
@@ -668,7 +901,7 @@ const Budget = () => {
               </ResponsiveContainer>
               <div className="absolute bottom-1 flex flex-col items-center">
                 <span className="text-3xl md:text-4xl font-black text-[#2e2a60] leading-none">
-                  87
+                  {healthScore}
                 </span>
                 <span className="text-[9px] md:text-[10px] font-bold text-gray-400 mt-1">
                   /100
@@ -676,142 +909,20 @@ const Budget = () => {
               </div>
             </div>
             <div className="mt-1">
-              <h4 className="text-xs font-black text-[#4caf50]">
-                Sangat Baik 😊
+              <h4
+                className="text-xs font-black"
+                style={{ color: healthColor }}
+              >
+                {healthLabel}
               </h4>
+
               <p className="text-[9px] md:text-[10px] text-gray-400 font-bold mt-0.5 leading-relaxed">
-                Budget kamu dikelola dengan baik!
+                {healthMessage}
               </p>
             </div>
           </div>
 
           {/* 3. PROGRESS ALOKASI */}
-          <div className="bg-white p-4 md:p-6 rounded-3xl border border-gray-100 shadow-sm flex flex-col justify-between min-h-[220px] md:min-h-[260px]">
-            <h3 className="text-[11px] md:text-sm font-black text-[#2e2a60] mb-2">
-              Progress Alokasi
-            </h3>
-            <div className="flex flex-col flex-1 justify-center divide-y divide-slate-50">
-              {/* KEBUTUHAN */}
-              <div className="flex items-center justify-between py-2">
-                <div className="flex items-center gap-1.5">
-                  <div className="p-1.5 bg-[#f4f2ff] text-[#8477e4] rounded-xl">
-                    <svg
-                      xmlns="http://www.w3.org/2000/svg"
-                      fill="none"
-                      viewBox="0 0 24 24"
-                      strokeWidth={2.5}
-                      stroke="currentColor"
-                      className="w-3 h-3"
-                    >
-                      <path
-                        strokeLinecap="round"
-                        strokeLinejoin="round"
-                        d="m2.25 12 8.954-8.955c.44-.439 1.152-.439 1.591 0L21.75 12M4.5 9.75v10.125c0 .621.504 1.125 1.125 1.125H9.75v-4.875c0-.621.504-1.125 1.125-1.125h2.25c.621 0 1.125.504 1.125 1.125V21h4.125c.621 0 1.125-.504 1.125-1.125V9.75M8.25 21h8.25"
-                      />
-                    </svg>
-                  </div>
-                  <div className="text-[10px] font-black text-slate-700">
-                    Kebutuhan{" "}
-                    <span className="text-slate-400 font-normal">(50%)</span>
-                  </div>
-                </div>
-                <div className="w-[45%] flex flex-col">
-                  <div className="text-right text-[10px] font-black text-[#8477e4] mb-0.5">
-                    85%
-                  </div>
-                  <div className="w-full bg-[#f3f4f6] h-1.5 rounded-full overflow-hidden">
-                    <div
-                      className="bg-[#8477e4] h-full rounded-full"
-                      style={{ width: "85%" }}
-                    />
-                  </div>
-                  <div className="text-left text-[8px] font-bold text-slate-400 mt-0.5">
-                    Rp 1.275k / Rp 1.500k
-                  </div>
-                </div>
-              </div>
-
-              {/* KEINGINAN */}
-              <div className="flex items-center justify-between py-2">
-                <div className="flex items-center gap-1.5">
-                  <div className="p-1.5 bg-[#fffbeb] text-[#ffb224] rounded-xl">
-                    <svg
-                      xmlns="http://www.w3.org/2000/svg"
-                      fill="none"
-                      viewBox="0 0 24 24"
-                      strokeWidth={2.5}
-                      stroke="currentColor"
-                      className="w-3 h-3"
-                    >
-                      <path
-                        strokeLinecap="round"
-                        strokeLinejoin="round"
-                        d="M15.75 10.5V6a3.75 3.75 0 1 0-7.5 0v4.5m11.356-1.993 1.263 12c.07.665-.45 1.243-1.119 1.243H4.25a1.125 1.125 0 0 1-1.12-1.243l1.264-12A1.125 1.125 0 0 1 5.513 7.5h12.974c.576 0 1.059.435 1.119 1.007ZM8.625 10.5a.375.375 0 1 1-.75 0 .375.375 0 0 1 .75 0Zm7.5 0a.375.375 0 1 1-.75 0 .375.375 0 0 1 .75 0Z"
-                      />
-                    </svg>
-                  </div>
-                  <div className="text-[10px] font-black text-slate-700">
-                    Keinginan{" "}
-                    <span className="text-slate-400 font-normal">(30%)</span>
-                  </div>
-                </div>
-                <div className="w-[45%] flex flex-col">
-                  <div className="text-right text-[10px] font-black text-[#ffb224] mb-0.5">
-                    87%
-                  </div>
-                  <div className="w-full bg-[#f3f4f6] h-1.5 rounded-full overflow-hidden">
-                    <div
-                      className="bg-[#ffb224] h-full rounded-full"
-                      style={{ width: "87%" }}
-                    />
-                  </div>
-                  <div className="text-left text-[8px] font-bold text-slate-400 mt-0.5">
-                    Rp 787k / Rp 900k
-                  </div>
-                </div>
-              </div>
-
-              {/* TABUNGAN */}
-              <div className="flex items-center justify-between py-2">
-                <div className="flex items-center gap-1.5">
-                  <div className="p-1.5 bg-[#f0fdf4] text-[#4caf50] rounded-xl">
-                    <svg
-                      xmlns="http://www.w3.org/2000/svg"
-                      fill="none"
-                      viewBox="0 0 24 24"
-                      strokeWidth={2.5}
-                      stroke="currentColor"
-                      className="w-3 h-3"
-                    >
-                      <path
-                        strokeLinecap="round"
-                        strokeLinejoin="round"
-                        d="M12 6v12m-3-2.818.879.659c1.171.879 3.07.879 4.242 0 1.172-.879 1.172-2.303 0-3.182C13.536 12.219 12.768 12 12 12c-.725 0-1.45-.22-2.003-.659-1.106-.854-1.106-2.24 0-3.093 1.147-.881 2.929-.881 4.076 0l.334.256M21 12a9 9 0 1 1-18 0 9 9 0 0 1 18 0Z"
-                      />
-                    </svg>
-                  </div>
-                  <div className="text-[10px] font-black text-slate-700">
-                    Tabungan{" "}
-                    <span className="text-slate-400 font-normal">(20%)</span>
-                  </div>
-                </div>
-                <div className="w-[45%] flex flex-col">
-                  <div className="text-right text-[10px] font-black text-[#4caf50] mb-0.5">
-                    67%
-                  </div>
-                  <div className="w-full bg-[#f3f4f6] h-1.5 rounded-full overflow-hidden">
-                    <div
-                      className="bg-[#4caf50] h-full rounded-full"
-                      style={{ width: "67%" }}
-                    />
-                  </div>
-                  <div className="text-left text-[8px] font-bold text-slate-400 mt-0.5">
-                    Rp 400k / Rp 600k
-                  </div>
-                </div>
-              </div>
-            </div>
-          </div>
         </div>
 
         {/* BOTTOM ROW: FOOTER INSIGHT AI & TENTANG METODE */}

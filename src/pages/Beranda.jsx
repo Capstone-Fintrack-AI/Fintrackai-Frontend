@@ -825,7 +825,7 @@ const Beranda = () => {
               </div>
 
               <div className="flex flex-col items-center gap-4 sm:gap-6">
-                <div className="flex flex-col sm:flex-row items-center justify-center w-full gap-4 sm:gap-6">
+                <div className="flex flex-col items-center justify-center w-full gap-4 sm:gap-6">
                   <div className="w-28 h-28 sm:w-36 sm:h-36 relative flex-shrink-0 flex items-center justify-center mx-auto mb-2 sm:mb-4">
                     <svg
                       viewBox="0 0 36 36"

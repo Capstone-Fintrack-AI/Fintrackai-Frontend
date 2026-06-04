@@ -468,8 +468,8 @@ const AI = () => {
                 navigate(item.path);
               }}
               className={`relative z-10 flex items-center ${isSidebarOpen ? "gap-4 px-3.5" : "justify-center px-0"} cursor-pointer h-[52px] rounded-2xl transition-all duration-300 ${activeMenu === item.n
-                  ? "text-[#8477e4] font-bold"
-                  : "text-gray-400 hover:text-gray-900"
+                ? "text-[#8477e4] font-bold"
+                : "text-gray-400 hover:text-gray-900"
                 }`}
             >
               <img
@@ -535,8 +535,8 @@ const AI = () => {
                   setIsMobileMenuOpen(false); // Otomatis tutup pop-up setelah diklik
                 }}
                 className={`p-2 rounded-xl transition-all duration-200 cursor-pointer ${activeMenu === item.n
-                    ? "bg-[#f0eaff] scale-110"
-                    : "opacity-60"
+                  ? "bg-[#f0eaff] scale-110"
+                  : "opacity-60"
                   }`}
               >
                 <img
@@ -557,8 +557,8 @@ const AI = () => {
                 setIsMobileMenuOpen(false);
               }}
               className={`p-2 rounded-xl transition-all duration-200 cursor-pointer ${activeMenu === "Pengaturan"
-                  ? "bg-[#f0eaff] scale-110"
-                  : "opacity-60"
+                ? "bg-[#f0eaff] scale-110"
+                : "opacity-60"
                 }`}
             >
               <img
@@ -670,8 +670,9 @@ const AI = () => {
                 icon="💳"
               />
               <TopCard
-                title="Budget Health Score"
+                title="Financial Health Score"
                 value={`${budgetHealthScore} / 100`}
+                description="Kesehatan finansial secara keseluruhan"
                 badge={getHealthStatus(budgetHealthScore).text}
                 badgeColor={getHealthStatus(budgetHealthScore).color}
                 iconBg="bg-green-50"

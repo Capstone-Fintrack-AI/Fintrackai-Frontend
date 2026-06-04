@@ -533,7 +533,7 @@ const Transaksi = () => {
           </div>
 
           {/* Grid Kebutuhan, Keinginan, Tabungan */}
-          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-3 sm:gap-4">
+          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-2 gap-3 sm:gap-4">
             {/* Kebutuhan */}
             <div className="bg-white p-3 sm:p-4 rounded-2xl sm:rounded-3xl border border-[#e9dff9] shadow-sm flex items-center gap-3 sm:gap-4 min-w-0">
               <div className="w-10 h-10 sm:w-14 sm:h-14 rounded-xl sm:rounded-2xl bg-gradient-to-br from-[#a78bfa] to-[#8b5cf6] flex items-center justify-center text-white text-lg sm:text-2xl shrink-0">
@@ -591,7 +591,7 @@ const Transaksi = () => {
             </div>
 
             {/* Tabungan */}
-            <div className="bg-white p-3 sm:p-4 rounded-2xl sm:rounded-3xl border border-[#e9dff9] shadow-sm flex items-center gap-3 sm:gap-4 min-w-0">
+            {/* <div className="bg-white p-3 sm:p-4 rounded-2xl sm:rounded-3xl border border-[#e9dff9] shadow-sm flex items-center gap-3 sm:gap-4 min-w-0">
               <div className="w-10 h-10 sm:w-14 sm:h-14 rounded-xl sm:rounded-2xl bg-gradient-to-br from-[#6ee7b7] to-[#10b981] flex items-center justify-center text-white text-lg sm:text-2xl shrink-0">
                 <i className="fas fa-piggy-bank"></i>
               </div>
@@ -616,7 +616,7 @@ const Transaksi = () => {
                   Sisa Rp {sisaTabungan.toLocaleString("id-ID")}
                 </p>
               </div>
-            </div>
+            </div> */}
           </div>
         </div>
 
