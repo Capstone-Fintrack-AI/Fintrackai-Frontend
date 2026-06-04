@@ -15,9 +15,11 @@ const Transaksi = () => {
   const [searchTerm, setSearchTerm] = useState("");
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [isScanModalOpen, setIsScanModalOpen] = useState(false);
-  // Tambahkan state ini agar tidak error di bagian pagination
   const [activePage, setActivePage] = useState(1);
   const [notif, setNotif] = useState(null);
+  const [isEditOpen, setIsEditOpen] = useState(false);
+  const [isDeleteOpen, setIsDeleteOpen] = useState(false);
+  const [selectedItem, setSelectedItem] = useState(null);
 
   const location = useLocation();
   const navigate = useNavigate();
@@ -154,9 +156,48 @@ const Transaksi = () => {
     fetchTransaksi();
   }, [location]);
 
+  // State menampung data form edit
+  const [editForm, setEditForm] = useState({
+    tgl: "",
+    kat: "",
+    desc: "",
+    nominal: "",
+  });
+
+  // --- FUNGSI AKSI (PEMICU MODAL) ---
+  const handleEdit = (item) => {
+    setSelectedItem(item);
+    setEditForm({
+      tgl: item.tgl,
+      kat: item.kat,
+      desc: item.desc,
+      nominal: item.nominal,
+    });
+    setIsEditOpen(true);
+  };
+
+  const handleDelete = (item) => {
+    setSelectedItem(item);
+    setIsDeleteOpen(true);
+  };
+
+  // --- FUNGSI SUBMIT (UNTUK HUBUNGKAN KE BACKEND KAK NISA) ---
+  const handleConfirmEdit = (e) => {
+    e.preventDefault();
+    // TODO: Sipa / Kak Nisa tinggal integrasikan API Update di sini menggunakan data 'editForm' dan 'selectedItem.id'
+    console.log("Data berhasil diubah:", editForm);
+    setIsEditOpen(false);
+  };
+
+  const handleConfirmDelete = () => {
+    // TODO: Sipa / Kak Nisa tinggal integrasikan API Delete di sini menggunakan 'selectedItem.id'
+    console.log("Data berhasil dihapus:", selectedItem);
+    setIsDeleteOpen(false);
+  };
+
   return (
     // Ubah menjadi overflow-hidden
-    <div className="h-screen bg-[#f8f6ff] font-poppins flex overflow-hidden">
+    <div className="h-screen bg-[#f8f6ff] font-poppins flex overflow-hidden relative">
       {/* =========================================================
           1. BACKGROUND TEMA & BUBBLE (PERSIS BERANDA)
       ========================================================= */}
@@ -524,32 +565,6 @@ const Transaksi = () => {
                     </button>
                   ))}
                 </div>
-                {/* <div className="flex gap-2">
-                {["Kebutuhan", "Keinginan", "Tabungan"].map((kat) => (
-                  <button
-                    key={kat}
-                    onClick={() =>
-                      setActiveCategoryFilter(
-                        activeCategoryFilter === kat ? "Semua" : kat,
-                      )
-                    }
-                    className={`flex items-center gap-2 text-[10px] font-bold px-3 py-1.5 rounded-lg border transition-all ${activeCategoryFilter === kat
-                      ? "bg-[#f0eaff] text-[#8477e4] border-[#8477e4]"
-                      : "text-gray-400 bg-gray-50 border-gray-100"
-                      }`}
-                  >
-                    <div
-                      className={`w-2 h-2 rounded-full ${kat === "Kebutuhan"
-                        ? "bg-[#8477e4]"
-                        : kat === "Keinginan"
-                          ? "bg-[#FCD166]"
-                          : "bg-[#F44336]"
-                        }`}
-                    ></div>
-                    {kat}
-                  </button>
-                ))}
-              </div> */}
               </div>
 
               {/* TABEL RIWAYAT TRANSAKSI */}
@@ -569,54 +584,363 @@ const Transaksi = () => {
                       <th className="px-6 py-5 text-[11px] font-extrabold text-gray-400 uppercase tracking-widest text-right">
                         Nominal
                       </th>
+                      {/* TAMBAHAN: Kolom Aksi */}
+                      <th className="px-6 py-5 text-[11px] font-extrabold text-gray-400 uppercase tracking-widest text-center">
+                        Aksi
+                      </th>
                     </tr>
                   </thead>
                   <tbody className="divide-y divide-gray-50">
-                    {dataTampil.map((item, idx) => (
-                      <tr key={idx} className="hover:bg-gray-50 transition-all">
-                        <td className="px-6 py-5 text-[12px] font-bold text-gray-500">
-                          {item.tgl}
-                        </td>
-                        <td className="px-6 py-5">
-                          <span className="text-[10px] font-bold px-3 py-1 rounded-lg bg-gray-100 text-gray-600">
-                            {item.kat}
-                          </span>
-                        </td>
-                        <td className="px-6 py-5 text-[12px] font-bold text-gray-900">
-                          {item.desc}
-                        </td>
+                    {/* Loop data per halaman (Sekarang diset 10 data) */}
+                    {dataTampil && dataTampil.length > 0
+                      ? dataTampil
+                          .slice((activePage - 1) * 10, activePage * 10) // <--- Ubah angka 30 kemarin jadi 10 di sini
+                          .map((item, idx) => (
+                            <tr
+                              key={idx}
+                              className="hover:bg-gray-50 transition-all"
+                            >
+                              <td className="px-6 py-5 text-[12px] font-bold text-gray-500">
+                                {
+                                  typeof item.tgl === "string" &&
+                                  item.tgl.includes("/")
+                                    ? (() => {
+                                        // Memecah "3/6/2026" menjadi ['3', '6', '2026']
+                                        const [hari, bulan, tahun] =
+                                          item.tgl.split("/");
+
+                                        // Array nama bulan Indonesia
+                                        const namaBulan = [
+                                          "Januari",
+                                          "Februari",
+                                          "Maret",
+                                          "April",
+                                          "Mei",
+                                          "Juni",
+                                          "Juli",
+                                          "Agustus",
+                                          "September",
+                                          "Oktober",
+                                          "November",
+                                          "Desember",
+                                        ];
+
+                                        // Ambil nama bulan (dikurang 1 karena index array mulai dari 0)
+                                        const bulanIndo =
+                                          namaBulan[parseInt(bulan, 10) - 1] ||
+                                          bulan;
+
+                                        return `${hari} ${bulanIndo} ${tahun}`;
+                                      })()
+                                    : item.tgl // Fallback kalau datanya sudah berformat teks atau objek Date
+                                }
+                              </td>
+                              <td className="px-6 py-5">
+                                <span className="text-[10px] font-bold px-3 py-1 rounded-lg bg-gray-100 text-gray-600">
+                                  {item.kat}
+                                </span>
+                              </td>
+                              <td className="px-6 py-5 text-[12px] font-bold text-gray-900">
+                                {item.desc}
+                              </td>
+                              <td
+                                className={`px-6 py-5 text-[12px] font-black text-right ${
+                                  item.nominal < 0
+                                    ? "text-[#F44336]"
+                                    : "text-[#4caf50]"
+                                }`}
+                              >
+                                {item.nominal?.toLocaleString("id-ID", {
+                                  style: "currency",
+                                  currency: "IDR",
+                                })}
+                              </td>
+                              <td className="px-6 py-5 text-center">
+                                <div className="flex justify-center items-center gap-2">
+                                  <button
+                                    type="button"
+                                    onClick={() => handleEdit(item)}
+                                    className="w-7 h-7 rounded-md bg-blue-50 text-blue-500 hover:bg-blue-500 hover:text-white transition-all flex items-center justify-center"
+                                    title="Edit"
+                                  >
+                                    <i className="fas fa-edit text-[10px]"></i>
+                                  </button>
+                                  <button
+                                    type="button"
+                                    onClick={() => handleDelete(item)}
+                                    className="w-7 h-7 rounded-md bg-red-50 text-red-500 hover:bg-red-500 hover:text-white transition-all flex items-center justify-center"
+                                    title="Hapus"
+                                  >
+                                    <i className="fas fa-trash text-[10px]"></i>
+                                  </button>
+                                </div>
+                              </td>
+                            </tr>
+                          ))
+                      : null}
+
+                    {/* Pesan jika halaman kosong */}
+                    {(!dataTampil ||
+                      dataTampil.slice((activePage - 1) * 10, activePage * 10)
+                        .length === 0) && (
+                      <tr>
                         <td
-                          className={`px-6 py-5 text-[12px] font-black text-right ${item.nominal < 0 ? "text-[#F44336]" : "text-[#4caf50]"}`}
+                          colSpan={5}
+                          className="px-6 py-12 text-center text-xs font-semibold text-gray-400 bg-gray-50/30"
                         >
-                          {item.nominal.toLocaleString("id-ID", {
-                            style: "currency",
-                            currency: "IDR",
-                          })}
+                          <div className="text-lg mb-1">📂</div>
+                          Tidak ada data transaksi di halaman ini.
                         </td>
                       </tr>
-                    ))}
+                    )}
                   </tbody>
                 </table>
 
                 {/* PAGINATION */}
                 <div className="p-6 flex justify-center items-center gap-3 bg-[#fcfcff] border-t border-gray-50">
-                  <button className="w-8 h-8 rounded-lg border border-gray-200 flex items-center justify-center text-gray-400 hover:bg-white">
+                  {/* Tombol Previous (Kiri) - Hanya aktif jika page > 1 */}
+                  <button
+                    type="button"
+                    onClick={() =>
+                      activePage > 1 && setActivePage(activePage - 1)
+                    }
+                    disabled={activePage === 1}
+                    className={`w-8 h-8 rounded-lg border flex items-center justify-center transition-all ${
+                      activePage === 1
+                        ? "border-gray-100 text-gray-300 cursor-not-allowed bg-gray-50"
+                        : "border-gray-200 text-gray-400 hover:bg-white"
+                    }`}
+                  >
                     <i className="fas fa-chevron-left text-[10px]"></i>
                   </button>
-                  {[1, 2, 3, "...", 10].map((p, i) => (
+
+                  {/* Angka Halaman Dinamis - Otomatis bertambah sesuai jumlah data kelipatan 10 */}
+                  {Array.from(
+                    { length: Math.ceil((dataTampil?.length || 0) / 10) || 1 },
+                    (_, i) => i + 1,
+                  ).map((p) => (
                     <button
-                      key={i}
-                      onClick={() => typeof p === "number" && setActivePage(p)}
-                      className={`w-8 h-8 rounded-lg text-xs font-bold transition-all ${activePage === p ? "bg-[#8477e4] text-white" : "text-gray-400 hover:bg-white"}`}
+                      key={p}
+                      type="button"
+                      onClick={() => setActivePage(p)}
+                      className={`w-8 h-8 rounded-lg text-xs font-bold transition-all ${
+                        activePage === p
+                          ? "bg-[#8477e4] text-white"
+                          : "text-gray-400 hover:bg-white"
+                      }`}
                     >
                       {p}
                     </button>
                   ))}
-                  <button className="w-8 h-8 rounded-lg border border-gray-200 flex items-center justify-center text-gray-400 hover:bg-white">
+
+                  {/* Tombol Next (Kanan) - Otomatis mati jika sudah di halaman terakhir */}
+                  <button
+                    type="button"
+                    onClick={() => {
+                      const totalPage =
+                        Math.ceil((dataTampil?.length || 0) / 10) || 1;
+                      if (activePage < totalPage) setActivePage(activePage + 1);
+                    }}
+                    disabled={
+                      activePage >=
+                      (Math.ceil((dataTampil?.length || 0) / 10) || 1)
+                    }
+                    className={`w-8 h-8 rounded-lg border flex items-center justify-center transition-all ${
+                      activePage >=
+                      (Math.ceil((dataTampil?.length || 0) / 10) || 1)
+                        ? "border-gray-100 text-gray-300 cursor-not-allowed bg-gray-50"
+                        : "border-gray-200 text-gray-400 hover:bg-white"
+                    }`}
+                  >
                     <i className="fas fa-chevron-right text-[10px]"></i>
                   </button>
                 </div>
               </div>
+              {/* ======================================================== */}
+              {/* 1. POP-UP / MODAL EDIT */}
+              {/* ======================================================== */}
+              {isEditOpen && (
+                <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/40 backdrop-blur-sm p-4 animate-fadeIn">
+                  <div className="bg-white rounded-[2rem] w-full max-w-md p-8 shadow-2xl border border-gray-100 transform transition-all scale-100">
+                    <div className="flex justify-between items-center mb-6">
+                      <h3 className="text-xl font-extrabold text-[#1e1b4b]">
+                        Edit Transaksi
+                      </h3>
+                      <button
+                        onClick={() => setIsEditOpen(false)}
+                        className="text-gray-400 hover:text-gray-600 transition-colors text-lg"
+                      >
+                        ✕
+                      </button>
+                    </div>
+
+                    <form onSubmit={handleConfirmEdit} className="space-y-5">
+                      {/* Tanggal */}
+                      <div>
+                        <label className="block text-xs font-bold text-gray-400 uppercase tracking-wider mb-2">
+                          Tanggal
+                        </label>
+                        <input
+                          type="text"
+                          value={editForm.tgl}
+                          onChange={(e) =>
+                            setEditForm({ ...editForm, tgl: e.target.value })
+                          }
+                          className="w-full px-4 py-3 rounded-xl border border-gray-200 text-sm font-semibold text-gray-700 focus:outline-none focus:border-[#8477e4] transition-colors"
+                          required
+                        />
+                      </div>
+
+                      {/* Kategori (Ubah ke Button Pilihan Kebutuhan/Keinginan) */}
+                      <div>
+                        <label className="block text-xs font-bold text-gray-400 uppercase tracking-wider mb-2">
+                          Kategori
+                        </label>
+                        <div className="flex gap-3">
+                          <button
+                            type="button"
+                            onClick={() =>
+                              setEditForm({ ...editForm, kat: "Kebutuhan" })
+                            }
+                            className={`flex-1 py-3 rounded-xl font-bold text-sm transition-all border ${
+                              editForm.kat === "Kebutuhan"
+                                ? "bg-purple-50 border-[#8477e4] text-[#8477e4] shadow-sm shadow-purple-500/10"
+                                : "bg-white border-gray-200 text-gray-500 hover:bg-gray-50"
+                            }`}
+                          >
+                            💼 Kebutuhan
+                          </button>
+                          <button
+                            type="button"
+                            onClick={() =>
+                              setEditForm({ ...editForm, kat: "Keinginan" })
+                            }
+                            className={`flex-1 py-3 rounded-xl font-bold text-sm transition-all border ${
+                              editForm.kat === "Keinginan"
+                                ? "bg-purple-50 border-[#8477e4] text-[#8477e4] shadow-sm shadow-purple-500/10"
+                                : "bg-white border-gray-200 text-gray-500 hover:bg-gray-50"
+                            }`}
+                          >
+                            ✨ Keinginan
+                          </button>
+                        </div>
+                      </div>
+
+                      {/* Keterangan */}
+                      <div>
+                        <label className="block text-xs font-bold text-gray-400 uppercase tracking-wider mb-2">
+                          Keterangan
+                        </label>
+                        <input
+                          type="text"
+                          value={editForm.desc}
+                          onChange={(e) =>
+                            setEditForm({ ...editForm, desc: e.target.value })
+                          }
+                          className="w-full px-4 py-3 rounded-xl border border-gray-200 text-sm font-semibold text-gray-700 focus:outline-none focus:border-[#8477e4] transition-colors"
+                          required
+                        />
+                      </div>
+
+                      {/* Nominal (Otomatis Titik Ribuan) */}
+                      <div>
+                        <label className="block text-xs font-bold text-gray-400 uppercase tracking-wider mb-2">
+                          Nominal
+                        </label>
+                        <div className="relative flex items-center">
+                          <span className="absolute left-4 text-sm font-bold text-gray-400">
+                            Rp
+                          </span>
+                          <input
+                            type="text"
+                            // Memformat angka murni dari state menjadi string bertitik saat ditampilkan
+                            value={
+                              editForm.nominal
+                                ? String(editForm.nominal).replace(
+                                    /\B(?=(\d{3})+(?!\d))/g,
+                                    ".",
+                                  )
+                                : ""
+                            }
+                            // Hanya mengambil digit angka saat pengguna mengetik agar state tetap bertipe Number
+                            onChange={(e) => {
+                              const hanyaAngka = e.target.value.replace(
+                                /\D/g,
+                                "",
+                              );
+                              setEditForm({
+                                ...editForm,
+                                nominal: hanyaAngka ? Number(hanyaAngka) : "",
+                              });
+                            }}
+                            className="w-full pl-10 pr-4 py-3 rounded-xl border border-gray-200 text-sm font-bold text-gray-700 focus:outline-none focus:border-[#8477e4] transition-colors"
+                            placeholder="0"
+                            required
+                          />
+                        </div>
+                      </div>
+
+                      {/* Action Buttons */}
+                      <div className="flex gap-3 pt-2">
+                        <button
+                          type="button"
+                          onClick={() => setIsEditOpen(false)}
+                          className="flex-1 py-3.5 rounded-xl border border-gray-200 text-sm font-bold text-gray-500 hover:bg-gray-50 transition-colors"
+                        >
+                          Batal
+                        </button>
+                        <button
+                          type="submit"
+                          className="flex-1 py-3.5 rounded-xl bg-[#8477e4] text-white text-sm font-bold shadow-lg shadow-purple-500/20 hover:bg-[#7265d4] transition-colors"
+                        >
+                          Simpan Perubahan
+                        </button>
+                      </div>
+                    </form>
+                  </div>
+                </div>
+              )}
+
+              {/* ======================================================== */}
+              {/* 2. POP-UP / MODAL KONFIRMASI HAPUS */}
+              {/* ======================================================== */}
+              {isDeleteOpen && (
+                <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/40 backdrop-blur-sm p-4 animate-fadeIn">
+                  <div className="bg-white rounded-[2rem] w-full max-w-sm p-8 shadow-2xl border border-gray-100 text-center transform transition-all scale-100">
+                    <div className="w-16 h-16 bg-red-50 text-[#F44336] rounded-full flex items-center justify-center text-2xl mx-auto mb-4">
+                      ⚠️
+                    </div>
+
+                    <h3 className="text-xl font-extrabold text-[#1e1b4b] mb-2">
+                      Hapus Transaksi?
+                    </h3>
+                    <p className="text-sm text-gray-500 mb-6 leading-relaxed">
+                      Apakah kamu yakin ingin menghapus data{" "}
+                      <span className="font-bold text-gray-800">
+                        "{selectedItem?.desc}"
+                      </span>
+                      ? Tindakan ini tidak dapat dibatalkan.
+                    </p>
+
+                    <div className="flex gap-3">
+                      <button
+                        type="button"
+                        onClick={() => setIsDeleteOpen(false)}
+                        className="flex-1 py-3.5 rounded-xl border border-gray-200 text-sm font-bold text-gray-500 hover:bg-gray-50 transition-colors"
+                      >
+                        Batal
+                      </button>
+                      <button
+                        type="button"
+                        onClick={handleConfirmDelete}
+                        className="flex-1 py-3.5 rounded-xl bg-[#F44336] text-white text-sm font-bold shadow-lg shadow-red-500/20 hover:bg-[#e53935] transition-colors"
+                      >
+                        Ya, Hapus
+                      </button>
+                    </div>
+                  </div>
+                </div>
+              )}
             </div>
 
             {/* KOLOM KANAN (KONTEN STRUK & TIPS AI) */}
