@@ -456,250 +456,58 @@ const AI = () => {
             </div>
           </div>
 
-          {/* ROW 3: BUDGET & GOALS */}
-          <div className="grid grid-cols-1 xl:grid-cols-2 gap-6 mb-6 relative z-20">
-            {/* Analisis Budget */}
-            <div className="bg-white/90 backdrop-blur-sm p-6 rounded-[24px] border border-gray-100/50 shadow-sm flex flex-col md:flex-row gap-4 items-center">
-              <div className="w-full md:w-[35%] relative h-[160px] flex flex-col items-center justify-center">
-                <h3 className="absolute top-0 left-0 font-semibold text-[13px] text-[#1e1b4b] w-full text-left">
-                  Analisis Budget
-                </h3>
-                <div className="w-full h-full mt-4 relative">
-                  <ResponsiveContainer width="100%" height="100%">
-                    <PieChart>
-                      <Pie
-                        data={budgetData}
-                        innerRadius={45}
-                        outerRadius={65}
-                        dataKey="value"
-                        stroke="none"
-                        paddingAngle={2}
-                      >
-                        {budgetData.map((entry, index) => (
-                          <Cell key={`cell-${index}`} fill={entry.color} />
-                        ))}
-                      </Pie>
-                    </PieChart>
-                  </ResponsiveContainer>
-                  <div className="absolute inset-0 flex flex-col items-center justify-center">
-                    <span className="text-[20px] font-bold leading-none text-[#1e1b4b]">
-                      83%
-                    </span>
-                    <span className="text-[10px] text-gray-500 font-medium mt-1">
-                      Keinginan
-                    </span>
-                  </div>
-                </div>
-              </div>
-
-              <div className="w-full md:w-[30%] flex flex-col justify-center gap-3 pt-4 pl-2">
-                {budgetData.map((item, idx) => (
-                  <div key={idx}>
-                    <div className="flex items-center gap-2 mb-0.5">
-                      <div
-                        className="w-2.5 h-2.5 rounded-full"
-                        style={{ backgroundColor: item.color }}
-                      ></div>
-                      <span className="text-[11px] font-semibold text-gray-700">
-                        {item.name}
-                      </span>
-                    </div>
-                    <p className="text-[10px] text-gray-400 ml-4.5">
-                      {item.amount}{" "}
-                      <span className="font-medium">({item.value}%)</span>
-                    </p>
-                  </div>
-                ))}
-              </div>
-
-              <div className="w-full md:w-[35%] bg-[#f5f3ff] border border-[#ede9fe] p-5 rounded-[20px] h-full flex flex-col justify-center">
-                <div className="flex items-center gap-2 mb-2">
-                  <span className="text-purple-500 text-sm">📈</span>
-                  <span className="font-semibold text-[12px] text-purple-800">
-                    Insight Budget
-                  </span>
-                </div>
-                <p className="text-[10px] text-purple-900/80 leading-[1.6] font-medium">
-                  Alokasi keinginan mencapai 83% dari batas bulanan.
-                  <br />
-                  <br />
-                  Masih aman, namun disarankan mengurangi transaksi
-                  non-prioritas agar tabungan lebih optimal.
-                </p>
-              </div>
+          {/* ROW 3: BUDGET & GOALS (Dibuat Full-Width) */}
+<div className="mb-6 relative z-20">
+  <div className="bg-white/90 backdrop-blur-sm p-8 rounded-[24px] border border-gray-100/50 shadow-sm flex flex-col md:flex-row gap-8">
+    
+    {/* Kiri: Daftar Progress Tabungan */}
+    <div className="flex-1">
+      <h3 className="font-bold text-[16px] text-[#1e1b4b] mb-6">
+        Target Tabungan
+      </h3>
+      <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
+        {goalsData.map((goal, idx) => (
+          <div key={idx} className="flex gap-4 items-center bg-gray-50/50 p-4 rounded-2xl border border-gray-100">
+            <div className="w-12 h-12 bg-white rounded-xl border border-gray-100 flex items-center justify-center shadow-sm text-[24px]">
+              {goal.img}
             </div>
-
-            {/* Analisis Goals */}
-            <div className="bg-white/90 backdrop-blur-sm p-6 rounded-[24px] border border-gray-100/50 shadow-sm flex flex-col md:flex-row gap-6">
-              <div className="w-full md:w-[55%]">
-                <h3 className="font-semibold text-[13px] text-[#1e1b4b] mb-4">
-                  Analisis Goals
-                </h3>
-                <div className="space-y-4">
-                  {goalsData.map((goal, idx) => (
-                    <div key={idx} className="flex gap-3 items-center">
-                      <div className="w-10 h-10 bg-gray-50 rounded-xl border border-gray-100 flex items-center justify-center shadow-sm text-[20px]">
-                        {goal.img}
-                      </div>
-                      <div className="flex-1">
-                        <p className="text-[12px] font-bold text-[#1e1b4b]">
-                          {goal.name}
-                        </p>
-                        <p className="text-[9px] text-gray-400 mb-1.5 font-medium">
-                          {goal.current} / {goal.target}
-                        </p>
-                        <div className="flex items-center gap-2">
-                          <div className="w-full h-[5px] bg-gray-100 rounded-full overflow-hidden">
-                            <div
-                              className="h-full rounded-full"
-                              style={{
-                                width: `${goal.progress}%`,
-                                backgroundColor: goal.color,
-                              }}
-                            ></div>
-                          </div>
-                          <span
-                            className="text-[10px] font-bold w-7 text-right"
-                            style={{ color: goal.color }}
-                          >
-                            {goal.progress}%
-                          </span>
-                        </div>
-                      </div>
-                    </div>
-                  ))}
-                </div>
-              </div>
-
-              <div className="w-full md:w-[45%] flex flex-col gap-4 justify-center">
-                <div className="bg-[#e6f8f0] border border-[#a7f3d0] p-4 rounded-[16px]">
-                  <div className="flex items-center gap-2 mb-1.5">
-                    <span className="text-green-500 text-sm">📈</span>
-                    <span className="font-semibold text-[12px] text-green-800">
-                      Insight Goals
-                    </span>
-                  </div>
-                  <p className="text-[10px] text-green-800/80 leading-relaxed font-medium">
-                    Goal Laptop ASUS akan tercapai dalam 11 bulan jika pola
-                    menabung tetap konsisten.
-                  </p>
-                </div>
-
-                <div className="bg-[#fff9eb] border border-[#fef0c7] p-4 rounded-[16px] flex gap-3 items-start">
-                  <span className="text-orange-500 text-[20px]">🏆</span>
-                  <div>
-                    <p className="font-bold text-[11px] text-orange-800 leading-tight mb-1">
-                      Goal tercepat saat ini
-                      <br />
-                      Buku Kuliah 💥
-                    </p>
-                    <p className="text-[9px] text-orange-800/80 font-medium">
-                      Target dapat tercapai dalam 2 bulan lagi.
-                    </p>
-                  </div>
-                </div>
+            <div className="flex-1">
+              <p className="text-[13px] font-bold text-[#1e1b4b]">{goal.name}</p>
+              <p className="text-[10px] text-gray-400 mb-2 font-medium">
+                {goal.current} / {goal.target}
+              </p>
+              <div className="w-full h-[6px] bg-gray-200 rounded-full overflow-hidden">
+                <div className="h-full rounded-full" style={{ width: `${goal.progress}%`, backgroundColor: goal.color }}></div>
               </div>
             </div>
           </div>
+        ))}
+      </div>
+    </div>
 
-          {/* ROW 4: INSIGHTS & REKOMENDASI */}
-          <div className="grid grid-cols-1 xl:grid-cols-12 gap-6 relative z-20 pb-8">
-            {/* Kiri: Semua Insight AI */}
-            <div className="xl:col-span-7 bg-white rounded-[24px] p-6 shadow-[0_2px_10px_rgba(0,0,0,0.02)] border border-gray-100 flex flex-col gap-4">
-              <h3 className="font-bold text-[16px] text-[#1e1b4b]">
-                Semua Insight AI
-              </h3>
+    {/* Kanan: Insight (Sampingan) */}
+    <div className="w-full md:w-[350px] flex flex-col gap-4">
+      <div className="bg-[#f0eaff] border border-[#e0d4fc] p-5 rounded-[20px] flex-1">
+        <div className="flex items-center gap-2 mb-3">
+          <span className="text-purple-600 text-lg">📅</span>
+          <span className="font-bold text-[13px] text-purple-800">Prediksi Tabungan</span>
+        </div>
+        <p className="text-[12px] text-purple-900 leading-relaxed font-medium">
+          Jika pola pengeluaran tetap terjaga, target tabungan <span className="font-bold">LAPTOP ASUS</span> dapat tercapai sesuai jadwal.
+        </p>
+      </div>
 
-              {/* Tabs */}
-              <div className="flex gap-2 mb-2 overflow-x-auto pb-2 scrollbar-hide">
-                {tabs.map((tab) => (
-                  <button
-                    key={tab}
-                    onClick={() => setActiveTab(tab)}
-                    className={`px-5 py-1.5 rounded-xl text-[12px] font-semibold transition-all whitespace-nowrap border ${
-                      activeTab === tab
-                        ? "bg-[#8b5cf6] text-white border-[#8b5cf6]"
-                        : "bg-white text-gray-500 border-gray-200 hover:bg-gray-50"
-                    }`}
-                  >
-                    {tab}
-                  </button>
-                ))}
-              </div>
-
-              {/* Grid Insight Mini Cards */}
-              <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-3 flex-1">
-                <InsightMiniCard
-                  icon="🧭"
-                  iconBg="bg-[#f0eaff]"
-                  iconColor="text-purple-600"
-                  title="Dashboard"
-                  text="Pengeluaran hari ini 12% lebih rendah dibanding rata-rata 7 hari terakhir. Bagus! 👍"
-                  date="22 Mei 2025, 08:30"
-                />
-                <InsightMiniCard
-                  icon="💡"
-                  iconBg="bg-[#fff4e6]"
-                  iconColor="text-orange-500"
-                  title="Budget"
-                  text="Alokasi kebutuhan kamu terjaga dengan baik selama 5 hari terakhir."
-                  date="22 Mei 2025, 08:30"
-                />
-                <InsightMiniCard
-                  icon="🎯"
-                  iconBg="bg-[#ffeef2]"
-                  iconColor="text-red-500"
-                  title="Goals"
-                  text="Kamu sudah konsisten menabung selama 12 hari berturut-turut. Pertahankan! 💪"
-                  date="22 Mei 2025, 08:30"
-                />
-                <InsightMiniCard
-                  icon="📄"
-                  iconBg="bg-[#eef2ff]"
-                  iconColor="text-blue-500"
-                  title="Laporan"
-                  text="Bulan Mei menjadi bulan dengan pengeluaran tertinggi dalam 3 bulan terakhir."
-                  date="22 Mei 2025, 08:30"
-                />
-              </div>
-            </div>
-
-            {/* Kanan: Rekomendasi AI */}
-            <div className="xl:col-span-5 bg-white rounded-[24px] p-6 shadow-[0_2px_10px_rgba(0,0,0,0.02)] border border-gray-100 flex flex-col gap-4">
-              <div className="flex justify-between items-center mb-2">
-                <h3 className="font-bold text-[16px] text-[#1e1b4b]">
-                  Rekomendasi AI Untukmu
-                </h3>
-                <button className="text-[#8b5cf6] text-[12px] font-semibold hover:underline cursor-pointer flex items-center gap-1">
-                  Lihat Semua <span className="text-[10px]">❯</span>
-                </button>
-              </div>
-
-              <div className="grid grid-cols-1 md:grid-cols-3 gap-3 flex-1">
-                <RecomCard
-                  num="1"
-                  icon="🎯"
-                  color="purple"
-                  title="Prioritas 1"
-                  text="Tambahkan Rp100.000 ke Goal Laptop ASUS untuk mempercepat pencapaiannya."
-                />
-                <RecomCard
-                  num="2"
-                  icon="💳"
-                  color="orange"
-                  title="Prioritas 2"
-                  text="Kurangi alokasi keinginan sekitar 5% agar tabungan lebih optimal."
-                />
-                <RecomCard
-                  num="3"
-                  icon="🐷"
-                  color="green"
-                  title="Prioritas 3"
-                  text="Masih ada Rp200.000 tabungan yang belum dialokasikan ke goals. Ayo alokasikan!"
-                />
-              </div>
-            </div>
-          </div>
+      <div className="bg-[#fff9eb] border border-[#fef0c7] p-5 rounded-[20px]">
+        <p className="font-bold text-[12px] text-orange-800 leading-tight mb-2">
+          LAPTOP ASUS akan selesai dalam 5 hari lagi! 🚀
+        </p>
+        <p className="text-[10px] text-orange-800/80 font-medium italic">
+          Tetap konsisten ya, Sipa Cantik!
+        </p>
+      </div>
+    </div>
+  </div>
+</div>
         </div>
       </div>
     </div>

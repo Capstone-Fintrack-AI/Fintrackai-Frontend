@@ -124,7 +124,7 @@ const LandingPage = () => {
 
       {/* --- NAVBAR --- */}
       <nav className="fixed w-full top-4 md:top-6 z-50 flex justify-center px-4 sm:px-6">
-        <div 
+        <div
           className={`w-full max-w-6xl bg-white/90 backdrop-blur-md shadow-xl px-5 md:px-8 py-3 md:py-4 flex flex-col md:flex-row justify-between items-center border border-white/50 transition-all duration-300 ${
             isMenuOpen ? "rounded-3xl" : "rounded-full"
           }`}
@@ -132,7 +132,11 @@ const LandingPage = () => {
           {/* Header Mobile & Logo Desktop */}
           <div className="flex w-full md:w-auto justify-between items-center">
             <div className="flex items-center gap-2 md:gap-3">
-              <img src="/gambar/logo.png" className="w-8 h-8 md:w-10 md:h-10" alt="Logo" />
+              <img
+                src="/gambar/logo.png"
+                className="w-8 h-8 md:w-10 md:h-10"
+                alt="Logo"
+              />
               <span className="font-bold text-lg md:text-2xl tracking-tight text-[#1e1b4b]">
                 FinTrack AI
               </span>
@@ -143,55 +147,89 @@ const LandingPage = () => {
               onClick={() => setIsMenuOpen(!isMenuOpen)}
               className="md:hidden text-[#1e1b4b] hover:text-[#8477e4] focus:outline-none p-1"
             >
-              <svg 
-                className="w-7 h-7" 
-                fill="none" 
-                stroke="currentColor" 
+              <svg
+                className="w-7 h-7"
+                fill="none"
+                stroke="currentColor"
                 viewBox="0 0 24 24"
               >
                 {isMenuOpen ? (
-                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M6 18L18 6M6 6l12 12" />
+                  <path
+                    strokeLinecap="round"
+                    strokeLinejoin="round"
+                    strokeWidth="2"
+                    d="M6 18L18 6M6 6l12 12"
+                  />
                 ) : (
-                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M4 6h16M4 12h16M4 18h16" />
+                  <path
+                    strokeLinecap="round"
+                    strokeLinejoin="round"
+                    strokeWidth="2"
+                    d="M4 6h16M4 12h16M4 18h16"
+                  />
                 )}
               </svg>
             </button>
           </div>
 
           {/* Deretan Menu & Tombol Daftar (Merespons isMenuOpen di HP) */}
-          <div 
+          <div
             className={`${
               isMenuOpen ? "flex" : "hidden"
             } md:flex flex-col md:flex-row items-center w-full md:w-auto gap-4 md:gap-5 lg:gap-8 mt-4 md:mt-0 pb-2 md:pb-0 font-semibold text-gray-600 text-sm lg:text-base`}
           >
             <ul className="flex flex-col md:flex-row gap-4 lg:gap-8 w-full md:w-auto text-center">
               <li>
-                <a href="#beranda" onClick={() => setIsMenuOpen(false)} className="block w-full py-1 md:py-0 hover:text-[#8477e4] transition-colors">
+                <a
+                  href="#beranda"
+                  onClick={() => setIsMenuOpen(false)}
+                  className="block w-full py-1 md:py-0 hover:text-[#8477e4] transition-colors"
+                >
                   Home
                 </a>
               </li>
               <li>
-                <a href="#tentang" onClick={() => setIsMenuOpen(false)} className="block w-full py-1 md:py-0 hover:text-[#8477e4] transition-colors">
+                <a
+                  href="#tentang"
+                  onClick={() => setIsMenuOpen(false)}
+                  className="block w-full py-1 md:py-0 hover:text-[#8477e4] transition-colors"
+                >
                   Tentang
                 </a>
               </li>
               <li>
-                <a href="#fitur" onClick={() => setIsMenuOpen(false)} className="block w-full py-1 md:py-0 hover:text-[#8477e4] transition-colors">
+                <a
+                  href="#fitur"
+                  onClick={() => setIsMenuOpen(false)}
+                  className="block w-full py-1 md:py-0 hover:text-[#8477e4] transition-colors"
+                >
                   Fitur
                 </a>
               </li>
               <li>
-                <a href="#dashboard" onClick={() => setIsMenuOpen(false)} className="block w-full py-1 md:py-0 hover:text-[#8477e4] transition-colors">
+                {/* Cari link navigasimu dan tambahkan class ini */}
+                <a
+                  href="#dashboard"
+                  className="hidden md:block text-gray-600 hover:text-blue-600"
+                >
                   Dashboard
                 </a>
               </li>
               <li>
-                <a href="#tim" onClick={() => setIsMenuOpen(false)} className="block w-full py-1 md:py-0 hover:text-[#8477e4] transition-colors">
+                <a
+                  href="#tim"
+                  onClick={() => setIsMenuOpen(false)}
+                  className="block w-full py-1 md:py-0 hover:text-[#8477e4] transition-colors"
+                >
                   Team
                 </a>
               </li>
               <li>
-                <a href="#faq" onClick={() => setIsMenuOpen(false)} className="block w-full py-1 md:py-0 hover:text-[#8477e4] transition-colors">
+                <a
+                  href="#faq"
+                  onClick={() => setIsMenuOpen(false)}
+                  className="block w-full py-1 md:py-0 hover:text-[#8477e4] transition-colors"
+                >
                   FAQ
                 </a>
               </li>
@@ -241,7 +279,9 @@ const LandingPage = () => {
               </button>
               <button className="bg-white/60 backdrop-blur-sm text-[#1e1b4b] text-xs sm:text-sm md:text-base font-bold px-5 py-3.5 sm:px-6 sm:py-4 rounded-full shadow-sm border border-white hover:bg-white transition-colors flex items-center gap-2 sm:gap-3">
                 <div className="bg-purple-100 rounded-full p-1 sm:p-1.5 flex items-center justify-center shrink-0">
-                  <span className="text-[#8477e4] text-[10px] sm:text-xs">▶</span>
+                  <span className="text-[#8477e4] text-[10px] sm:text-xs">
+                    ▶
+                  </span>
                 </div>
                 Lihat Fitur <span>❯</span>
               </button>
@@ -439,7 +479,10 @@ const LandingPage = () => {
       </section>
 
       {/* --- TENTANG KAMI (BIGGER) --- */}
-      <section id="tentang" className="py-16 md:py-24 px-4 sm:px-6 md:px-12 lg:px-20">
+      <section
+        id="tentang"
+        className="py-16 md:py-24 px-4 sm:px-6 md:px-12 lg:px-20"
+      >
         <div className="w-full bg-gradient-to-br from-[#8477e4] to-[#e584ee] rounded-[32px] md:rounded-[50px] p-8 sm:p-12 md:p-20 lg:p-24 text-white shadow-3xl relative overflow-hidden flex flex-col lg:flex-row lg:items-center justify-between gap-12">
           <div className="w-full lg:max-w-2xl xl:max-w-3xl space-y-5 md:space-y-8 relative z-10 text-center lg:text-left">
             <h2 className="text-3xl sm:text-5xl md:text-6xl lg:text-7xl font-black leading-tight">
@@ -465,7 +508,10 @@ const LandingPage = () => {
       </section>
 
       {/* --- FITUR (FIXED STYLE) --- */}
-      <section id="fitur" className="py-20 md:py-32 px-4 sm:px-6 md:px-12 lg:px-20">
+      <section
+        id="fitur"
+        className="py-20 md:py-32 px-4 sm:px-6 md:px-12 lg:px-20"
+      >
         <div className="text-center mb-12 md:mb-20 space-y-4">
           <h2 className="text-3xl sm:text-5xl md:text-6xl font-bold text-gray-900 leading-tight">
             Kelola Keuangan Lebih Cerdas <br />
@@ -526,7 +572,9 @@ const LandingPage = () => {
                       alt={item.t}
                     />
                   </div>
-                  <h3 className="text-2xl sm:text-3xl font-bold mb-3 sm:mb-5">{item.t}</h3>
+                  <h3 className="text-2xl sm:text-3xl font-bold mb-3 sm:mb-5">
+                    {item.t}
+                  </h3>
                   <p className="text-gray-500 text-sm sm:text-lg leading-relaxed">
                     {item.d}
                   </p>
@@ -538,52 +586,42 @@ const LandingPage = () => {
       </section>
 
       {/* --- DASHBOARD --- */}
-
-      <section id="dashboard" className="py-24 px-6 md:px-20">
-
+      <section id="dashboard" className="hidden md:block py-24 px-6 md:px-20">
         <h2 className="text-5xl font-bold text-center mb-20 text-gray-900">
-
           Experience Our Interface
-
         </h2>
 
-        <div className="flex flex-col md:flex-row gap-6 h-[600px] max-w-7xl mx-auto">
-
+        <div className="flex gap-4 h-[500px] max-w-7xl mx-auto">
           {[
-
-            "/gambar/berandatampilan.jpeg",
-
-            "path-desktop-main.png",
-
-            "path-mobile-2.png",
-
-            "path-desktop-2.png",
-
+            "berandatampilan.jpeg",
+            "transaksitampilan.jpeg",
+            "budgettampilan.jpeg",
+            "goalstampilan.jpeg",
             "path-mobile-3.png",
-
           ].map((img, idx) => (
-
             <div
-
               key={idx}
-
-              className={`dashboard-item rounded-[40px] shadow-2xl flex items-center justify-center p-6 bg-white overflow-hidden ${activeDashboard === idx ? "active" : ""}`}
-
               onClick={() => setActiveDashboard(idx)}
-
+              className={`transition-all duration-700 ease-in-out cursor-pointer rounded-[40px] shadow-2xl bg-white overflow-hidden flex items-center justify-center ${
+                activeDashboard === idx
+                  ? "flex-[4] p-6"
+                  : "flex-[1] p-0 opacity-80 hover:opacity-100" // p-0 biar gambar mepet
+              }`}
             >
-
-              <img src={`/gambar/${img}`} className="h-full object-contain" />
-
+              <img
+                src={`/gambar/${img}`}
+                className={`h-full w-full transition-all duration-700 ${
+                  activeDashboard === idx
+                    ? "object-contain" // Saat aktif, gambar muncul penuh
+                    : "object-cover object-left" // Saat mengecil, gambar zoom & fokus ke kiri
+                }`}
+                alt={`Dashboard ${idx}`}
+              />
             </div>
-
           ))}
-
         </div>
-
       </section>
 
-      {/* --- TEAM --- */}
       <div
         id="tim"
         className="py-16 md:py-24 font-poppins selection:bg-[#8477e4] selection:text-white px-4 sm:px-6 md:px-12 lg:px-20"
@@ -630,7 +668,11 @@ const LandingPage = () => {
             slidesPerView={1.3}
             centeredSlides={true}
             breakpoints={{
-              640: { slidesPerView: 2.5, centeredSlides: false, spaceBetween: 25 },
+              640: {
+                slidesPerView: 2.5,
+                centeredSlides: false,
+                spaceBetween: 25,
+              },
               1024: {
                 slidesPerView: 4,
                 spaceBetween: 30,
@@ -671,7 +713,9 @@ const LandingPage = () => {
                         <h3 className="text-white font-bold text-base sm:text-lg">
                           {member.n}
                         </h3>
-                        <p className="text-white/80 text-xs sm:text-sm mb-3">{member.r}</p>
+                        <p className="text-white/80 text-xs sm:text-sm mb-3">
+                          {member.r}
+                        </p>
                         <div className="flex gap-2">
                           <div className="social-icon">
                             <i className="fab fa-instagram"></i>
@@ -688,7 +732,6 @@ const LandingPage = () => {
             ))}
           </Swiper>
 
-          {/* Navigasi Custom */}
           <div className="flex justify-center gap-4 md:gap-6 mt-8 md:mt-12">
             <div className="team-prev cursor-pointer w-10 h-10 md:w-12 md:h-12 rounded-full border-2 border-gray-200 flex items-center justify-center text-gray-400 hover:border-[#8477e4] hover:text-[#8477e4] transition-all relative z-10">
               <svg
@@ -726,107 +769,150 @@ const LandingPage = () => {
         </div>
       </div>
 
-      {/* --- FAQ --- */}
-<section id="faq" className="py-16 md:py-32 px-6 max-w-4xl mx-auto">
-  <h2 className="text-3xl md:text-5xl font-bold text-center mb-12 md:mb-20 text-gray-900">
-    Any Questions?
-  </h2>
-  <div className="space-y-4 md:space-y-6">
-    {[
-  {
-    q: "Apa itu FinTrack AI?",
-    a: "FinTrack AI adalah platform manajemen keuangan digital pintar yang dirancang untuk membantu kamu mengontrol pengeluaran, mengatur budget otomatis, hingga menetapkan target tabungan. Dilengkapi dengan teknologi Insight Cerdas AI, aplikasi ini akan menganalisis kebiasaan finansialmu dan memberikan rekomendasi terbaik agar keuanganmu tetap sehat dan optimal setiap hari.",
-  },
-  {
-    q: "Apakah data transaksi saya aman?",
-    a: "Sangat aman. Keamanan privasi dan data transaksimu adalah prioritas utama kami. FinTrack AI menggunakan sistem keamanan berlapis dan enkripsi standar industri untuk memastikan bahwa seluruh riwayat transaksi, catatan saldo, dan data pribadi kamu tersimpan dengan aman serta tidak akan disalahgunakan oleh pihak mana pun.",
-  },
-  {
-    q: "Berapa biaya langganannya?",
-    a: "FinTrack AI bisa kamu gunakan secara Gratis untuk fitur-fitur dasar seperti pencatatan transaksi harian dan pembuatan budget sederhana. Namun, untuk menikmati fitur premium tanpa batas seperti analisis mendalam dari Insight AI, laporan keuangan kustom, dan pelacakan target tabungan tingkat lanjut kami menyediakan paket langganan premium dengan harga yang sangat ramah di kantong.",
-  },
-  {
-    q: "Apakah bisa digunakan di Mobile?",
-    a: "Tentu saja bisa! FinTrack AI mengusung desain yang sepenuhnya responsive. Kamu bisa mengakses dan menggunakannya dengan sangat nyaman melalui browser di smartphone (HP) kamu tanpa kehilangan keindahan tampilan maupun kelengkapan fiturnya, sama lancarnya seperti saat diakses lewat laptop atau desktop.",
-  },
-].map((item, i) => (
-  <div
-    key={i}
-    className={`bg-white rounded-3xl p-5 md:p-6 shadow-sm border border-gray-100 transition-all duration-300 ${
-      activeFaq === i ? "border-[#8477e4]" : "border-gray-100"
-    }`}
-  >
-    <button
-      className="w-full flex justify-between items-center text-left py-2"
-      onClick={() => setActiveFaq(activeFaq === i ? null : i)}
-    >
-      <span className="text-lg md:text-xl font-bold text-gray-800 pr-4">
-        {item.q}
-      </span>
-      <i
-        className={`fas fa-chevron-down transition-transform duration-300 ${
-          activeFaq === i ? "rotate-180 text-[#8477e4]" : "text-gray-400"
-        }`}
-      ></i>
-    </button>
-    
-    {/* BAGIAN INI YANG DIPERBAIKI */}
-    <div 
-      className={`overflow-hidden transition-all duration-300 ease-in-out ${
-        activeFaq === i ? "max-h-96 opacity-100 mt-4" : "max-h-0 opacity-0"
-      }`}
-    >
-      <p className="text-gray-500 text-base md:text-lg leading-relaxed">
-        {item.a}
-      </p>
-    </div>
-  </div>
-))}
-  </div>
-</section>
+      <section id="faq" className="py-16 md:py-32 px-6 max-w-4xl mx-auto">
+        <h2 className="text-3xl md:text-5xl font-bold text-center mb-12 md:mb-20 text-gray-900">
+          Any Questions?
+        </h2>
+        <div className="space-y-4 md:space-y-6">
+          {[
+            {
+              q: "Apa itu FinTrack AI?",
+              a: "FinTrack AI adalah platform manajemen keuangan digital pintar yang dirancang untuk membantu kamu mengontrol pengeluaran, mengatur budget otomatis, hingga menetapkan target tabungan. Dilengkapi dengan teknologi Insight Cerdas AI, aplikasi ini akan menganalisis kebiasaan finansialmu dan memberikan rekomendasi terbaik agar keuanganmu tetap sehat dan optimal setiap hari.",
+            },
+            {
+              q: "Apakah data transaksi saya aman?",
+              a: "Sangat aman. Keamanan privasi dan data transaksimu adalah prioritas utama kami. FinTrack AI menggunakan sistem keamanan berlapis dan enkripsi standar industri untuk memastikan bahwa seluruh riwayat transaksi, catatan saldo, dan data pribadi kamu tersimpan dengan aman serta tidak akan disalahgunakan oleh pihak mana pun.",
+            },
+            {
+              q: "Berapa biaya langganannya?",
+              a: "FinTrack AI bisa kamu gunakan secara Gratis untuk fitur-fitur dasar seperti pencatatan transaksi harian dan pembuatan budget sederhana. Namun, untuk menikmati fitur premium tanpa batas seperti analisis mendalam dari Insight AI, laporan keuangan kustom, dan pelacakan target tabungan tingkat lanjut kami menyediakan paket langganan premium dengan harga yang sangat ramah di kantong.",
+            },
+            {
+              q: "Apakah bisa digunakan di Mobile?",
+              a: "Tentu saja bisa! FinTrack AI mengusung desain yang sepenuhnya responsive. Kamu bisa mengakses dan menggunakannya dengan sangat nyaman melalui browser di smartphone (HP) kamu tanpa kehilangan keindahan tampilan maupun kelengkapan fiturnya, sama lancarnya seperti saat diakses lewat laptop atau desktop.",
+            },
+          ].map((item, i) => (
+            <div
+              key={i}
+              className={`bg-white rounded-3xl p-5 md:p-6 shadow-sm border border-gray-100 transition-all duration-300 ${
+                activeFaq === i ? "border-[#8477e4]" : "border-gray-100"
+              }`}
+            >
+              <button
+                className="w-full flex justify-between items-center text-left py-2"
+                onClick={() => setActiveFaq(activeFaq === i ? null : i)}
+              >
+                <span className="text-lg md:text-xl font-bold text-gray-800 pr-4">
+                  {item.q}
+                </span>
+                <i
+                  className={`fas fa-chevron-down transition-transform duration-300 ${
+                    activeFaq === i
+                      ? "rotate-180 text-[#8477e4]"
+                      : "text-gray-400"
+                  }`}
+                ></i>
+              </button>
 
-      {/* --- FOOTER --- */}
-<footer className="py-16 md:py-24 bg-white/80 border-t border-gray-100 px-6 md:px-20 text-center">
-  <div className="max-w-7xl mx-auto grid grid-cols-1 md:grid-cols-3 gap-12 md:gap-16 justify-items-center">
-    
-    {/* Kolom 1 */}
-    <div className="flex flex-col items-center space-y-4 md:space-y-6 max-w-xs md:max-w-sm">
-      <div className="flex items-center gap-3 justify-center">
-        <img src="/gambar/logo.png" className="w-10 md:w-12" alt="FinTrack AI Logo" />
-        <span className="font-bold text-2xl md:text-3xl">FinTrack AI</span>
-      </div>
-      <p className="text-gray-500 leading-relaxed text-base md:text-lg">
-        Solusi manajemen keuangan modern untuk generasi masa kini. Cerdas, efisien, dan transparan.
-      </p>
-    </div>
+              <div
+                className={`overflow-hidden transition-all duration-300 ease-in-out ${
+                  activeFaq === i
+                    ? "max-h-96 opacity-100 mt-4"
+                    : "max-h-0 opacity-0"
+                }`}
+              >
+                <p className="text-gray-500 text-base md:text-lg leading-relaxed">
+                  {item.a}
+                </p>
+              </div>
+            </div>
+          ))}
+        </div>
+      </section>
 
-    {/* Kolom 2 */}
-    <div className="flex flex-col items-center">
-      <h4 className="font-bold text-lg md:text-xl mb-6 md:mb-8">Navigation</h4>
-      <ul className="space-y-3 md:space-y-4 text-gray-500 text-base md:text-lg">
-        <li><a href="#beranda" className="hover:text-[#8477e4] transition-colors">Home</a></li>
-        <li><a href="#tentang" className="hover:text-[#8477e4] transition-colors">About Us</a></li>
-        <li><a href="#fitur" className="hover:text-[#8477e4] transition-colors">Our Features</a></li>
-        <li><a href="#tim" className="hover:text-[#8477e4] transition-colors">Meet the Team</a></li>
-      </ul>
-    </div>
+      <footer className="py-16 md:py-24 bg-white/80 border-t border-gray-100 px-6 md:px-20 text-center">
+        <div className="max-w-7xl mx-auto grid grid-cols-1 md:grid-cols-3 gap-12 md:gap-16 justify-items-center">
+          <div className="flex flex-col items-center space-y-4 md:space-y-6 max-w-xs md:max-w-sm">
+            <div className="flex items-center gap-3 justify-center">
+              <img
+                src="/gambar/logo.png"
+                className="w-10 md:w-12"
+                alt="FinTrack AI Logo"
+              />
+              <span className="font-bold text-2xl md:text-3xl">
+                FinTrack AI
+              </span>
+            </div>
+            <p className="text-gray-500 leading-relaxed text-base md:text-lg">
+              Solusi manajemen keuangan modern untuk generasi masa kini. Cerdas,
+              efisien, dan transparan.
+            </p>
+          </div>
 
-    {/* Kolom 3 */}
-    <div className="flex flex-col items-center">
-      <h4 className="font-bold text-lg md:text-xl mb-6 md:mb-8">Follow Us</h4>
-      <div className="flex gap-6 text-2xl md:text-3xl text-gray-400 justify-center">
-        <i className="fab fa-instagram hover:text-[#e584ee] cursor-pointer transition-colors"></i>
-        <i className="fab fa-twitter hover:text-[#8477e4] cursor-pointer transition-colors"></i>
-        <i className="fab fa-linkedin hover:text-blue-600 cursor-pointer transition-colors"></i>
-      </div>
-    </div>
-  </div>
+          <div className="flex flex-col items-center">
+            <h4 className="font-bold text-lg md:text-xl mb-6 md:mb-8">
+              Navigation
+            </h4>
+            <ul className="space-y-3 md:space-y-4 text-gray-500 text-base md:text-lg">
+              <li>
+                <a
+                  href="#beranda"
+                  className="hover:text-[#8477e4] transition-colors"
+                >
+                  Home
+                </a>
+              </li>
+              <li>
+                <a
+                  href="#tentang"
+                  className="hover:text-[#8477e4] transition-colors"
+                >
+                  About Us
+                </a>
+              </li>
+              <li>
+                <a
+                  href="#fitur"
+                  className="hover:text-[#8477e4] transition-colors"
+                >
+                  Our Features
+                </a>
+              </li>
+              <li>
+                <a
+                  href="#tim"
+                  className="hover:text-[#8477e4] transition-colors"
+                >
+                  Meet the Team
+                </a>
+              </li>
+              <li>
+                <a
+                  href="#faq"
+                  className="hover:text-[#8477e4] transition-colors"
+                >
+                  FAQ
+                </a>
+              </li>
+            </ul>
+          </div>
 
-  {/* Copyright */}
-  <div className="text-center mt-12 md:mt-20 pt-8 md:pt-10 border-t border-gray-100 text-gray-400 font-medium text-sm md:text-base">
-    &copy; 2026 FinTrack AI. Coding Camp Team.
-  </div>
-</footer>
+          <div className="flex flex-col items-center">
+            <h4 className="font-bold text-lg md:text-xl mb-6 md:mb-8">
+              Follow Us
+            </h4>
+            <div className="flex gap-6 text-2xl md:text-3xl text-gray-400 justify-center">
+              <i className="fab fa-instagram hover:text-[#e584ee] cursor-pointer transition-colors"></i>
+              <i className="fab fa-twitter hover:text-[#8477e4] cursor-pointer transition-colors"></i>
+              <i className="fab fa-linkedin hover:text-blue-600 cursor-pointer transition-colors"></i>
+            </div>
+          </div>
+        </div>
+
+        <div className="text-center mt-12 md:mt-20 pt-8 md:pt-10 border-t border-gray-100 text-gray-400 font-medium text-sm md:text-base">
+          &copy; 2026 FinTrack AI. Coding Camp Team.
+        </div>
+      </footer>
     </div>
   );
 };
