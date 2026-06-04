@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { useNavigate, Link } from "react-router-dom";
 
 const Login = () => {
@@ -8,6 +8,7 @@ const Login = () => {
   const [password, setPassword] = useState("");
   const [isLoading, setIsLoading] = useState(false);
   const [showSuccess, setShowSuccess] = useState(false);
+  const [rememberMe, setRememberMe] = useState(false);
 
   const handleLogin = async (e) => {
     e.preventDefault();
@@ -15,8 +16,6 @@ const Login = () => {
     setIsLoading(true);
 
     try {
-      console.log("Mulai login...");
-
       const response = await fetch(
         "https://fintrackai-backend-1yz0.onrender.com/auth/login",
         {
@@ -31,18 +30,12 @@ const Login = () => {
         },
       );
 
-      console.log("Status:", response.status);
-
       const text = await response.text();
-
-      console.log("Response Text:", text);
-
       let data = {};
 
       try {
         data = JSON.parse(text);
       } catch (err) {
-        console.error("Response bukan JSON:", err);
         throw new Error("Server mengembalikan response tidak valid");
       }
 
@@ -50,6 +43,14 @@ const Login = () => {
         if (data.token) {
           localStorage.setItem("token", data.token);
         }
+
+        // --- TAMBAHAN: Logika Remember Me ---
+        if (rememberMe) {
+          localStorage.setItem("rememberedEmail", email);
+        } else {
+          localStorage.removeItem("rememberedEmail");
+        }
+        // ------------------------------------
 
         localStorage.setItem(
           "user",
@@ -72,12 +73,18 @@ const Login = () => {
       }
     } catch (error) {
       setIsLoading(false);
-
       console.error("LOGIN ERROR:", error);
-
       alert(`Error: ${error.message}`);
     }
   };
+
+  useEffect(() => {
+    const savedEmail = localStorage.getItem("rememberedEmail");
+    if (savedEmail) {
+      setEmail(savedEmail);
+      setRememberMe(true);
+    }
+  }, []);
 
   return (
     <div className="flex items-center justify-center min-h-screen p-4 md:p-8 font-poppins selection:bg-[#8477e4] selection:text-white overflow-hidden relative">
@@ -266,14 +273,20 @@ const Login = () => {
                   ></i>
                 </button>
               </div>
-              <div className="flex justify-end mt-3">
-                <a
-                  href="#"
-                  className="text-xs text-[#8477e4] hover:underline font-bold"
-                >
-                  Forgot Password?
-                </a>
-              </div>
+            </div>
+
+            <div className="flex items-center justify-between mt-4">
+              <label className="flex items-center gap-2 cursor-pointer">
+                <input
+                  type="checkbox"
+                  checked={rememberMe}
+                  onChange={(e) => setRememberMe(e.target.checked)}
+                  className="w-4 h-4 accent-[#8477e4] rounded"
+                />
+                <span className="text-xs text-gray-500 font-medium">
+                  Remember me
+                </span>
+              </label>
             </div>
 
             <button
@@ -284,25 +297,7 @@ const Login = () => {
             </button>
           </form>
 
-          <div className="flex items-center my-8">
-            <div className="flex-grow border-t border-gray-300"></div>
-            <span className="px-4 text-xs font-semibold text-gray-400 uppercase tracking-wider">
-              Or Sign In With
-            </span>
-            <div className="flex-grow border-t border-gray-300"></div>
-          </div>
-
-          <div className="flex justify-center mb-8">
-            <button className="w-12 h-12 rounded-full border border-gray-200 shadow-sm flex items-center justify-center hover:shadow-md hover:bg-gray-50 transition-all bg-white/60">
-              <img
-                src="https://www.svgrepo.com/show/475656/google-color.svg"
-                alt="Google"
-                className="w-5 h-5"
-              />
-            </button>
-          </div>
-
-          <p className="text-center text-xs text-gray-500 font-medium">
+          <p className="text-center text-xs text-gray-500 font-medium mt-8">
             Don't have an account?
             <Link
               to="/register"

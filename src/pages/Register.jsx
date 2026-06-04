@@ -75,70 +75,6 @@ const Register = () => {
     }
   };
 
-  const handleGoogleRegister = () => {
-    const client = window.google.accounts.oauth2.initTokenClient({
-      client_id:
-        "851842541176-633b6em5p61s94487sue3tj3ed0ip4ho.apps.googleusercontent.com",
-
-      scope: "openid email profile",
-
-      callback: (response) => {
-        console.log("Google Success");
-        console.log(response);
-      },
-    });
-
-    client.requestAccessToken();
-  };
-
-  const handleGoogleCallback = async (response) => {
-    try {
-      setIsLoading(true);
-
-      const res = await fetch(
-        "https://fintrackai-backend-1yz0.onrender.com/auth/google",
-        {
-          method: "POST",
-          headers: {
-            "Content-Type": "application/json",
-          },
-          body: JSON.stringify({
-            token: response.credential, // JWT dari Google
-          }),
-        }
-      );
-
-      const data = await res.json();
-
-      console.log(data);
-
-      if (res.ok) {
-        setShowSuccess(true);
-
-        setTimeout(() => {
-          navigate("/login"); // atau langsung dashboard kalau mau
-        }, 1500);
-      } else {
-        alert(data.message || "Google register gagal");
-      }
-    } catch (error) {
-      console.error(error);
-      alert("Error Google login");
-    } finally {
-      setIsLoading(false);
-    }
-  };
-
-  useEffect(() => {
-    if (!window.google) return;
-
-    window.google.accounts.id.initialize({
-      client_id:
-        "851842541176-633b6em5p61s94487sue3tj3ed0ip4ho.apps.googleusercontent.com",
-      callback: handleGoogleCallback,
-    });
-  }, []);
-
   return (
     <div className="flex items-center justify-center min-h-screen p-4 md:p-8 font-poppins selection:bg-[#8477e4] selection:text-white overflow-hidden relative">
       {/* --- INJECT CUSTOM CSS (BUBBLE & INPUT) --- */}
@@ -360,29 +296,7 @@ const Register = () => {
             </button>
           </form>
 
-          <div className="flex items-center my-8">
-            <div className="flex-grow border-t border-gray-200"></div>
-            <span className="px-4 text-xs font-semibold text-gray-300 uppercase tracking-wider">
-              Or Sign Up With
-            </span>
-            <div className="flex-grow border-t border-gray-200"></div>
-          </div>
-
-          <div className="flex justify-center mb-8">
-            <button
-              onClick={handleGoogleRegister}
-              type="button"
-              className="w-12 h-12 rounded-full border border-gray-100 shadow-sm flex items-center justify-center hover:shadow-md transition-all bg-white"
-            >
-              <img
-                src="https://www.svgrepo.com/show/475656/google-color.svg"
-                alt="Google"
-                className="w-5 h-5"
-              />
-            </button>
-          </div>
-
-          <p className="text-center text-xs text-gray-400 font-medium">
+          <p className="text-center text-xs text-gray-400 font-medium mt-8">
             Already Have an account?
             <Link
               to="/login"
