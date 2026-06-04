@@ -712,8 +712,8 @@ const LandingPage = () => {
                     n: "Mohammad El Abror Sholeh",
                     r: "AI Engineer",
                     i: "Abror.jpeg",
-                    ig: "https://instagram.com/username_abror",
-                    li: "https://linkedin.com/in/username_abror",
+                    ig: "https://www.instagram.com/mohamadelabror",
+                    li: "https://www.linkedin.com/in/mohamadelabror",
                   },
                   {
                     n: "Hamasah Fazal Aqsha",
