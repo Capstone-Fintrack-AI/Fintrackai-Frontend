@@ -138,7 +138,7 @@ const Transaksi = () => {
           }),
           kat: item.kategori,
           desc: item.nama_pengeluaran,
-          nominal: -Number(item.jumlah), // negatif
+          nominal: -Number(item.jumlah), 
           createdAt: item.created_at,
         }));
 
@@ -181,22 +181,18 @@ const Transaksi = () => {
     setIsDeleteOpen(true);
   };
 
-  // --- FUNGSI SUBMIT (UNTUK HUBUNGKAN KE BACKEND KAK NISA) ---
   const handleConfirmEdit = (e) => {
     e.preventDefault();
-    // TODO: Sipa / Kak Nisa tinggal integrasikan API Update di sini menggunakan data 'editForm' dan 'selectedItem.id'
     console.log("Data berhasil diubah:", editForm);
     setIsEditOpen(false);
   };
 
   const handleConfirmDelete = () => {
-    // TODO: Sipa / Kak Nisa tinggal integrasikan API Delete di sini menggunakan 'selectedItem.id'
     console.log("Data berhasil dihapus:", selectedItem);
     setIsDeleteOpen(false);
   };
 
   return (
-    // Ubah menjadi overflow-hidden
     <div className="h-screen bg-[#f8f6ff] font-poppins flex overflow-hidden relative w-full">
       {/* =========================================================
           1. BACKGROUND TEMA & BUBBLE (PERSIS BERANDA)
@@ -337,7 +333,7 @@ const Transaksi = () => {
 
       {/* =========================================================
       3. MOBILE NAVBAR (BERDIRI SENDIRI DI LUAR - KHUSUS LAYAR HP)
-  ========================================================= */}
+          ========================================================= */}
       <div className="fixed bottom-6 right-6 z-50 md:hidden flex flex-col items-center gap-3">
         {/* Pop-up Menu Logo saat Robot Mobile Ditekan */}
         {isMobileMenuOpen && (
@@ -358,7 +354,7 @@ const Transaksi = () => {
                 key={item.n}
                 onClick={() => {
                   navigate(item.path);
-                  setIsMobileMenuOpen(false); // Otomatis tutup pop-up setelah diklik
+                  setIsMobileMenuOpen(false); 
                 }}
                 className={`p-2 rounded-xl transition-all duration-200 cursor-pointer ${
                   activeMenu === item.n
@@ -396,7 +392,6 @@ const Transaksi = () => {
               />
             </div>
 
-            {/* Logout Versi Mobile */}
             <div
               onClick={() => {
                 handleLogout();
@@ -413,7 +408,6 @@ const Transaksi = () => {
           </div>
         )}
 
-        {/* Tombol Utama Robot Ngintip di HP */}
         <button
           onClick={() => setIsMobileMenuOpen(!isMobileMenuOpen)}
           className="w-16 h-16 bg-transparent flex items-center justify-center hover:scale-110 active:scale-95 transition-all duration-300 focus:outline-none"
@@ -426,7 +420,6 @@ const Transaksi = () => {
         </button>
       </div>
 
-      {/* MODAL */}
       {isModalOpen && (
         <TransactionModal
           isOpen={isModalOpen}
@@ -623,7 +616,6 @@ const Transaksi = () => {
           </div>
         </div>
 
-        {/* Isi Grid Utama Transaksi (Scrollable) */}
         {/* 4 METRIC CARDS ROW */}
         <div className="px-4 sm:px-6 md:px-10 w-full">
           <main className="flex-grow pb-8 grid grid-cols-12 gap-6 progress-clean w-full items-start">
@@ -662,7 +654,6 @@ const Transaksi = () => {
               </div>
 
               {/* TABEL RIWAYAT TRANSAKSI */}
-              {/* overflow-hidden + table-fixed = semua kolom pas tanpa geser kanan */}
               <div className="bg-white rounded-[2rem] shadow-sm border border-gray-50 overflow-hidden">
                 <table className="w-full text-left border-collapse table-fixed">
                   <thead className="bg-[#fcfcff] border-b border-gray-50">
@@ -688,7 +679,7 @@ const Transaksi = () => {
                     {/* Loop data per halaman (Sekarang diset 10 data) */}
                     {dataTampil && dataTampil.length > 0
                       ? dataTampil
-                          .slice((activePage - 1) * 10, activePage * 10) // <--- Ubah angka 30 kemarin jadi 10 di sini
+                          .slice((activePage - 1) * 10, activePage * 10)
                           .map((item, idx) => (
                             <tr
                               key={idx}
@@ -719,14 +710,13 @@ const Transaksi = () => {
                                           "Desember",
                                         ];
 
-                                        // Ambil nama bulan (dikurang 1 karena index array mulai dari 0)
                                         const bulanIndo =
                                           namaBulan[parseInt(bulan, 10) - 1] ||
                                           bulan;
 
                                         return `${hari} ${bulanIndo} ${tahun}`;
                                       })()
-                                    : item.tgl // Fallback kalau datanya sudah berformat teks atau objek Date
+                                    : item.tgl 
                                 }
                               </td>
                               <td className="px-2 py-3 md:px-6 md:py-5 max-w-0">
@@ -773,7 +763,6 @@ const Transaksi = () => {
                           ))
                       : null}
 
-                    {/* Pesan jika halaman kosong */}
                     {(!dataTampil ||
                       dataTampil.slice((activePage - 1) * 10, activePage * 10)
                         .length === 0) && (
@@ -792,7 +781,6 @@ const Transaksi = () => {
 
                 {/* PAGINATION */}
                 <div className="p-4 sm:p-6 flex justify-center items-center gap-2 sm:gap-3 bg-[#fcfcff] border-t border-gray-50 flex-wrap">
-                  {/* Tombol Previous (Kiri) - Hanya aktif jika page > 1 */}
                   <button
                     type="button"
                     onClick={() =>
@@ -808,7 +796,6 @@ const Transaksi = () => {
                     <i className="fas fa-chevron-left text-[10px]"></i>
                   </button>
 
-                  {/* Angka Halaman Dinamis - Otomatis bertambah sesuai jumlah data kelipatan 10 */}
                   {Array.from(
                     { length: Math.ceil((dataTampil?.length || 0) / 10) || 1 },
                     (_, i) => i + 1,
@@ -827,7 +814,6 @@ const Transaksi = () => {
                     </button>
                   ))}
 
-                  {/* Tombol Next (Kanan) - Otomatis mati jika sudah di halaman terakhir */}
                   <button
                     type="button"
                     onClick={() => {
@@ -885,7 +871,6 @@ const Transaksi = () => {
                         />
                       </div>
 
-                      {/* Kategori (Ubah ke Button Pilihan Kebutuhan/Keinginan) */}
                       <div>
                         <label className="block text-xs font-bold text-gray-400 uppercase tracking-wider mb-2">
                           Kategori
@@ -920,7 +905,6 @@ const Transaksi = () => {
                         </div>
                       </div>
 
-                      {/* Keterangan */}
                       <div>
                         <label className="block text-xs font-bold text-gray-400 uppercase tracking-wider mb-2">
                           Keterangan
@@ -936,7 +920,6 @@ const Transaksi = () => {
                         />
                       </div>
 
-                      {/* Nominal (Otomatis Titik Ribuan) */}
                       <div>
                         <label className="block text-xs font-bold text-gray-400 uppercase tracking-wider mb-2">
                           Nominal
@@ -947,7 +930,6 @@ const Transaksi = () => {
                           </span>
                           <input
                             type="text"
-                            // Memformat angka murni dari state menjadi string bertitik saat ditampilkan
                             value={
                               editForm.nominal
                                 ? String(editForm.nominal).replace(
@@ -956,7 +938,6 @@ const Transaksi = () => {
                                   )
                                 : ""
                             }
-                            // Hanya mengambil digit angka saat pengguna mengetik agar state tetap bertipe Number
                             onChange={(e) => {
                               const hanyaAngka = e.target.value.replace(
                                 /\D/g,

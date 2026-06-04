@@ -125,45 +125,110 @@ const Budget = () => {
         </div>
       </div>
 
-       {/* =========================================================
+      {/* =========================================================
       2. SIDEBAR KIRI (KHUSUS TAMPILAN DESKTOP - OTOMATIS HILANG DI HP)
             ========================================================= */}
-        <div
-          className={`${isSidebarOpen ? "w-64" : "w-20"} hidden md:flex absolute md:relative z-[60] md:z-10 h-full bg-white border-r border-[#f0f0f0] px-4 md:px-6 py-6 md:py-8 flex-col shadow-[4px_0_24px_rgba(0,0,0,0.02)] transition-all duration-300`}
-        >
-          {/* Bagian Atas: Logo & Tombol Toggle Desktop */}
-          <div className="flex flex-col items-center mb-10 relative">
-            <img src="/gambar/logo.png" className="w-16 mb-2" alt="Logo" />
-            <button
-              onClick={() => setIsSidebarOpen(!isSidebarOpen)}
-              className="absolute -right-10 top-2 z-[60] w-16 h-16 transition-transform duration-300 hover:scale-105 focus:outline-none"
+      <div
+        className={`${isSidebarOpen ? "w-64" : "w-20"} hidden md:flex absolute md:relative z-[60] md:z-10 h-full bg-white border-r border-[#f0f0f0] px-4 md:px-6 py-6 md:py-8 flex-col shadow-[4px_0_24px_rgba(0,0,0,0.02)] transition-all duration-300`}
+      >
+        {/* Bagian Atas: Logo & Tombol Toggle Desktop */}
+        <div className="flex flex-col items-center mb-10 relative">
+          <img src="/gambar/logo.png" className="w-16 mb-2" alt="Logo" />
+          <button
+            onClick={() => setIsSidebarOpen(!isSidebarOpen)}
+            className="absolute -right-10 top-2 z-[60] w-16 h-16 transition-transform duration-300 hover:scale-105 focus:outline-none"
+          >
+            <img
+              src="/gambar/robotngintip.png"
+              alt="Toggle Sidebar"
+              className="w-full h-full object-contain"
+            />
+          </button>
+        </div>
+
+        {/* Menu Navigasi Utama Desktop */}
+        <nav className="relative flex-grow font-medium flex flex-col gap-4">
+          <div
+            className="absolute left-0 w-full h-[52px] bg-[#f0eaff] rounded-2xl shadow-sm transition-transform duration-500 ease-[cubic-bezier(0.4,0,0.2,1)]"
+            style={{
+              transform: `translateY(${["Beranda", "Transaksi", "Budget", "Goals", "AI"].indexOf(activeMenu) * 68}px)`,
+              display: [
+                "Beranda",
+                "Transaksi",
+                "Budget",
+                "Goals",
+                "AI",
+              ].includes(activeMenu)
+                ? "block"
+                : "none",
+            }}
+          ></div>
+
+          {[
+            { n: "Beranda", img: "/gambar/beranda.png", path: "/beranda" },
+            {
+              n: "Transaksi",
+              img: "/gambar/transaksi.png",
+              path: "/transaksi",
+            },
+            { n: "Budget", img: "/gambar/budget.png", path: "/budget" },
+            { n: "Goals", img: "/gambar/goals.png", path: "/goals" },
+            { n: "AI", img: "/gambar/ai.png", path: "/ai" },
+          ].map((item) => (
+            <div
+              key={item.n}
+              onClick={() => {
+                navigate(item.path);
+              }}
+              className={`relative z-10 flex items-center ${isSidebarOpen ? "gap-4 px-3.5" : "justify-center px-0"} cursor-pointer h-[52px] rounded-2xl transition-all duration-300 ${
+                activeMenu === item.n
+                  ? "text-[#8477e4] font-bold"
+                  : "text-gray-400 hover:text-gray-900"
+              }`}
             >
               <img
-                src="/gambar/robotngintip.png"
-                alt="Toggle Sidebar"
-                className="w-full h-full object-contain"
+                src={item.img}
+                className={`w-6 h-6 object-contain transition-all ${activeMenu !== item.n ? "grayscale opacity-70" : ""}`}
+                alt={item.n}
               />
-            </button>
+              {isSidebarOpen && <span className="text-sm">{item.n}</span>}
+            </div>
+          ))}
+        </nav>
+
+        {/* Menu Bawah Desktop: Pengaturan & Logout */}
+        <div className="border-t border-gray-100 pt-6 space-y-4 font-medium relative z-10 bg-white">
+          <div
+            onClick={() => navigate("/pengaturan")}
+            className={`flex items-center ${isSidebarOpen ? "gap-4 p-3.5" : "justify-center p-0 h-[52px]"} cursor-pointer rounded-2xl ${activeMenu === "Pengaturan" ? "bg-[#f0eaff] text-[#8477e4] font-bold" : "text-gray-400 hover:text-gray-900"} transition-all`}
+          >
+            <img
+              src="/gambar/pengaturan.png"
+              className={`w-6 h-6 object-contain ${activeMenu !== "Pengaturan" ? "grayscale opacity-70" : ""}`}
+              alt="Setting"
+            />
+            {isSidebarOpen && <span className="text-sm">Pengaturan</span>}
           </div>
+          <div
+            onClick={handleLogout}
+            className={`flex items-center ${isSidebarOpen ? "gap-4 p-3.5" : "justify-center p-0 h-[52px]"} cursor-pointer rounded-2xl text-gray-400 hover:bg-red-50 hover:text-red-500 transition-all`}
+          >
+            <img
+              src="/gambar/logout.png"
+              className="w-6 h-6 object-contain grayscale opacity-70"
+              alt="Logout"
+            />
+            {isSidebarOpen && <span className="text-sm">Logout</span>}
+          </div>
+        </div>
+      </div>
 
-          {/* Menu Navigasi Utama Desktop */}
-          <nav className="relative flex-grow font-medium flex flex-col gap-4">
-            <div
-              className="absolute left-0 w-full h-[52px] bg-[#f0eaff] rounded-2xl shadow-sm transition-transform duration-500 ease-[cubic-bezier(0.4,0,0.2,1)]"
-              style={{
-                transform: `translateY(${["Beranda", "Transaksi", "Budget", "Goals", "AI"].indexOf(activeMenu) * 68}px)`,
-                display: [
-                  "Beranda",
-                  "Transaksi",
-                  "Budget",
-                  "Goals",
-                  "AI",
-                ].includes(activeMenu)
-                  ? "block"
-                  : "none",
-              }}
-            ></div>
-
+      {/* =========================================================
+          3. MOBILE NAVBAR (BERDIRI SENDIRI DI LUAR - KHUSUS LAYAR HP)
+         ========================================================= */}
+      <div className="fixed bottom-6 right-6 z-50 md:hidden flex flex-col items-center gap-3">
+        {isMobileMenuOpen && (
+          <div className="bg-white/90 backdrop-blur-md border border-purple-100 p-3 rounded-2xl shadow-xl flex flex-col gap-4 items-center animate-bounce-short">
             {[
               { n: "Beranda", img: "/gambar/beranda.png", path: "/beranda" },
               {
@@ -179,151 +244,84 @@ const Budget = () => {
                 key={item.n}
                 onClick={() => {
                   navigate(item.path);
+                  setIsMobileMenuOpen(false); // Otomatis tutup pop-up setelah diklik
                 }}
-                className={`relative z-10 flex items-center ${isSidebarOpen ? "gap-4 px-3.5" : "justify-center px-0"} cursor-pointer h-[52px] rounded-2xl transition-all duration-300 ${
+                className={`p-2 rounded-xl transition-all duration-200 cursor-pointer ${
                   activeMenu === item.n
-                    ? "text-[#8477e4] font-bold"
-                    : "text-gray-400 hover:text-gray-900"
+                    ? "bg-[#f0eaff] scale-110"
+                    : "opacity-60"
                 }`}
               >
                 <img
                   src={item.img}
-                  className={`w-6 h-6 object-contain transition-all ${activeMenu !== item.n ? "grayscale opacity-70" : ""}`}
+                  className={`w-6 h-6 object-contain ${activeMenu !== item.n ? "grayscale" : ""}`}
                   alt={item.n}
                 />
-                {isSidebarOpen && <span className="text-sm">{item.n}</span>}
               </div>
             ))}
-          </nav>
 
-          {/* Menu Bawah Desktop: Pengaturan & Logout */}
-          <div className="border-t border-gray-100 pt-6 space-y-4 font-medium relative z-10 bg-white">
+            {/* Garis Pembatas Tipis */}
+            <div className="w-full border-t border-gray-200 my-1"></div>
+
+            {/* Pengaturan Versi Mobile */}
             <div
-              onClick={() => navigate("/pengaturan")}
-              className={`flex items-center ${isSidebarOpen ? "gap-4 p-3.5" : "justify-center p-0 h-[52px]"} cursor-pointer rounded-2xl ${activeMenu === "Pengaturan" ? "bg-[#f0eaff] text-[#8477e4] font-bold" : "text-gray-400 hover:text-gray-900"} transition-all`}
+              onClick={() => {
+                navigate("/pengaturan");
+                setIsMobileMenuOpen(false);
+              }}
+              className={`p-2 rounded-xl transition-all duration-200 cursor-pointer ${
+                activeMenu === "Pengaturan"
+                  ? "bg-[#f0eaff] scale-110"
+                  : "opacity-60"
+              }`}
             >
               <img
                 src="/gambar/pengaturan.png"
-                className={`w-6 h-6 object-contain ${activeMenu !== "Pengaturan" ? "grayscale opacity-70" : ""}`}
-                alt="Setting"
+                className={`w-6 h-6 object-contain ${activeMenu !== "Pengaturan" ? "grayscale" : ""}`}
+                alt="Pengaturan"
               />
-              {isSidebarOpen && <span className="text-sm">Pengaturan</span>}
             </div>
+
+            {/* Logout Versi Mobile */}
             <div
-              onClick={handleLogout}
-              className={`flex items-center ${isSidebarOpen ? "gap-4 p-3.5" : "justify-center p-0 h-[52px]"} cursor-pointer rounded-2xl text-gray-400 hover:bg-red-50 hover:text-red-500 transition-all`}
+              onClick={() => {
+                handleLogout();
+                setIsMobileMenuOpen(false);
+              }}
+              className="p-2 rounded-xl transition-all duration-200 cursor-pointer opacity-60 hover:bg-red-50 text-red-500"
             >
               <img
                 src="/gambar/logout.png"
                 className="w-6 h-6 object-contain grayscale opacity-70"
                 alt="Logout"
               />
-              {isSidebarOpen && <span className="text-sm">Logout</span>}
             </div>
           </div>
-        </div>
+        )}
 
-        {/* =========================================================
-      3. MOBILE NAVBAR (BERDIRI SENDIRI DI LUAR - KHUSUS LAYAR HP)
-  ========================================================= */}
-        <div className="fixed bottom-6 right-6 z-50 md:hidden flex flex-col items-center gap-3">
-          {/* Pop-up Menu Logo saat Robot Mobile Ditekan */}
-          {isMobileMenuOpen && (
-            <div className="bg-white/90 backdrop-blur-md border border-purple-100 p-3 rounded-2xl shadow-xl flex flex-col gap-4 items-center animate-bounce-short">
-              {/* List Menu Utama Mobile */}
-              {[
-                { n: "Beranda", img: "/gambar/beranda.png", path: "/beranda" },
-                {
-                  n: "Transaksi",
-                  img: "/gambar/transaksi.png",
-                  path: "/transaksi",
-                },
-                { n: "Budget", img: "/gambar/budget.png", path: "/budget" },
-                { n: "Goals", img: "/gambar/goals.png", path: "/goals" },
-                { n: "AI", img: "/gambar/ai.png", path: "/ai" },
-              ].map((item) => (
-                <div
-                  key={item.n}
-                  onClick={() => {
-                    navigate(item.path);
-                    setIsMobileMenuOpen(false); // Otomatis tutup pop-up setelah diklik
-                  }}
-                  className={`p-2 rounded-xl transition-all duration-200 cursor-pointer ${
-                    activeMenu === item.n
-                      ? "bg-[#f0eaff] scale-110"
-                      : "opacity-60"
-                  }`}
-                >
-                  <img
-                    src={item.img}
-                    className={`w-6 h-6 object-contain ${activeMenu !== item.n ? "grayscale" : ""}`}
-                    alt={item.n}
-                  />
-                </div>
-              ))}
-
-              {/* Garis Pembatas Tipis */}
-              <div className="w-full border-t border-gray-200 my-1"></div>
-
-              {/* Pengaturan Versi Mobile */}
-              <div
-                onClick={() => {
-                  navigate("/pengaturan");
-                  setIsMobileMenuOpen(false);
-                }}
-                className={`p-2 rounded-xl transition-all duration-200 cursor-pointer ${
-                  activeMenu === "Pengaturan"
-                    ? "bg-[#f0eaff] scale-110"
-                    : "opacity-60"
-                }`}
-              >
-                <img
-                  src="/gambar/pengaturan.png"
-                  className={`w-6 h-6 object-contain ${activeMenu !== "Pengaturan" ? "grayscale" : ""}`}
-                  alt="Pengaturan"
-                />
-              </div>
-
-              {/* Logout Versi Mobile */}
-              <div
-                onClick={() => {
-                  handleLogout();
-                  setIsMobileMenuOpen(false);
-                }}
-                className="p-2 rounded-xl transition-all duration-200 cursor-pointer opacity-60 hover:bg-red-50 text-red-500"
-              >
-                <img
-                  src="/gambar/logout.png"
-                  className="w-6 h-6 object-contain grayscale opacity-70"
-                  alt="Logout"
-                />
-              </div>
-            </div>
-          )}
-
-          {/* Tombol Utama Robot Ngintip di HP */}
-          <button
-            onClick={() => setIsMobileMenuOpen(!isMobileMenuOpen)}
-            className="w-16 h-16 bg-transparent flex items-center justify-center hover:scale-110 active:scale-95 transition-all duration-300 focus:outline-none"
-          >
-            <img
-              src="/gambar/robotngintip.png"
-              // Ditambahkan '-rotate-90' supaya robotnya berputar menghadap ke atas
-              // Ukuran dinaikkan ke 'w-14 h-14' agar tetap proporsional dan tegas
-              className="w-14 h-14 object-contain transform -rotate-90 hover:translate-y-[-4px] transition-transform"
-              alt="FinTrack AI Assistant"
-            />
-          </button>
-        </div>
+        {/* Tombol Utama Robot Ngintip di HP */}
+        <button
+          onClick={() => setIsMobileMenuOpen(!isMobileMenuOpen)}
+          className="w-16 h-16 bg-transparent flex items-center justify-center hover:scale-110 active:scale-95 transition-all duration-300 focus:outline-none"
+        >
+          <img
+            src="/gambar/robotngintip.png"
+            className="w-14 h-14 object-contain transform -rotate-90 hover:translate-y-[-4px] transition-transform"
+            alt="FinTrack AI Assistant"
+          />
+        </button>
+      </div>
 
       {/* DASHBOARD CONTAINER */}
-      <div className="flex-1 overflow-y-auto p-6 md:p-8 space-y-6 z-10 relative">
+      <div className="flex-1 overflow-y-auto p-4 md:p-6 lg:p-8 space-y-4 md:space-y-6 z-10 relative pb-24 md:pb-8">
         {/* WRAPPER HEADER UTAMA */}
         <div className="flex justify-between items-center">
           {/* KIRI: HEADER TITLE */}
           <div>
-            <h1 className="text-3xl font-bold text-gray-800">Budget</h1>
-            <p className="text-sm text-gray-500">
+            <h1 className="text-2xl md:text-3xl font-bold text-gray-800">
+              Budget
+            </h1>
+            <p className="text-xs md:text-sm text-gray-500">
               Atur alokasi dana dan pantau kesehatan keuanganmu setiap bulan.
             </p>
           </div>
@@ -341,15 +339,15 @@ const Budget = () => {
         </div>
 
         {/* HERO BANNER SMART BUDGETING */}
-        <div className="bg-[#EEE8FD] rounded-2xl border border-[#e9dff9] p-4 flex flex-row items-center justify-between gap-6 w-full h-[160px] shadow-sm relative overflow-hidden">
-          <div className="flex-1 min-w-0 z-10">
+        <div className="bg-[#EEE8FD] rounded-2xl border border-[#e9dff9] p-4 flex flex-col sm:flex-row items-center justify-between gap-4 w-full min-h-[auto] sm:h-[160px] shadow-sm relative overflow-hidden">
+          <div className="flex-1 min-w-0 z-10 text-center sm:text-left">
             {/* JUDUL: Menggunakan warna utama #3e3a94 dan ukuran text-lg yang ramping */}
-            <h2 className="text-lg font-extrabold text-[#3e3a94] mb-1.5 tracking-tight">
+            <h2 className="text-base sm:text-lg font-extrabold text-[#3e3a94] mb-1.5 tracking-tight">
               Smart Budgeting 50-30-20
             </h2>
 
             {/* DESKRIPSI: Menggunakan text-xs, warna #685fbe, dan max-w agar teks membungkus rapi */}
-            <p className="text-xs font-medium text-[#685fbe] leading-relaxed max-w-sm">
+            <p className="text-xs font-medium text-[#685fbe] leading-relaxed max-w-sm mx-auto sm:mx-0">
               FinTrack AI otomatis mengalokasikan pemasukanmu ke{" "}
               <span className="font-extrabold text-[#3e3a94]">
                 Kebutuhan, Keinginan, dan Tabungan
@@ -357,14 +355,14 @@ const Budget = () => {
               agar keuanganmu lebih sehat dan seimbang.
             </p>
           </div>
-          <div className="absolute inset-y-0 left-1/2 -translate-x-1/2 h-full flex items-center justify-center">
+          <div className="hidden sm:flex absolute inset-y-0 left-1/2 -translate-x-1/2 h-full items-center justify-center">
             <img
               src="/gambar/robotbudget.png"
               alt="Robot"
               className="h-full w-auto object-contain"
             />
           </div>
-          <div className="bg-white p-3.5 rounded-xl border border-[#e9dff9] space-y-2 w-[280px] shrink-0 z-10">
+          <div className="bg-white p-3 rounded-xl border border-[#e9dff9] space-y-2 w-full sm:w-[280px] shrink-0 z-10">
             <div className="flex justify-between items-center text-[11px]">
               <span className="text-[#6b61b7] font-semibold">
                 Periode Aktif
@@ -393,27 +391,26 @@ const Budget = () => {
         {/* 4 METRIC CARDS ROW */}
 
         {/* TOP ROW: PIE CHARTS & BAR CHART */}
-        <div className="grid grid-cols-1 xl:grid-cols-4 gap-4">
+        <div className="grid grid-cols-2 xl:grid-cols-4 gap-3 md:gap-4">
           {[
             { title: "Alokasi Budget (50-30-20)", data: dataAlokasiPie },
             { title: "Realisasi Saat Ini", data: dataRealisasiPie },
           ].map((chart, i) => (
             <div
               key={i}
-              className="bg-white p-6 rounded-3xl border border-gray-100 shadow-sm flex flex-col justify-between"
+              className="bg-white p-3 md:p-6 rounded-3xl border border-gray-100 shadow-sm flex flex-col justify-between"
             >
-              {/* UKURAN JUDUL DISAMAKAN DI SINI */}
-              <h3 className="text-base font-black text-[#2e2a60] mb-6">
+              <h3 className="text-[11px] md:text-base font-black text-[#2e2a60] mb-3 md:mb-6">
                 {chart.title}
               </h3>
 
-              <div className="relative flex items-center justify-center h-36">
+              <div className="relative flex items-center justify-center h-28 md:h-36">
                 <ResponsiveContainer width="100%" height="100%">
                   <PieChart>
                     <Pie
                       data={chart.data}
-                      innerRadius={45}
-                      outerRadius={60}
+                      innerRadius={35}
+                      outerRadius={48}
                       paddingAngle={4}
                       dataKey="value"
                     >
@@ -424,28 +421,30 @@ const Budget = () => {
                   </PieChart>
                 </ResponsiveContainer>
                 <div className="absolute flex flex-col items-center">
-                  <span className="text-[9px] font-bold text-gray-400">
+                  <span className="text-[8px] font-bold text-gray-400">
                     TOTAL
                   </span>
-                  <span className="text-xs font-black text-gray-900">100%</span>
+                  <span className="text-[10px] font-black text-gray-900">
+                    100%
+                  </span>
                 </div>
               </div>
-              <div className="space-y-1.5 mt-4">
+              <div className="space-y-1 mt-2 md:mt-4">
                 {chart.data.map((item, idx) => (
                   <div
                     key={idx}
-                    className="flex justify-between items-center text-[10px] font-bold"
+                    className="flex justify-between items-center text-[9px] md:text-[10px] font-bold"
                   >
-                    <div className="flex items-center gap-1.5">
+                    <div className="flex items-center gap-1">
                       <div
-                        className="w-2.5 h-2.5 rounded-full"
+                        className="w-2 h-2 rounded-full shrink-0"
                         style={{ backgroundColor: item.color }}
                       />
                       <span className="text-gray-500 truncate">
                         {item.name}
                       </span>
                     </div>
-                    <span className="text-gray-900">
+                    <span className="text-gray-900 ml-1">
                       Rp {(item.value / 1000000).toFixed(1)}jt
                     </span>
                   </div>
@@ -454,27 +453,27 @@ const Budget = () => {
             </div>
           ))}
 
-          <div className="bg-white p-6 rounded-3xl border border-gray-100 shadow-sm flex flex-col col-span-1 xl:col-span-2">
-            <div className="flex justify-between items-center mb-6">
-              <h3 className="text-base font-black text-[#2e2a60]">
+          <div className="bg-white p-3 md:p-6 rounded-3xl border border-gray-100 shadow-sm flex flex-col col-span-2 xl:col-span-2">
+            <div className="flex justify-between items-center mb-3 md:mb-6">
+              <h3 className="text-[11px] md:text-base font-black text-[#2e2a60]">
                 Budget VS Aktual
               </h3>
-              <div className="flex items-center gap-4 text-xs font-bold text-slate-600">
-                <div className="flex items-center gap-1.5">
-                  <div className="w-5 h-3 bg-[#f3f0ff] border border-dashed border-[#8477e4] rounded-sm" />
+              <div className="flex items-center gap-2 md:gap-4 text-[9px] md:text-xs font-bold text-slate-600">
+                <div className="flex items-center gap-1">
+                  <div className="w-4 h-2.5 bg-[#f3f0ff] border border-dashed border-[#8477e4] rounded-sm" />
                   <span>Target</span>
                 </div>
-                <div className="flex items-center gap-1.5">
-                  <div className="w-5 h-3 bg-[#8477e4] rounded-sm" />
+                <div className="flex items-center gap-1">
+                  <div className="w-4 h-2.5 bg-[#8477e4] rounded-sm" />
                   <span>Aktual</span>
                 </div>
               </div>
             </div>
-            <div className="h-56 w-full">
+            <div className="h-44 md:h-56 w-full">
               <ResponsiveContainer width="100%" height="100%">
                 <BarChart
                   data={dataBudgetVsAktual}
-                  margin={{ top: 40, right: 10, left: 15, bottom: 15 }}
+                  margin={{ top: 20, right: 5, left: 0, bottom: 15 }}
                 >
                   <CartesianGrid vertical={false} stroke="#f1efff" />
                   <XAxis
@@ -487,17 +486,26 @@ const Budget = () => {
                         <g transform={`translate(${x},${y})`}>
                           <text
                             x={0}
-                            y={15}
+                            y={12}
                             textAnchor="middle"
                             className="text-[11px] font-extrabold fill-gray-700"
+                            style={{
+                              fontSize: 9,
+                              fontWeight: 700,
+                              fill: "#374151",
+                            }}
                           >
                             {item.name}
                           </text>
                           <text
                             x={0}
-                            y={30}
+                            y={24}
                             textAnchor="middle"
-                            className="text-[11px] font-bold fill-gray-400"
+                            style={{
+                              fontSize: 8,
+                              fontWeight: 700,
+                              fill: "#9ca3af",
+                            }}
                           >
                             {item.percentage}
                           </text>
@@ -508,14 +516,12 @@ const Budget = () => {
                   <YAxis
                     domain={[0, yAxisMax]}
                     ticks={dynamicTicks}
-                    tick={{ fontSize: 10, fontWeight: 700, fill: "#6b7280" }}
+                    tick={{ fontSize: 8, fontWeight: 700, fill: "#6b7280" }}
                     axisLine={false}
                     tickLine={false}
-                    width={75}
+                    width={55}
                     tickFormatter={(value) =>
-                      value === 0
-                        ? "Rp 0"
-                        : `Rp ${value.toLocaleString("id-ID")}`
+                      value === 0 ? "Rp 0" : `${(value / 1000000).toFixed(1)}jt`
                     }
                   />
                   <Tooltip
@@ -527,13 +533,13 @@ const Budget = () => {
                     stroke="#8477e4"
                     strokeDasharray="4 4"
                     radius={[4, 4, 0, 0]}
-                    barSize={40}
+                    barSize={28}
                   />
                   <Bar
                     dataKey="Aktual"
                     fill="#8477e4"
                     radius={[4, 4, 0, 0]}
-                    barSize={40}
+                    barSize={28}
                   />
                 </BarChart>
               </ResponsiveContainer>
@@ -542,14 +548,14 @@ const Budget = () => {
         </div>
 
         {/* MIDDLE ROW: 3 SEJAJAR */}
-        <div className="grid grid-cols-1 xl:grid-cols-3 gap-6">
-          {/* 1. TREN BUDGET BULANAN (DI-TENGAAHKAN ISINYA) */}
-          <div className="bg-white p-6 rounded-3xl border border-gray-100 shadow-sm flex flex-col justify-between min-h-[260px]">
+        <div className="grid grid-cols-1 sm:grid-cols-3 xl:grid-cols-3 gap-3 md:gap-6">
+          {/* 1. TREN BUDGET BULANAN */}
+          <div className="bg-white p-4 md:p-6 rounded-3xl border border-gray-100 shadow-sm flex flex-col justify-between min-h-[220px] md:min-h-[260px]">
             <div className="flex justify-between items-center mb-2">
-              <h3 className="text-sm font-black text-[#2e2a60]">
+              <h3 className="text-[11px] md:text-sm font-black text-[#2e2a60]">
                 Tren Budget Bulanan
               </h3>
-              <div className="flex items-center gap-2 text-[9px] font-bold text-slate-500">
+              <div className="flex items-center gap-2 text-[8px] md:text-[9px] font-bold text-slate-500">
                 <div className="flex items-center gap-1">
                   <div className="w-3 h-0.5 border-t border-dashed border-[#a294f9]" />
                   <span>Target</span>
@@ -560,28 +566,27 @@ const Budget = () => {
                 </div>
               </div>
             </div>
-            <div className="h-44 w-full flex items-center justify-center">
+            <div className="h-36 md:h-44 w-full flex items-center justify-center">
               <ResponsiveContainer width="100%" height="100%">
-                {/* Di-tengahkan dengan menyeimbangkan margin left negatif dan right positif */}
                 <LineChart
                   data={dataTrenBulanan}
-                  margin={{ top: 15, right: 35, left: -20, bottom: 5 }}
+                  margin={{ top: 10, right: 10, left: -25, bottom: 5 }}
                 >
                   <CartesianGrid vertical={false} stroke="#f1efff" />
                   <XAxis
                     dataKey="name"
-                    tick={{ fontSize: 9, fontWeight: 700, fill: "#9ca3af" }}
+                    tick={{ fontSize: 7, fontWeight: 700, fill: "#9ca3af" }}
                     axisLine={false}
                     tickLine={false}
                   />
                   <YAxis
                     domain={[0, 4000000]}
                     ticks={[0, 1000000, 2000000, 3000000, 4000000]}
-                    width={55}
+                    width={40}
                     tickFormatter={(val) =>
-                      val === 0 ? "Rp 0" : `Rp ${(val / 1000000).toFixed(0)}jt`
+                      val === 0 ? "0" : `${(val / 1000000).toFixed(0)}jt`
                     }
-                    tick={{ fontSize: 9, fontWeight: 700, fill: "#9ca3af" }}
+                    tick={{ fontSize: 7, fontWeight: 700, fill: "#9ca3af" }}
                     axisLine={false}
                     tickLine={false}
                   />
@@ -609,12 +614,12 @@ const Budget = () => {
           </div>
 
           {/* 2. BUDGET HEALTH SCORE */}
-          <div className="bg-white p-6 rounded-3xl border border-gray-100 shadow-sm flex flex-col justify-between items-center text-center min-h-[260px]">
-            <h3 className="text-sm font-black text-[#2e2a60] self-start">
+          <div className="bg-white p-4 md:p-6 rounded-3xl border border-gray-100 shadow-sm flex flex-col justify-between items-center text-center min-h-[220px] md:min-h-[260px]">
+            <h3 className="text-[11px] md:text-sm font-black text-[#2e2a60] self-start">
               Budget Health Score
             </h3>
-            <div className="relative w-full flex items-center justify-center h-32 mt-1">
-              <ResponsiveContainer width="100%" height={140}>
+            <div className="relative w-full flex items-center justify-center h-28 md:h-32 mt-1">
+              <ResponsiveContainer width="100%" height={130}>
                 <PieChart>
                   <defs>
                     <linearGradient
@@ -632,9 +637,9 @@ const Budget = () => {
                     data={dataGauge}
                     startAngle={180}
                     endAngle={0}
-                    innerRadius={74}
-                    outerRadius={90}
-                    cy={115}
+                    innerRadius={60}
+                    outerRadius={74}
+                    cy={105}
                     dataKey="value"
                     stroke="none"
                   >
@@ -643,11 +648,11 @@ const Budget = () => {
                   </Pie>
                 </PieChart>
               </ResponsiveContainer>
-              <div className="absolute bottom-1.5 flex flex-col items-center">
-                <span className="text-4xl font-black text-[#2e2a60] leading-none">
+              <div className="absolute bottom-1 flex flex-col items-center">
+                <span className="text-3xl md:text-4xl font-black text-[#2e2a60] leading-none">
                   87
                 </span>
-                <span className="text-[10px] font-bold text-gray-400 mt-1">
+                <span className="text-[9px] md:text-[10px] font-bold text-gray-400 mt-1">
                   /100
                 </span>
               </div>
@@ -656,29 +661,29 @@ const Budget = () => {
               <h4 className="text-xs font-black text-[#4caf50]">
                 Sangat Baik 😊
               </h4>
-              <p className="text-[10px] text-gray-400 font-bold mt-0.5 leading-relaxed">
+              <p className="text-[9px] md:text-[10px] text-gray-400 font-bold mt-0.5 leading-relaxed">
                 Budget kamu dikelola dengan baik!
               </p>
             </div>
           </div>
 
           {/* 3. PROGRESS ALOKASI */}
-          <div className="bg-white p-6 rounded-3xl border border-gray-100 shadow-sm flex flex-col justify-between min-h-[260px]">
-            <h3 className="text-sm font-black text-[#2e2a60] mb-2">
+          <div className="bg-white p-4 md:p-6 rounded-3xl border border-gray-100 shadow-sm flex flex-col justify-between min-h-[220px] md:min-h-[260px]">
+            <h3 className="text-[11px] md:text-sm font-black text-[#2e2a60] mb-2">
               Progress Alokasi
             </h3>
             <div className="flex flex-col flex-1 justify-center divide-y divide-slate-50">
               {/* KEBUTUHAN */}
               <div className="flex items-center justify-between py-2">
-                <div className="flex items-center gap-2">
-                  <div className="p-2 bg-[#f4f2ff] text-[#8477e4] rounded-xl">
+                <div className="flex items-center gap-1.5">
+                  <div className="p-1.5 bg-[#f4f2ff] text-[#8477e4] rounded-xl">
                     <svg
                       xmlns="http://www.w3.org/2000/svg"
                       fill="none"
                       viewBox="0 0 24 24"
                       strokeWidth={2.5}
                       stroke="currentColor"
-                      className="w-3.5 h-3.5"
+                      className="w-3 h-3"
                     >
                       <path
                         strokeLinecap="round"
@@ -687,13 +692,13 @@ const Budget = () => {
                       />
                     </svg>
                   </div>
-                  <div className="text-[11px] font-black text-slate-700">
+                  <div className="text-[10px] font-black text-slate-700">
                     Kebutuhan{" "}
                     <span className="text-slate-400 font-normal">(50%)</span>
                   </div>
                 </div>
-                <div className="w-1/2 flex flex-col">
-                  <div className="text-right text-[11px] font-black text-[#8477e4] mb-0.5">
+                <div className="w-[45%] flex flex-col">
+                  <div className="text-right text-[10px] font-black text-[#8477e4] mb-0.5">
                     85%
                   </div>
                   <div className="w-full bg-[#f3f4f6] h-1.5 rounded-full overflow-hidden">
@@ -710,15 +715,15 @@ const Budget = () => {
 
               {/* KEINGINAN */}
               <div className="flex items-center justify-between py-2">
-                <div className="flex items-center gap-2">
-                  <div className="p-2 bg-[#fffbeb] text-[#ffb224] rounded-xl">
+                <div className="flex items-center gap-1.5">
+                  <div className="p-1.5 bg-[#fffbeb] text-[#ffb224] rounded-xl">
                     <svg
                       xmlns="http://www.w3.org/2000/svg"
                       fill="none"
                       viewBox="0 0 24 24"
                       strokeWidth={2.5}
                       stroke="currentColor"
-                      className="w-3.5 h-3.5"
+                      className="w-3 h-3"
                     >
                       <path
                         strokeLinecap="round"
@@ -727,13 +732,13 @@ const Budget = () => {
                       />
                     </svg>
                   </div>
-                  <div className="text-[11px] font-black text-slate-700">
+                  <div className="text-[10px] font-black text-slate-700">
                     Keinginan{" "}
                     <span className="text-slate-400 font-normal">(30%)</span>
                   </div>
                 </div>
-                <div className="w-1/2 flex flex-col">
-                  <div className="text-right text-[11px] font-black text-[#ffb224] mb-0.5">
+                <div className="w-[45%] flex flex-col">
+                  <div className="text-right text-[10px] font-black text-[#ffb224] mb-0.5">
                     87%
                   </div>
                   <div className="w-full bg-[#f3f4f6] h-1.5 rounded-full overflow-hidden">
@@ -750,15 +755,15 @@ const Budget = () => {
 
               {/* TABUNGAN */}
               <div className="flex items-center justify-between py-2">
-                <div className="flex items-center gap-2">
-                  <div className="p-2 bg-[#f0fdf4] text-[#4caf50] rounded-xl">
+                <div className="flex items-center gap-1.5">
+                  <div className="p-1.5 bg-[#f0fdf4] text-[#4caf50] rounded-xl">
                     <svg
                       xmlns="http://www.w3.org/2000/svg"
                       fill="none"
                       viewBox="0 0 24 24"
                       strokeWidth={2.5}
                       stroke="currentColor"
-                      className="w-3.5 h-3.5"
+                      className="w-3 h-3"
                     >
                       <path
                         strokeLinecap="round"
@@ -767,13 +772,13 @@ const Budget = () => {
                       />
                     </svg>
                   </div>
-                  <div className="text-[11px] font-black text-slate-700">
+                  <div className="text-[10px] font-black text-slate-700">
                     Tabungan{" "}
                     <span className="text-slate-400 font-normal">(20%)</span>
                   </div>
                 </div>
-                <div className="w-1/2 flex flex-col">
-                  <div className="text-right text-[11px] font-black text-[#4caf50] mb-0.5">
+                <div className="w-[45%] flex flex-col">
+                  <div className="text-right text-[10px] font-black text-[#4caf50] mb-0.5">
                     67%
                   </div>
                   <div className="w-full bg-[#f3f4f6] h-1.5 rounded-full overflow-hidden">
@@ -792,17 +797,19 @@ const Budget = () => {
         </div>
 
         {/* BOTTOM ROW: FOOTER INSIGHT AI & TENTANG METODE */}
-        <div className="grid grid-cols-1 xl:grid-cols-5 gap-6">
+        <div className="grid grid-cols-1 sm:grid-cols-2 xl:grid-cols-5 gap-3 md:gap-6">
           {/* KARTU 1: INSIGHT AI */}
-          <div className="xl:col-span-2 bg-[#f4f0ff] p-5 rounded-3xl border border-[#e1d7ff] shadow-sm flex items-center gap-4 relative overflow-hidden">
+          <div className="sm:col-span-1 xl:col-span-2 bg-[#f4f0ff] p-4 md:p-5 rounded-3xl border border-[#e1d7ff] shadow-sm flex items-center gap-3 md:gap-4 relative overflow-hidden">
             <img
               src="/gambar/robotdada.png"
               alt="Robot AI"
-              className="w-20 h-20 object-contain shrink-0"
+              className="w-14 h-14 md:w-20 md:h-20 object-contain shrink-0"
             />
             <div className="space-y-0.5">
-              <h3 className="text-sm font-black text-[#2e2a60]">Insight AI</h3>
-              <p className="text-[11px] text-[#5c5494] font-medium leading-relaxed">
+              <h3 className="text-[11px] md:text-sm font-black text-[#2e2a60]">
+                Insight AI
+              </h3>
+              <p className="text-[10px] md:text-[11px] text-[#5c5494] font-medium leading-relaxed">
                 Pengeluaran pada alokasi{" "}
                 <span className="font-bold">Keinginan</span> telah mencapai{" "}
                 <span className="font-bold">87%</span> dari batas bulanan.
@@ -816,14 +823,14 @@ const Budget = () => {
           </div>
 
           {/* KARTU 2: TENTANG METODE 50-30-20 */}
-          <div className="xl:col-span-3 bg-white p-5 rounded-3xl border border-gray-100 shadow-sm flex flex-col justify-between">
-            <h3 className="text-sm font-black text-[#2e2a60] mb-3">
+          <div className="sm:col-span-1 xl:col-span-3 bg-white p-4 md:p-5 rounded-3xl border border-gray-100 shadow-sm flex flex-col justify-between">
+            <h3 className="text-[11px] md:text-sm font-black text-[#2e2a60] mb-3">
               Tentang Metode 50-30-20
             </h3>
-            <div className="grid grid-cols-1 md:grid-cols-3 gap-3">
+            <div className="grid grid-cols-3 gap-2 md:gap-3">
               {/* Box Kebutuhan */}
-              <div className="bg-[#f6f3ff] p-3 rounded-2xl flex flex-col gap-1.5">
-                <div className="flex items-center gap-2">
+              <div className="bg-[#f6f3ff] p-2 md:p-3 rounded-2xl flex flex-col gap-1.5">
+                <div className="flex items-center gap-1.5">
                   <div className="p-1 bg-white text-[#8477e4] rounded-lg shadow-sm">
                     <svg
                       xmlns="http://www.w3.org/2000/svg"
@@ -831,7 +838,7 @@ const Budget = () => {
                       viewBox="0 0 24 24"
                       strokeWidth={2.5}
                       stroke="currentColor"
-                      className="w-3.5 h-3.5"
+                      className="w-3 h-3"
                     >
                       <path
                         strokeLinecap="round"
@@ -840,18 +847,18 @@ const Budget = () => {
                       />
                     </svg>
                   </div>
-                  <div className="text-[10px] font-black text-[#8477e4]">
+                  <div className="text-[9px] md:text-[10px] font-black text-[#8477e4]">
                     50% Kebutuhan
                   </div>
                 </div>
-                <p className="text-[10px] text-gray-400 font-bold leading-tight">
+                <p className="text-[9px] md:text-[10px] text-gray-400 font-bold leading-tight">
                   Untuk kebutuhan pokok and penting
                 </p>
               </div>
 
               {/* Box Keinginan */}
-              <div className="bg-[#fffcf0] p-3 rounded-2xl flex flex-col gap-1.5">
-                <div className="flex items-center gap-2">
+              <div className="bg-[#fffcf0] p-2 md:p-3 rounded-2xl flex flex-col gap-1.5">
+                <div className="flex items-center gap-1.5">
                   <div className="p-1 bg-white text-[#ffb224] rounded-lg shadow-sm">
                     <svg
                       xmlns="http://www.w3.org/2000/svg"
@@ -859,7 +866,7 @@ const Budget = () => {
                       viewBox="0 0 24 24"
                       strokeWidth={2.5}
                       stroke="currentColor"
-                      className="w-3.5 h-3.5"
+                      className="w-3 h-3"
                     >
                       <path
                         strokeLinecap="round"
@@ -868,18 +875,18 @@ const Budget = () => {
                       />
                     </svg>
                   </div>
-                  <div className="text-[10px] font-black text-[#ffb224]">
+                  <div className="text-[9px] md:text-[10px] font-black text-[#ffb224]">
                     30% Keinginan
                   </div>
                 </div>
-                <p className="text-[10px] text-gray-400 font-bold leading-tight">
+                <p className="text-[9px] md:text-[10px] text-gray-400 font-bold leading-tight">
                   Untuk keinginan dan kenyamanan hidup
                 </p>
               </div>
 
               {/* Box Tabungan */}
-              <div className="bg-[#f0fdf4] p-3 rounded-2xl flex flex-col gap-1.5">
-                <div className="flex items-center gap-2">
+              <div className="bg-[#f0fdf4] p-2 md:p-3 rounded-2xl flex flex-col gap-1.5">
+                <div className="flex items-center gap-1.5">
                   <div className="p-1 bg-white text-[#4caf50] rounded-lg shadow-sm">
                     <svg
                       xmlns="http://www.w3.org/2000/svg"
@@ -887,7 +894,7 @@ const Budget = () => {
                       viewBox="0 0 24 24"
                       strokeWidth={2.5}
                       stroke="currentColor"
-                      className="w-3.5 h-3.5"
+                      className="w-3 h-3"
                     >
                       <path
                         strokeLinecap="round"
@@ -896,11 +903,11 @@ const Budget = () => {
                       />
                     </svg>
                   </div>
-                  <div className="text-[10px] font-black text-[#4caf50]">
+                  <div className="text-[9px] md:text-[10px] font-black text-[#4caf50]">
                     20% Tabungan
                   </div>
                 </div>
-                <p className="text-[10px] text-gray-400 font-bold leading-tight">
+                <p className="text-[9px] md:text-[10px] text-gray-400 font-bold leading-tight">
                   Untuk tabungan dan mencapai goals
                 </p>
               </div>

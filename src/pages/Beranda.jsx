@@ -242,7 +242,7 @@ const Beranda = () => {
 
       <>
         {/* =========================================================
-      2. SIDEBAR KIRI (KHUSUS TAMPILAN DESKTOP - OTOMATIS HILANG DI HP)
+            2. SIDEBAR KIRI (KHUSUS TAMPILAN DESKTOP - OTOMATIS HILANG DI HP)
             ========================================================= */}
         <div
           className={`${isSidebarOpen ? "w-64" : "w-20"} hidden md:flex absolute md:relative z-[60] md:z-10 h-full bg-white border-r border-[#f0f0f0] px-4 md:px-6 py-6 md:py-8 flex-col shadow-[4px_0_24px_rgba(0,0,0,0.02)] transition-all duration-300`}
@@ -340,8 +340,8 @@ const Beranda = () => {
         </div>
 
         {/* =========================================================
-      3. MOBILE NAVBAR (BERDIRI SENDIRI DI LUAR - KHUSUS LAYAR HP)
-  ========================================================= */}
+            3. MOBILE NAVBAR (BERDIRI SENDIRI DI LUAR - KHUSUS LAYAR HP)
+            ========================================================= */}
         <div className="fixed bottom-6 right-6 z-50 md:hidden flex flex-col items-center gap-3">
           {/* Pop-up Menu Logo saat Robot Mobile Ditekan */}
           {isMobileMenuOpen && (
@@ -424,8 +424,6 @@ const Beranda = () => {
           >
             <img
               src="/gambar/robotngintip.png"
-              // Ditambahkan '-rotate-90' supaya robotnya berputar menghadap ke atas
-              // Ukuran dinaikkan ke 'w-14 h-14' agar tetap proporsional dan tegas
               className="w-14 h-14 object-contain transform -rotate-90 hover:translate-y-[-4px] transition-transform"
               alt="FinTrack AI Assistant"
             />
@@ -465,8 +463,6 @@ const Beranda = () => {
         {/* GRID UTAMA LAYOUT */}
         <div className="grid grid-cols-12 gap-6 items-stretch">
           <div className="col-span-12 xl:col-span-7 flex flex-col gap-6">
-            {/* HERO CARD (SUDAH DI-FIT UNTUK HP) */}
-            {/* Jarak mt-12 dipangkas jadi mt-4 di mobile, pl-[90px] disesuaikan ke pl-[80px] agar teks tidak terlalu menepi ke kanan */}
             <div className="relative bg-[#ede7fdf2] rounded-2xl sm:rounded-3xl mt-4 sm:mt-8 md:mt-12 pr-3 sm:pr-6 md:pr-8 flex items-center shadow-sm border border-[#e8dffd] min-h-[90px] sm:min-h-[130px] py-3.5 sm:py-5 pl-[80px] sm:pl-[120px] md:pl-[140px] shrink-0">
               <img
                 src="/gambar/robotsapa.png"
@@ -493,12 +489,6 @@ const Beranda = () => {
                     Ringkasan Keuangan
                   </h3>
                 </div>
-                {/* <button
-                  onClick={() => setIsModalOpen(true)}
-                  className="text-xs font-bold text-[#8477e4] flex items-center gap-2 hover:bg-[#f4f3ff] transition-all bg-white border-2 border-[#8477e4]/20 px-4 py-2 rounded-xl shadow-sm"
-                >
-                  Catat Transaksi <i className="fas fa-plus"></i>
-                </button> */}
               </div>
 
               <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-4 sm:gap-5">
@@ -585,7 +575,7 @@ const Beranda = () => {
               </Link>
             </div>
 
-            {/* SMART BUDGETING (Ditambahkan Banner Insight di bawahnya agar tidak berongga) */}
+            {/* SMART BUDGETING */}
             <div className="bg-white p-4 sm:p-6 rounded-2xl sm:rounded-3xl border border-gray-100 shadow-sm flex-1 flex flex-col">
               <div className="flex flex-row justify-between items-center mb-4 sm:mb-6 gap-2 sm:gap-0">
                 <h3 className="text-sm sm:text-base font-bold text-gray-900">
@@ -686,7 +676,6 @@ const Beranda = () => {
                 ))}
               </div>
 
-              {/* BANNER MINI INSIGHT (Otomatis ngisi ruang bawah biar rata) */}
               <div className="mt-auto pt-6 sm:pt-8">
                 <div className="bg-[#f2eefd] rounded-xl sm:rounded-2xl p-4 sm:p-6 flex flex-row items-start sm:items-center gap-3 sm:gap-4 border border-[#e8dffd] shadow-sm">
                   <div className="w-10 h-10 sm:w-12 sm:h-12 rounded-xl sm:rounded-2xl bg-white flex items-center justify-center shrink-0 shadow-sm">
@@ -713,18 +702,16 @@ const Beranda = () => {
               </div>
             </div>
           </div>
-          {/* KOLOM KANAN (5/12) */}
+
           <div className="col-span-12 xl:col-span-5 flex flex-col gap-6">
-            {/* INSIGHT AI - DESAIN BARU (BORDER BIRU) */}
             <div className="bg-white p-4 sm:p-6 rounded-2xl sm:rounded-[2rem] border border-gray-100 shadow-sm flex flex-col shrink-0">
-              {/* SEBARIS: Judul Insight AI dan Tombol Detail Lengkap ke halaman AI */}
               <div className="flex flex-row justify-between items-center mb-4 gap-2 sm:gap-0">
                 <h3 className="text-sm sm:text-base font-extrabold text-gray-900">
                   Insight AI
                 </h3>
                 <button
                   type="button"
-                  onClick={() => navigate("/ai")} // <-- Mengarah ke halaman AI
+                  onClick={() => navigate("/ai")} 
                   className="text-[9px] sm:text-[10px] font-bold text-gray-400 flex items-center gap-1.5 border border-gray-100 px-2 sm:px-3 py-1.5 rounded-lg hover:text-[#8477e4] transition-all shrink-0"
                 >
                   Detail Lengkap <i className="fas fa-plus"></i>
@@ -753,7 +740,6 @@ const Beranda = () => {
                 />
               </div>
 
-              {/* Box Tips Hari Ini (Tanda panah > sudah dihapus) */}
               <div className="mt-3 sm:mt-4 bg-[#f8f9fb] p-3 sm:p-4 rounded-xl sm:rounded-2xl cursor-pointer hover:bg-gray-50 transition-all border border-gray-50">
                 <div>
                   <h4 className="text-[10px] sm:text-[11px] font-extrabold text-gray-900 mb-1">
@@ -768,11 +754,8 @@ const Beranda = () => {
             </div>
 
             {/* ALOKASI KEUANGAN */}
-            {/* Ditambahkan p-4 sm:p-6 agar padding di HP tidak terlalu memakan tempat */}
             <div className="bg-white p-4 sm:p-6 rounded-[2rem] border border-gray-100 shadow-sm flex flex-col shrink-0">
-              {/* SEBARIS: Ditambahkan flex, justify-between, dan items-center */}
               <div className="flex justify-between items-center gap-2 mb-4 sm:mb-6">
-                {/* Teks Judul & Deskripsi dikelompokkan di kiri */}
                 <div className="min-w-0">
                   <h3 className="text-sm sm:text-base font-bold text-gray-900 truncate">
                     Alokasi Keuangan{" "}
@@ -785,8 +768,6 @@ const Beranda = () => {
                   </p>
                 </div>
 
-                {/* Tombol Detail Lengkap otomatis di kanan */}
-                {/* Ditambahkan whitespace-nowrap agar teks tombol tidak patah/turun ke bawah di HP */}
                 <button
                   type="button"
                   onClick={() => navigate("/transaksi")}
@@ -797,16 +778,8 @@ const Beranda = () => {
               </div>
 
               <div className="flex flex-col items-center gap-4 sm:gap-6">
-                {/* Ditambahkan flex flex-col sm:flex-row agar di HP nyusun ke bawah, di Laptop nyamping */}
                 <div className="flex flex-col sm:flex-row items-center justify-center w-full gap-4 sm:gap-6">
-                  {/* Ukuran Chart dikecilkan sedikit di mobile (w-28 h-28), desktop tetap (w-36 h-36) */}
                   <div className="w-28 h-28 sm:w-36 sm:h-36 relative flex-shrink-0 flex items-center justify-center mx-auto mb-2 sm:mb-4">
-                    {/* <svg viewBox="0 0 36 36" className="w-full h-full transform -rotate-90">
-                      <circle cx="18" cy="18" r="14" fill="none" stroke="#f4f6f8" strokeWidth="5.5"></circle>
-                      <circle cx="18" cy="18" r="14" fill="none" stroke="#3093ec" strokeWidth="5.5" strokeDasharray="48 100" strokeDashoffset="0" strokeLinecap="round"></circle>
-                      <circle cx="18" cy="18" r="14" fill="none" stroke="#f37e61" strokeWidth="5.5" strokeDasharray="28 100" strokeDashoffset="-50" strokeLinecap="round"></circle>
-                      <circle cx="18" cy="18" r="14" fill="none" stroke="#20b46b" strokeWidth="5.5" strokeDasharray="18 100" strokeDashoffset="-80" strokeLinecap="round"></circle>
-                    </svg> */}
                     <svg
                       viewBox="0 0 36 36"
                       className="w-full h-full -rotate-90"
@@ -924,7 +897,6 @@ const Beranda = () => {
                   </div>
                 </div>
 
-                {/* Di HP status melar penuh (w-full), di desktop menyesuaikan isi (sm:w-auto) */}
                 <div
                   className="w-full sm:w-auto flex items-center justify-center gap-2 text-xs font-bold px-5 py-2.5 rounded-xl"
                   style={{
@@ -952,39 +924,13 @@ const Beranda = () => {
               </div>
             </div>
 
-            {/* QUICK ACTION */}
-            {/* <div className="bg-white p-6 rounded-3xl border border-gray-100 shadow-sm shrink-0">
-              <h3 className="text-sm font-bold text-gray-900 mb-4">
-                Quick Action
-              </h3>
-              <div className="grid grid-cols-2 gap-4">
-                <div
-                  onClick={() => setIsModalOpen(true)}
-                  className="bg-[#f0eaff] py-4 rounded-2xl flex flex-col items-center justify-center gap-2 cursor-pointer transition-transform hover:scale-105 border border-[#e8dffd]"
-                >
-                  <i className="fas fa-file-invoice text-xl text-[#8477e4]"></i>
-                  <span className="text-[10px] font-bold text-[#8477e4]">
-                    Catat Transaksi
-                  </span>
-                </div>
-                <div className="bg-[#fafafa] py-4 rounded-2xl flex flex-col items-center justify-center gap-2 cursor-pointer transition-transform hover:scale-105 border border-gray-200">
-                  <i className="fas fa-expand text-xl text-gray-800"></i>
-                  <span className="text-[10px] font-bold text-gray-800">
-                    Scan Struck
-                  </span>
-                </div>
-              </div>
-            </div> */}
-
             {/* GOALS SETTING */}
-            {/* Ditambahkan p-4 sm:p-6 menyesuaikan kartu di atasnya */}
             <div className="bg-white p-4 sm:p-6 rounded-3xl border border-gray-100 shadow-sm text-center relative flex-1 flex flex-col justify-between">
               {/* SEBARIS: Judul Goals Setting dan Tombol Detail Lengkap */}
               <div className="flex justify-between items-center gap-2 mb-3">
                 <h3 className="text-sm font-bold text-gray-900 truncate">
                   Goals Setting
                 </h3>
-                {/* Ditambahkan whitespace-nowrap agar aman di layar sempit */}
                 <button
                   type="button"
                   onClick={() => navigate("/goals")}
@@ -994,7 +940,6 @@ const Beranda = () => {
                 </button>
               </div>
 
-              {/* Konten Slider Goals & Informasi Target (Mengisi kekosongan space) */}
               <div className="my-auto py-2 flex flex-col justify-center">
                 <div className="flex items-center justify-center gap-4 sm:gap-6 mb-3">
                   <i className="fas fa-chevron-left text-gray-400 cursor-pointer hover:text-gray-900 p-2"></i>
@@ -1006,7 +951,6 @@ const Beranda = () => {
                   <i className="fas fa-chevron-right text-gray-400 cursor-pointer hover:text-gray-900 p-2"></i>
                 </div>
 
-                {/* Tambahan Info Detail Nominal biar space tengah lebih padat dan informatif */}
                 <div className="text-center mb-4">
                   <p className="text-xs font-bold text-gray-800 truncate">
                     {activeGoal.title || "Target Kamu"}
@@ -1025,7 +969,6 @@ const Beranda = () => {
                 </div>
               </div>
 
-              {/* Bagian Bawah: Progress Bar & Teks Persentase */}
               <div className="w-full mt-auto">
                 <AnimatedProgressBar
                   value={percentage}
