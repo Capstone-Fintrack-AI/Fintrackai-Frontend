@@ -251,11 +251,10 @@ const Transaksi = () => {
               onClick={() => {
                 navigate(item.path);
               }}
-              className={`relative z-10 flex items-center ${isSidebarOpen ? "gap-4 px-3.5" : "justify-center px-0"} cursor-pointer h-[52px] rounded-2xl transition-all duration-300 ${
-                activeMenu === item.n
-                  ? "text-[#8477e4] font-bold"
-                  : "text-gray-400 hover:text-gray-900"
-              }`}
+              className={`relative z-10 flex items-center ${isSidebarOpen ? "gap-4 px-3.5" : "justify-center px-0"} cursor-pointer h-[52px] rounded-2xl transition-all duration-300 ${activeMenu === item.n
+                ? "text-[#8477e4] font-bold"
+                : "text-gray-400 hover:text-gray-900"
+                }`}
             >
               <img
                 src={item.img}
@@ -295,9 +294,8 @@ const Transaksi = () => {
       {notif && (
         <div className="fixed top-6 right-6 z-[9999] animate-slideIn">
           <div
-            className={`px-6 py-4 rounded-2xl shadow-xl text-white flex items-center gap-3 ${
-              notif.type === "Pemasukan" ? "bg-green-500" : "bg-red-500"
-            }`}
+            className={`px-6 py-4 rounded-2xl shadow-xl text-white flex items-center gap-3 ${notif.type === "Pemasukan" ? "bg-green-500" : "bg-red-500"
+              }`}
           >
             <i className="fas fa-check-circle text-xl"></i>
 
@@ -388,94 +386,114 @@ const Transaksi = () => {
         </header>
 
         {/* BUDGETING */}
-        <div className="grid grid-cols-1 md:grid-cols-3 gap-4 px-10 pb-8 flex-shrink-0">
-          {/* Kebutuhan */}
-          <div className="bg-white p-4 rounded-3xl border border-[#e9dff9] shadow-sm flex items-center gap-4">
-            <div className="w-14 h-14 rounded-2xl bg-gradient-to-br from-[#a78bfa] to-[#8b5cf6] flex items-center justify-center text-white text-2xl shrink-0">
-              <i className="fas fa-home"></i>
-            </div>
+        <div className="px-10 pb-8 flex-shrink-0">
+          {/* Total Pemasukan */}
+          <div className="bg-gradient-to-r from-[#8b5cf6] to-[#a78bfa] p-6 rounded-3xl shadow-lg mb-6 text-white">
+            <div className="flex items-center gap-4">
+              <div className="w-16 h-16 rounded-2xl bg-white/20 flex items-center justify-center text-3xl">
+                <i className="fas fa-wallet"></i>
+              </div>
 
-            <div>
-              <p className="text-[11px] font-semibold text-[#6b61b7]">
-                Budget Kebutuhan
-              </p>
+              <div>
+                <p className="text-sm font-medium text-white/80">
+                  Total Pemasukan Mu
+                </p>
 
-              <h3 className="text-sm font-extrabold text-[#453c8a] mt-0.5">
-                Rp {terpakaiKebutuhan.toLocaleString("id-ID")}
-                <span className="text-gray-400 font-medium">
-                  {" "}
-                  / Rp {kebutuhan.toLocaleString("id-ID")}
-                </span>
-              </h3>
-
-              <p
-                className={`text-[10px] mt-0.5 ${
-                  sisaKebutuhan < 0 ? "text-red-500" : "text-green-500"
-                }`}
-              >
-                Sisa Rp {sisaKebutuhan.toLocaleString("id-ID")}
-              </p>
+                <h2 className="text-3xl md:text-4xl font-extrabold mt-1 tracking-tight">
+                  Rp {totalPemasukan.toLocaleString("id-ID")}
+                </h2>
+              </div>
             </div>
           </div>
 
-          {/* Keinginan */}
-          <div className="bg-white p-4 rounded-3xl border border-[#e9dff9] shadow-sm flex items-center gap-4">
-            <div className="w-14 h-14 rounded-2xl bg-gradient-to-br from-[#fbbf24] to-[#f59e0b] flex items-center justify-center text-white text-2xl shrink-0">
-              <i className="fas fa-shopping-bag"></i>
+          <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+
+            {/* Kebutuhan */}
+            <div className="bg-white p-4 rounded-3xl border border-[#e9dff9] shadow-sm flex items-center gap-4">
+              <div className="w-14 h-14 rounded-2xl bg-gradient-to-br from-[#a78bfa] to-[#8b5cf6] flex items-center justify-center text-white text-2xl shrink-0">
+                <i className="fas fa-home"></i>
+              </div>
+
+              <div>
+                <p className="text-[11px] font-semibold text-[#6b61b7]">
+                  Budget Kebutuhan
+                </p>
+
+                <h3 className="text-sm font-extrabold text-[#453c8a] mt-0.5">
+                  Rp {terpakaiKebutuhan.toLocaleString("id-ID")}
+                  <span className="text-gray-400 font-medium">
+                    {" "}
+                    / Rp {kebutuhan.toLocaleString("id-ID")}
+                  </span>
+                </h3>
+
+                <p
+                  className={`text-[10px] mt-0.5 ${sisaKebutuhan < 0 ? "text-red-500" : "text-green-500"
+                    }`}
+                >
+                  Sisa Rp {sisaKebutuhan.toLocaleString("id-ID")}
+                </p>
+              </div>
             </div>
 
-            <div>
-              <p className="text-[11px] font-semibold text-[#6b61b7]">
-                Budget Keinginan
-              </p>
+            {/* Keinginan */}
+            <div className="bg-white p-4 rounded-3xl border border-[#e9dff9] shadow-sm flex items-center gap-4">
+              <div className="w-14 h-14 rounded-2xl bg-gradient-to-br from-[#fbbf24] to-[#f59e0b] flex items-center justify-center text-white text-2xl shrink-0">
+                <i className="fas fa-shopping-bag"></i>
+              </div>
 
-              <h3 className="text-sm font-extrabold text-[#453c8a] mt-0.5">
-                Rp {terpakaiKeinginan.toLocaleString("id-ID")}
-                <span className="text-gray-400 font-medium">
-                  {" "}
-                  / Rp {keinginan.toLocaleString("id-ID")}
-                </span>
-              </h3>
+              <div>
+                <p className="text-[11px] font-semibold text-[#6b61b7]">
+                  Budget Keinginan
+                </p>
 
-              <p
-                className={`text-[10px] mt-0.5 ${
-                  sisaKeinginan < 0 ? "text-red-500" : "text-green-500"
-                }`}
-              >
-                Sisa Rp {sisaKeinginan.toLocaleString("id-ID")}
-              </p>
+                <h3 className="text-sm font-extrabold text-[#453c8a] mt-0.5">
+                  Rp {terpakaiKeinginan.toLocaleString("id-ID")}
+                  <span className="text-gray-400 font-medium">
+                    {" "}
+                    / Rp {keinginan.toLocaleString("id-ID")}
+                  </span>
+                </h3>
+
+                <p
+                  className={`text-[10px] mt-0.5 ${sisaKeinginan < 0 ? "text-red-500" : "text-green-500"
+                    }`}
+                >
+                  Sisa Rp {sisaKeinginan.toLocaleString("id-ID")}
+                </p>
+              </div>
             </div>
-          </div>
 
-          {/* Tabungan */}
-          <div className="bg-white p-4 rounded-3xl border border-[#e9dff9] shadow-sm flex items-center gap-4">
-            <div className="w-14 h-14 rounded-2xl bg-gradient-to-br from-[#6ee7b7] to-[#10b981] flex items-center justify-center text-white text-2xl shrink-0">
-              <i className="fas fa-piggy-bank"></i>
-            </div>
+            {/* Tabungan */}
+            <div className="bg-white p-4 rounded-3xl border border-[#e9dff9] shadow-sm flex items-center gap-4">
+              <div className="w-14 h-14 rounded-2xl bg-gradient-to-br from-[#6ee7b7] to-[#10b981] flex items-center justify-center text-white text-2xl shrink-0">
+                <i className="fas fa-piggy-bank"></i>
+              </div>
 
-            <div>
-              <p className="text-[11px] font-semibold text-[#6b61b7]">
-                Budget Tabungan
-              </p>
+              <div>
+                <p className="text-[11px] font-semibold text-[#6b61b7]">
+                  Budget Tabungan
+                </p>
 
-              <h3 className="text-sm font-extrabold text-[#453c8a] mt-0.5">
-                Rp {terpakaiTabungan.toLocaleString("id-ID")}
-                <span className="text-gray-400 font-medium">
-                  {" "}
-                  / Rp {tabungan.toLocaleString("id-ID")}
-                </span>
-              </h3>
+                <h3 className="text-sm font-extrabold text-[#453c8a] mt-0.5">
+                  Rp {terpakaiTabungan.toLocaleString("id-ID")}
+                  <span className="text-gray-400 font-medium">
+                    {" "}
+                    / Rp {tabungan.toLocaleString("id-ID")}
+                  </span>
+                </h3>
 
-              <p
-                className={`text-[10px] mt-0.5 ${
-                  sisaTabungan < 0 ? "text-red-500" : "text-green-500"
-                }`}
-              >
-                Sisa Rp {sisaTabungan.toLocaleString("id-ID")}
-              </p>
+                <p
+                  className={`text-[10px] mt-0.5 ${sisaTabungan < 0 ? "text-red-500" : "text-green-500"
+                    }`}
+                >
+                  Sisa Rp {sisaTabungan.toLocaleString("id-ID")}
+                </p>
+              </div>
             </div>
           </div>
         </div>
+
 
         {/* Isi Grid Utama Transaksi (Scrollable) */}
         {/* 4 METRIC CARDS ROW */}
