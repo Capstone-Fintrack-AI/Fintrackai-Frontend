@@ -97,7 +97,9 @@ const AddGoalPopup = ({ isOpen, onClose, initialBalance = 1000000, onSave }) => 
         user_id: userId,
         nama_target: name,
         jumlah_target: Number(targetPrice),
-        jumlah_terkumpul: Number(allocation || 0),
+
+        // jangan kirim allocation ke sini
+        jumlah_terkumpul: 0,
       };
 
       const res = await fetch(
