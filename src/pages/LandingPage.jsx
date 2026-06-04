@@ -636,27 +636,29 @@ const LandingPage = () => {
         className="py-16 md:py-24 font-poppins selection:bg-[#8477e4] selection:text-white px-4 sm:px-6 md:px-12 lg:px-20"
       >
         <style>{`
-          #tim .swiper { padding: 30px 10px 50px 10px !important; overflow: visible !important; }
-          @media (min-width: 768px) {
-            #tim .swiper { padding: 50px 20px !important; }
-          }
-          .team-item { 
-            position: relative; border-radius: 25px; overflow: hidden; 
-            aspect-ratio: 3/4; cursor: grab; transition: all 0.5s ease;
-            box-shadow: 0 20px 40px rgba(0, 0, 0, 0.15); border: 1px solid rgba(0,0,0,0.05);
-          }
-          .team-item img { width: 100%; height: 100%; object-fit: cover; transition: transform 0.6s ease; }
-          .team-item:hover img { transform: scale(1.1); }
-          .team-text-overlay { 
-            position: absolute; inset: 0; 
-            background: linear-gradient(to top, rgba(0, 0, 0, 0.9) 0%, rgba(0, 0, 0, 0.3) 50%, transparent 100%); 
-            display: flex; flex-direction: column; justify-content: flex-end; padding: 20px; 
-          }
-          @media (min-width: 768px) {
-            .team-text-overlay { padding: 25px; }
-          }
-          .social-icon { width: 32px; height: 32px; background: rgba(255, 255, 255, 0.2); backdrop-filter: blur(4px); border-radius: 50%; display: flex; align-items: center; justify-content: center; color: white; font-size: 0.9rem; transition: all 0.3s ease; border: 1px solid rgba(255, 255, 255, 0.1); }
-        `}</style>
+    #tim .swiper { padding: 30px 10px 50px 10px !important; overflow: visible !important; }
+    @media (min-width: 768px) {
+      #tim .swiper { padding: 50px 20px !important; }
+    }
+    .team-item { 
+      position: relative; border-radius: 25px; overflow: hidden; 
+      aspect-ratio: 3/4; cursor: grab; transition: all 0.5s ease;
+      box-shadow: 0 20px 40px rgba(0, 0, 0, 0.15); border: 1px solid rgba(0,0,0,0.05);
+    }
+    .team-item img { width: 100%; height: 100%; object-fit: cover; transition: transform 0.6s ease; }
+    .team-item:hover img { transform: scale(1.1); }
+    .team-text-overlay { 
+      position: absolute; inset: 0; 
+      background: linear-gradient(to top, rgba(0, 0, 0, 0.9) 0%, rgba(0, 0, 0, 0.3) 50%, transparent 100%); 
+      display: flex; flex-direction: column; justify-content: flex-end; padding: 20px; 
+    }
+    @media (min-width: 768px) {
+      .team-text-overlay { padding: 25px; }
+    }
+    /* Mengubah cursor pointer pada social-icon agar terlihat bisa diklik */
+    .social-icon { width: 32px; height: 32px; background: rgba(255, 255, 255, 0.2); backdrop-filter: blur(4px); border-radius: 50%; display: flex; align-items: center; justify-content: center; color: white; font-size: 0.9rem; transition: all 0.3s ease; border: 1px solid rgba(255, 255, 255, 0.1); cursor: pointer; }
+    .social-icon:hover { background: #8477e4; transform: scale(1.1); color: white; }
+  `}</style>
 
         <div className="text-center mb-8 md:mb-12">
           <h2 className="text-3xl sm:text-5xl font-bold text-gray-900">
@@ -692,28 +694,48 @@ const LandingPage = () => {
             {[...Array(2)].map((_, loopIdx) => (
               <React.Fragment key={loopIdx}>
                 {[
-                  { n: "Anisa", r: "Back-end Developer", i: "Anisa.png" },
+                  {
+                    n: "Anisa",
+                    r: "Back-end Developer",
+                    i: "Anisa.png",
+                    ig: "https://www.instagram.com/nisaa107_/",
+                    li: "https://www.linkedin.com/in/anisa-nisa-534a50287/",
+                  },
                   {
                     n: "Shifa Anjani Desha",
                     r: "Front-end Developer",
                     i: "Shifa.jpeg",
+                    ig: "https://www.instagram.com/shifaanjanii/",
+                    li: "https://www.linkedin.com/in/shifa-anjani-desha-9163683a6/",
                   },
                   {
                     n: "Mohammad El Abror Sholeh",
                     r: "AI Engineer",
                     i: "Abror.jpeg",
+                    ig: "https://instagram.com/username_abror",
+                    li: "https://linkedin.com/in/username_abror",
                   },
                   {
                     n: "Hamasah Fazal Aqsha",
                     r: "AI Engineer",
                     i: "Aqso.jpeg",
+                    ig: "https://instagram.com/hamaaasah_",
+                    li: "https://www.linkedin.com/in/hamasah-fazal-aqsha-b61b86274/",
                   },
                   {
                     n: "Icha Aulia Putri",
                     r: "Data Scientist",
                     i: "Ichaa.png",
+                    ig: "https://instagram.com/ichaauliaptrii_",
+                    li: "https://www.linkedin.com/in/icha-aulia-putri-253ba5330",
                   },
-                  { n: "Nanda Hidayah", r: "Data Scientist", i: "Nanda.jpeg" },
+                  {
+                    n: "Nanda Hidayah",
+                    r: "Data Scientist",
+                    i: "Nanda.jpeg",
+                    ig: "https://instagram.com/nndhdyh",
+                    li: "https://www.linkedin.com/in/nanda-hidayah-87a7423ab/",
+                  },
                 ].map((member, index) => (
                   <SwiperSlide key={`${loopIdx}-${index}`}>
                     <div className="team-item">
@@ -725,13 +747,25 @@ const LandingPage = () => {
                         <p className="text-white/80 text-xs sm:text-sm mb-3">
                           {member.r}
                         </p>
-                        <div className="flex gap-2">
-                          <div className="social-icon">
+
+                        {/* PERBAIKAN DI SINI: Mengubah div menjadi tag <a> */}
+                        <div className="flex gap-2 relative z-20">
+                          <a
+                            href={member.ig}
+                            target="_blank"
+                            rel="noopener noreferrer"
+                            className="social-icon"
+                          >
                             <i className="fab fa-instagram"></i>
-                          </div>
-                          <div className="social-icon">
+                          </a>
+                          <a
+                            href={member.li}
+                            target="_blank"
+                            rel="noopener noreferrer"
+                            className="social-icon"
+                          >
                             <i className="fab fa-linkedin-in"></i>
-                          </div>
+                          </a>
                         </div>
                       </div>
                     </div>
