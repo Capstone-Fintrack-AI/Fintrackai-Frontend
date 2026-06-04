@@ -84,6 +84,27 @@ const Budget = () => {
     return `1 - ${hariTerakhir} ${namaBulan} ${tahun}`;
   };
 
+  const totalPemasukan = pemasukan.reduce(
+    (sum, item) => sum + Number(item.jumlah),
+    0
+  );
+
+  const kebutuhan = totalPemasukan * 0.5;
+  const keinginan = totalPemasukan * 0.3;
+  const tabungan = totalPemasukan * 0.2;
+
+  const terpakaiKebutuhan = pengeluaran
+    .filter((item) => item.kategori?.toLowerCase() === "kebutuhan")
+    .reduce((sum, item) => sum + Number(item.jumlah), 0);
+
+  const terpakaiKeinginan = pengeluaran
+    .filter((item) => item.kategori?.toLowerCase() === "keinginan")
+    .reduce((sum, item) => sum + Number(item.jumlah), 0);
+
+  const terpakaiTabungan = pengeluaran
+    .filter((item) => item.kategori?.toLowerCase() === "tabungan")
+    .reduce((sum, item) => sum + Number(item.jumlah), 0);
+
   return (
     <div className="h-screen bg-[#f8f6ff] font-poppins flex overflow-hidden relative">
       {/* =========================================================
@@ -180,11 +201,10 @@ const Budget = () => {
               onClick={() => {
                 navigate(item.path);
               }}
-              className={`relative z-10 flex items-center ${isSidebarOpen ? "gap-4 px-3.5" : "justify-center px-0"} cursor-pointer h-[52px] rounded-2xl transition-all duration-300 ${
-                activeMenu === item.n
+              className={`relative z-10 flex items-center ${isSidebarOpen ? "gap-4 px-3.5" : "justify-center px-0"} cursor-pointer h-[52px] rounded-2xl transition-all duration-300 ${activeMenu === item.n
                   ? "text-[#8477e4] font-bold"
                   : "text-gray-400 hover:text-gray-900"
-              }`}
+                }`}
             >
               <img
                 src={item.img}
@@ -246,11 +266,10 @@ const Budget = () => {
                   navigate(item.path);
                   setIsMobileMenuOpen(false); // Otomatis tutup pop-up setelah diklik
                 }}
-                className={`p-2 rounded-xl transition-all duration-200 cursor-pointer ${
-                  activeMenu === item.n
+                className={`p-2 rounded-xl transition-all duration-200 cursor-pointer ${activeMenu === item.n
                     ? "bg-[#f0eaff] scale-110"
                     : "opacity-60"
-                }`}
+                  }`}
               >
                 <img
                   src={item.img}
@@ -269,11 +288,10 @@ const Budget = () => {
                 navigate("/pengaturan");
                 setIsMobileMenuOpen(false);
               }}
-              className={`p-2 rounded-xl transition-all duration-200 cursor-pointer ${
-                activeMenu === "Pengaturan"
+              className={`p-2 rounded-xl transition-all duration-200 cursor-pointer ${activeMenu === "Pengaturan"
                   ? "bg-[#f0eaff] scale-110"
                   : "opacity-60"
-              }`}
+                }`}
             >
               <img
                 src="/gambar/pengaturan.png"

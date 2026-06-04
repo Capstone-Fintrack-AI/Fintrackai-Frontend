@@ -199,6 +199,52 @@ const Beranda = () => {
     statusText = "Over Budget";
   }
 
+  const getFinancialStatus = (
+    totalPemasukan,
+    totalPengeluaran
+  ) => {
+    if (totalPemasukan <= 0) {
+      return {
+        status: "Tidak Ada Data",
+        color: "bg-gray-100 text-gray-500",
+        icon: "fas fa-question-circle",
+      };
+    }
+
+    const ratio =
+      (totalPengeluaran / totalPemasukan) * 100;
+
+    if (ratio <= 50) {
+      return {
+        status: "Hemat",
+        color:
+          "bg-[#e8f5e9] text-[#4caf50] border-[#4caf50]/20",
+        icon: "fas fa-check-circle",
+      };
+    }
+
+    if (ratio <= 80) {
+      return {
+        status: "Normal",
+        color:
+          "bg-blue-50 text-blue-500 border-blue-500/20",
+        icon: "fas fa-chart-line",
+      };
+    }
+
+    return {
+      status: "Boros",
+      color:
+        "bg-red-50 text-red-500 border-red-500/20",
+      icon: "fas fa-exclamation-circle",
+    };
+  };
+
+  const financialStatus = getFinancialStatus(
+    totalPemasukan,
+    totalPengeluaran
+  );
+
   return (
     <div className="h-screen bg-[#f8f6ff] font-poppins flex overflow-hidden relative w-full">
       {/* =========================================================
@@ -296,11 +342,10 @@ const Beranda = () => {
                 onClick={() => {
                   navigate(item.path);
                 }}
-                className={`relative z-10 flex items-center ${isSidebarOpen ? "gap-4 px-3.5" : "justify-center px-0"} cursor-pointer h-[52px] rounded-2xl transition-all duration-300 ${
-                  activeMenu === item.n
-                    ? "text-[#8477e4] font-bold"
-                    : "text-gray-400 hover:text-gray-900"
-                }`}
+                className={`relative z-10 flex items-center ${isSidebarOpen ? "gap-4 px-3.5" : "justify-center px-0"} cursor-pointer h-[52px] rounded-2xl transition-all duration-300 ${activeMenu === item.n
+                  ? "text-[#8477e4] font-bold"
+                  : "text-gray-400 hover:text-gray-900"
+                  }`}
               >
                 <img
                   src={item.img}
@@ -364,11 +409,10 @@ const Beranda = () => {
                     navigate(item.path);
                     setIsMobileMenuOpen(false); // Otomatis tutup pop-up setelah diklik
                   }}
-                  className={`p-2 rounded-xl transition-all duration-200 cursor-pointer ${
-                    activeMenu === item.n
-                      ? "bg-[#f0eaff] scale-110"
-                      : "opacity-60"
-                  }`}
+                  className={`p-2 rounded-xl transition-all duration-200 cursor-pointer ${activeMenu === item.n
+                    ? "bg-[#f0eaff] scale-110"
+                    : "opacity-60"
+                    }`}
                 >
                   <img
                     src={item.img}
@@ -387,11 +431,10 @@ const Beranda = () => {
                   navigate("/pengaturan");
                   setIsMobileMenuOpen(false);
                 }}
-                className={`p-2 rounded-xl transition-all duration-200 cursor-pointer ${
-                  activeMenu === "Pengaturan"
-                    ? "bg-[#f0eaff] scale-110"
-                    : "opacity-60"
-                }`}
+                className={`p-2 rounded-xl transition-all duration-200 cursor-pointer ${activeMenu === "Pengaturan"
+                  ? "bg-[#f0eaff] scale-110"
+                  : "opacity-60"
+                  }`}
               >
                 <img
                   src="/gambar/pengaturan.png"
@@ -441,8 +484,12 @@ const Beranda = () => {
             <h1 className="text-xl sm:text-2xl md:text-3xl font-bold text-gray-900 truncate">
               Halo, {userName} ! 👋
             </h1>
-            <div className="self-start flex items-center gap-1.5 text-[10px] sm:text-[11px] font-bold bg-[#e8f5e9] text-[#4caf50] px-2.5 py-1.5 rounded-lg border border-[#4caf50]/20 whitespace-nowrap">
-              <i className="fas fa-check-circle"></i> Status : Hemat
+            <div
+              className={`self-start flex items-center gap-1.5 text-[10px] sm:text-[11px] font-bold px-2.5 py-1.5 rounded-lg border whitespace-nowrap ${financialStatus.color}`}
+            >
+              <i className={financialStatus.icon}></i>
+
+              Status : {financialStatus.status}
             </div>
           </div>
 
@@ -711,7 +758,7 @@ const Beranda = () => {
                 </h3>
                 <button
                   type="button"
-                  onClick={() => navigate("/ai")} 
+                  onClick={() => navigate("/ai")}
                   className="text-[9px] sm:text-[10px] font-bold text-gray-400 flex items-center gap-1.5 border border-gray-100 px-2 sm:px-3 py-1.5 rounded-lg hover:text-[#8477e4] transition-all shrink-0"
                 >
                   Detail Lengkap <i className="fas fa-plus"></i>

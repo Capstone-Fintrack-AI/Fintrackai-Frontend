@@ -21,6 +21,7 @@ const Transaksi = () => {
   const [isDeleteOpen, setIsDeleteOpen] = useState(false);
   const [selectedItem, setSelectedItem] = useState(null);
 
+
   const location = useLocation();
   const navigate = useNavigate();
 
@@ -138,7 +139,7 @@ const Transaksi = () => {
           }),
           kat: item.kategori,
           desc: item.nama_pengeluaran,
-          nominal: -Number(item.jumlah), 
+          nominal: -Number(item.jumlah),
           createdAt: item.created_at,
         }));
 
@@ -191,6 +192,11 @@ const Transaksi = () => {
     console.log("Data berhasil dihapus:", selectedItem);
     setIsDeleteOpen(false);
   };
+
+  const totalPengeluaran = dataTransaksi
+    .filter((item) => item.nominal < 0)
+    .reduce((sum, item) => sum + Math.abs(item.nominal), 0);
+  const saldoSaatIni = totalPemasukan - totalPengeluaran;
 
   return (
     <div className="h-screen bg-[#f8f6ff] font-poppins flex overflow-hidden relative w-full">
@@ -288,11 +294,10 @@ const Transaksi = () => {
               onClick={() => {
                 navigate(item.path);
               }}
-              className={`relative z-10 flex items-center ${isSidebarOpen ? "gap-4 px-3.5" : "justify-center px-0"} cursor-pointer h-[52px] rounded-2xl transition-all duration-300 ${
-                activeMenu === item.n
-                  ? "text-[#8477e4] font-bold"
-                  : "text-gray-400 hover:text-gray-900"
-              }`}
+              className={`relative z-10 flex items-center ${isSidebarOpen ? "gap-4 px-3.5" : "justify-center px-0"} cursor-pointer h-[52px] rounded-2xl transition-all duration-300 ${activeMenu === item.n
+                ? "text-[#8477e4] font-bold"
+                : "text-gray-400 hover:text-gray-900"
+                }`}
             >
               <img
                 src={item.img}
@@ -354,13 +359,12 @@ const Transaksi = () => {
                 key={item.n}
                 onClick={() => {
                   navigate(item.path);
-                  setIsMobileMenuOpen(false); 
+                  setIsMobileMenuOpen(false);
                 }}
-                className={`p-2 rounded-xl transition-all duration-200 cursor-pointer ${
-                  activeMenu === item.n
-                    ? "bg-[#f0eaff] scale-110"
-                    : "opacity-60"
-                }`}
+                className={`p-2 rounded-xl transition-all duration-200 cursor-pointer ${activeMenu === item.n
+                  ? "bg-[#f0eaff] scale-110"
+                  : "opacity-60"
+                  }`}
               >
                 <img
                   src={item.img}
@@ -379,11 +383,10 @@ const Transaksi = () => {
                 navigate("/pengaturan");
                 setIsMobileMenuOpen(false);
               }}
-              className={`p-2 rounded-xl transition-all duration-200 cursor-pointer ${
-                activeMenu === "Pengaturan"
-                  ? "bg-[#f0eaff] scale-110"
-                  : "opacity-60"
-              }`}
+              className={`p-2 rounded-xl transition-all duration-200 cursor-pointer ${activeMenu === "Pengaturan"
+                ? "bg-[#f0eaff] scale-110"
+                : "opacity-60"
+                }`}
             >
               <img
                 src="/gambar/pengaturan.png"
@@ -507,20 +510,24 @@ const Transaksi = () => {
         {/* BUDGETING */}
         <div className="px-4 sm:px-6 md:px-10 pb-6 sm:pb-8 flex-shrink-0 w-full">
           {/* Total Pemasukan */}
-          <div className="bg-gradient-to-r from-[#8b5cf6] to-[#a78bfa] p-4 sm:p-6 rounded-2xl sm:rounded-3xl shadow-lg mb-4 sm:mb-6 text-white w-full">
+          <div className="bg-gradient-to-r from-[#10b981] to-[#34d399] p-4 sm:p-6 rounded-2xl sm:rounded-3xl shadow-lg mb-4 sm:mb-6 text-white w-full">
             <div className="flex items-center gap-3 sm:gap-4">
               <div className="w-12 h-12 sm:w-16 sm:h-16 rounded-xl sm:rounded-2xl bg-white/20 flex items-center justify-center text-2xl sm:text-3xl shrink-0">
                 <i className="fas fa-wallet"></i>
               </div>
 
               <div className="min-w-0">
-                <p className="text-xs sm:text-sm font-medium text-white/80 truncate">
-                  Total Pemasukan Mu
+                <p className="text-xs sm:text-sm font-medium text-white/80">
+                  Saldo Saat Ini
                 </p>
 
-                <h2 className="text-xl sm:text-3xl md:text-4xl font-extrabold mt-0.5 sm:mt-1 tracking-tight truncate">
-                  Rp {totalPemasukan.toLocaleString("id-ID")}
+                <h2 className="text-xl sm:text-3xl md:text-4xl font-extrabold mt-1">
+                  Rp {saldoSaatIni.toLocaleString("id-ID")}
                 </h2>
+
+                <p className="text-xs text-white/70 mt-1">
+                  Pemasukan - Pengeluaran
+                </p>
               </div>
             </div>
           </div>
@@ -547,9 +554,8 @@ const Transaksi = () => {
                 </h3>
 
                 <p
-                  className={`text-[9px] sm:text-[10px] mt-0.5 truncate ${
-                    sisaKebutuhan < 0 ? "text-red-500" : "text-green-500"
-                  }`}
+                  className={`text-[9px] sm:text-[10px] mt-0.5 truncate ${sisaKebutuhan < 0 ? "text-red-500" : "text-green-500"
+                    }`}
                 >
                   Sisa Rp {sisaKebutuhan.toLocaleString("id-ID")}
                 </p>
@@ -576,9 +582,8 @@ const Transaksi = () => {
                 </h3>
 
                 <p
-                  className={`text-[9px] sm:text-[10px] mt-0.5 truncate ${
-                    sisaKeinginan < 0 ? "text-red-500" : "text-green-500"
-                  }`}
+                  className={`text-[9px] sm:text-[10px] mt-0.5 truncate ${sisaKeinginan < 0 ? "text-red-500" : "text-green-500"
+                    }`}
                 >
                   Sisa Rp {sisaKeinginan.toLocaleString("id-ID")}
                 </p>
@@ -605,9 +610,8 @@ const Transaksi = () => {
                 </h3>
 
                 <p
-                  className={`text-[9px] sm:text-[10px] mt-0.5 truncate ${
-                    sisaTabungan < 0 ? "text-red-500" : "text-green-500"
-                  }`}
+                  className={`text-[9px] sm:text-[10px] mt-0.5 truncate ${sisaTabungan < 0 ? "text-red-500" : "text-green-500"
+                    }`}
                 >
                   Sisa Rp {sisaTabungan.toLocaleString("id-ID")}
                 </p>
@@ -641,11 +645,10 @@ const Transaksi = () => {
                     <button
                       key={f}
                       onClick={() => setActiveFilter(f)}
-                      className={`flex-1 md:flex-none px-2 sm:px-5 py-2 sm:py-2.5 rounded-xl text-[10px] sm:text-xs font-bold transition-all whitespace-nowrap ${
-                        activeFilter === f
-                          ? "bg-[#8477e4] text-white shadow-md"
-                          : "bg-[#f8f9fb] text-gray-500 hover:bg-gray-100"
-                      }`}
+                      className={`flex-1 md:flex-none px-2 sm:px-5 py-2 sm:py-2.5 rounded-xl text-[10px] sm:text-xs font-bold transition-all whitespace-nowrap ${activeFilter === f
+                        ? "bg-[#8477e4] text-white shadow-md"
+                        : "bg-[#f8f9fb] text-gray-500 hover:bg-gray-100"
+                        }`}
                     >
                       {f}
                     </button>
@@ -679,103 +682,102 @@ const Transaksi = () => {
                     {/* Loop data per halaman (Sekarang diset 10 data) */}
                     {dataTampil && dataTampil.length > 0
                       ? dataTampil
-                          .slice((activePage - 1) * 10, activePage * 10)
-                          .map((item, idx) => (
-                            <tr
-                              key={idx}
-                              className="hover:bg-gray-50 transition-all"
-                            >
-                              <td className="px-2 py-3 md:px-6 md:py-5 text-[9px] md:text-[12px] font-bold text-gray-500 truncate max-w-0">
-                                {
-                                  typeof item.tgl === "string" &&
+                        .slice((activePage - 1) * 10, activePage * 10)
+                        .map((item, idx) => (
+                          <tr
+                            key={idx}
+                            className="hover:bg-gray-50 transition-all"
+                          >
+                            <td className="px-2 py-3 md:px-6 md:py-5 text-[9px] md:text-[12px] font-bold text-gray-500 truncate max-w-0">
+                              {
+                                typeof item.tgl === "string" &&
                                   item.tgl.includes("/")
-                                    ? (() => {
-                                        // Memecah "3/6/2026" menjadi ['3', '6', '2026']
-                                        const [hari, bulan, tahun] =
-                                          item.tgl.split("/");
+                                  ? (() => {
+                                    // Memecah "3/6/2026" menjadi ['3', '6', '2026']
+                                    const [hari, bulan, tahun] =
+                                      item.tgl.split("/");
 
-                                        // Array nama bulan Indonesia
-                                        const namaBulan = [
-                                          "Januari",
-                                          "Februari",
-                                          "Maret",
-                                          "April",
-                                          "Mei",
-                                          "Juni",
-                                          "Juli",
-                                          "Agustus",
-                                          "September",
-                                          "Oktober",
-                                          "November",
-                                          "Desember",
-                                        ];
+                                    // Array nama bulan Indonesia
+                                    const namaBulan = [
+                                      "Januari",
+                                      "Februari",
+                                      "Maret",
+                                      "April",
+                                      "Mei",
+                                      "Juni",
+                                      "Juli",
+                                      "Agustus",
+                                      "September",
+                                      "Oktober",
+                                      "November",
+                                      "Desember",
+                                    ];
 
-                                        const bulanIndo =
-                                          namaBulan[parseInt(bulan, 10) - 1] ||
-                                          bulan;
+                                    const bulanIndo =
+                                      namaBulan[parseInt(bulan, 10) - 1] ||
+                                      bulan;
 
-                                        return `${hari} ${bulanIndo} ${tahun}`;
-                                      })()
-                                    : item.tgl 
-                                }
-                              </td>
-                              <td className="px-2 py-3 md:px-6 md:py-5 max-w-0">
-                                <span className="text-[8px] md:text-[10px] font-bold px-1.5 md:px-3 py-0.5 md:py-1 rounded-lg bg-gray-100 text-gray-600 truncate block w-full">
-                                  {item.kat}
-                                </span>
-                              </td>
-                              <td className="px-2 py-3 md:px-6 md:py-5 text-[9px] md:text-[12px] font-bold text-gray-900 truncate max-w-0">
-                                {item.desc}
-                              </td>
-                              <td
-                                className={`px-2 py-3 md:px-6 md:py-5 text-[9px] md:text-[12px] font-black text-right truncate max-w-0 ${
-                                  item.nominal < 0
-                                    ? "text-[#F44336]"
-                                    : "text-[#4caf50]"
+                                    return `${hari} ${bulanIndo} ${tahun}`;
+                                  })()
+                                  : item.tgl
+                              }
+                            </td>
+                            <td className="px-2 py-3 md:px-6 md:py-5 max-w-0">
+                              <span className="text-[8px] md:text-[10px] font-bold px-1.5 md:px-3 py-0.5 md:py-1 rounded-lg bg-gray-100 text-gray-600 truncate block w-full">
+                                {item.kat}
+                              </span>
+                            </td>
+                            <td className="px-2 py-3 md:px-6 md:py-5 text-[9px] md:text-[12px] font-bold text-gray-900 truncate max-w-0">
+                              {item.desc}
+                            </td>
+                            <td
+                              className={`px-2 py-3 md:px-6 md:py-5 text-[9px] md:text-[12px] font-black text-right truncate max-w-0 ${item.nominal < 0
+                                ? "text-[#F44336]"
+                                : "text-[#4caf50]"
                                 }`}
-                              >
-                                {item.nominal?.toLocaleString("id-ID", {
-                                  style: "currency",
-                                  currency: "IDR",
-                                })}
-                              </td>
-                              <td className="px-2 py-3 md:px-6 md:py-5 text-center">
-                                <div className="flex justify-center items-center gap-1 md:gap-2">
-                                  <button
-                                    type="button"
-                                    onClick={() => handleEdit(item)}
-                                    className="w-5 h-5 md:w-7 md:h-7 rounded-md bg-blue-50 text-blue-500 hover:bg-blue-500 hover:text-white transition-all flex items-center justify-center shrink-0"
-                                    title="Edit"
-                                  >
-                                    <i className="fas fa-edit text-[8px] md:text-[10px]"></i>
-                                  </button>
-                                  <button
-                                    type="button"
-                                    onClick={() => handleDelete(item)}
-                                    className="w-5 h-5 md:w-7 md:h-7 rounded-md bg-red-50 text-red-500 hover:bg-red-500 hover:text-white transition-all flex items-center justify-center shrink-0"
-                                    title="Hapus"
-                                  >
-                                    <i className="fas fa-trash text-[8px] md:text-[10px]"></i>
-                                  </button>
-                                </div>
-                              </td>
-                            </tr>
-                          ))
+                            >
+                              {item.nominal?.toLocaleString("id-ID", {
+                                style: "currency",
+                                currency: "IDR",
+                              })}
+                            </td>
+                            <td className="px-2 py-3 md:px-6 md:py-5 text-center">
+                              <div className="flex justify-center items-center gap-1 md:gap-2">
+                                <button
+                                  type="button"
+                                  onClick={() => handleEdit(item)}
+                                  className="w-5 h-5 md:w-7 md:h-7 rounded-md bg-blue-50 text-blue-500 hover:bg-blue-500 hover:text-white transition-all flex items-center justify-center shrink-0"
+                                  title="Edit"
+                                >
+                                  <i className="fas fa-edit text-[8px] md:text-[10px]"></i>
+                                </button>
+                                <button
+                                  type="button"
+                                  onClick={() => handleDelete(item)}
+                                  className="w-5 h-5 md:w-7 md:h-7 rounded-md bg-red-50 text-red-500 hover:bg-red-500 hover:text-white transition-all flex items-center justify-center shrink-0"
+                                  title="Hapus"
+                                >
+                                  <i className="fas fa-trash text-[8px] md:text-[10px]"></i>
+                                </button>
+                              </div>
+                            </td>
+                          </tr>
+                        ))
                       : null}
 
                     {(!dataTampil ||
                       dataTampil.slice((activePage - 1) * 10, activePage * 10)
                         .length === 0) && (
-                      <tr>
-                        <td
-                          colSpan={5}
-                          className="px-6 py-12 text-center text-xs font-semibold text-gray-400 bg-gray-50/30"
-                        >
-                          <div className="text-lg mb-1">📂</div>
-                          Tidak ada data transaksi di halaman ini.
-                        </td>
-                      </tr>
-                    )}
+                        <tr>
+                          <td
+                            colSpan={5}
+                            className="px-6 py-12 text-center text-xs font-semibold text-gray-400 bg-gray-50/30"
+                          >
+                            <div className="text-lg mb-1">📂</div>
+                            Tidak ada data transaksi di halaman ini.
+                          </td>
+                        </tr>
+                      )}
                   </tbody>
                 </table>
 
@@ -787,11 +789,10 @@ const Transaksi = () => {
                       activePage > 1 && setActivePage(activePage - 1)
                     }
                     disabled={activePage === 1}
-                    className={`w-8 h-8 rounded-lg border flex items-center justify-center transition-all ${
-                      activePage === 1
-                        ? "border-gray-100 text-gray-300 cursor-not-allowed bg-gray-50"
-                        : "border-gray-200 text-gray-400 hover:bg-white"
-                    }`}
+                    className={`w-8 h-8 rounded-lg border flex items-center justify-center transition-all ${activePage === 1
+                      ? "border-gray-100 text-gray-300 cursor-not-allowed bg-gray-50"
+                      : "border-gray-200 text-gray-400 hover:bg-white"
+                      }`}
                   >
                     <i className="fas fa-chevron-left text-[10px]"></i>
                   </button>
@@ -804,11 +805,10 @@ const Transaksi = () => {
                       key={p}
                       type="button"
                       onClick={() => setActivePage(p)}
-                      className={`w-8 h-8 rounded-lg text-xs font-bold transition-all ${
-                        activePage === p
-                          ? "bg-[#8477e4] text-white"
-                          : "text-gray-400 hover:bg-white"
-                      }`}
+                      className={`w-8 h-8 rounded-lg text-xs font-bold transition-all ${activePage === p
+                        ? "bg-[#8477e4] text-white"
+                        : "text-gray-400 hover:bg-white"
+                        }`}
                     >
                       {p}
                     </button>
@@ -825,12 +825,11 @@ const Transaksi = () => {
                       activePage >=
                       (Math.ceil((dataTampil?.length || 0) / 10) || 1)
                     }
-                    className={`w-8 h-8 rounded-lg border flex items-center justify-center transition-all ${
-                      activePage >=
+                    className={`w-8 h-8 rounded-lg border flex items-center justify-center transition-all ${activePage >=
                       (Math.ceil((dataTampil?.length || 0) / 10) || 1)
-                        ? "border-gray-100 text-gray-300 cursor-not-allowed bg-gray-50"
-                        : "border-gray-200 text-gray-400 hover:bg-white"
-                    }`}
+                      ? "border-gray-100 text-gray-300 cursor-not-allowed bg-gray-50"
+                      : "border-gray-200 text-gray-400 hover:bg-white"
+                      }`}
                   >
                     <i className="fas fa-chevron-right text-[10px]"></i>
                   </button>
@@ -881,11 +880,10 @@ const Transaksi = () => {
                             onClick={() =>
                               setEditForm({ ...editForm, kat: "Kebutuhan" })
                             }
-                            className={`flex-1 py-3 rounded-xl font-bold text-sm transition-all border ${
-                              editForm.kat === "Kebutuhan"
-                                ? "bg-purple-50 border-[#8477e4] text-[#8477e4] shadow-sm shadow-purple-500/10"
-                                : "bg-white border-gray-200 text-gray-500 hover:bg-gray-50"
-                            }`}
+                            className={`flex-1 py-3 rounded-xl font-bold text-sm transition-all border ${editForm.kat === "Kebutuhan"
+                              ? "bg-purple-50 border-[#8477e4] text-[#8477e4] shadow-sm shadow-purple-500/10"
+                              : "bg-white border-gray-200 text-gray-500 hover:bg-gray-50"
+                              }`}
                           >
                             💼 Kebutuhan
                           </button>
@@ -894,11 +892,10 @@ const Transaksi = () => {
                             onClick={() =>
                               setEditForm({ ...editForm, kat: "Keinginan" })
                             }
-                            className={`flex-1 py-3 rounded-xl font-bold text-sm transition-all border ${
-                              editForm.kat === "Keinginan"
-                                ? "bg-purple-50 border-[#8477e4] text-[#8477e4] shadow-sm shadow-purple-500/10"
-                                : "bg-white border-gray-200 text-gray-500 hover:bg-gray-50"
-                            }`}
+                            className={`flex-1 py-3 rounded-xl font-bold text-sm transition-all border ${editForm.kat === "Keinginan"
+                              ? "bg-purple-50 border-[#8477e4] text-[#8477e4] shadow-sm shadow-purple-500/10"
+                              : "bg-white border-gray-200 text-gray-500 hover:bg-gray-50"
+                              }`}
                           >
                             ✨ Keinginan
                           </button>
@@ -933,9 +930,9 @@ const Transaksi = () => {
                             value={
                               editForm.nominal
                                 ? String(editForm.nominal).replace(
-                                    /\B(?=(\d{3})+(?!\d))/g,
-                                    ".",
-                                  )
+                                  /\B(?=(\d{3})+(?!\d))/g,
+                                  ".",
+                                )
                                 : ""
                             }
                             onChange={(e) => {
