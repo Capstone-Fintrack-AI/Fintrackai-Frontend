@@ -19,10 +19,6 @@ const AI = () => {
   const navigate = useNavigate();
   const [isSidebarOpen, setIsSidebarOpen] = useState(true);
   const activeMenu = "AI"; // Set active menu ke AI
-<<<<<<< HEAD
-=======
-// <<<<<<< HEAD
->>>>>>> 39299f0a18fca75eaeaccca034650ad6c53f8781
   const [aiPrediction, setAiPrediction] = useState(null);
   const [goalsData, setGoalsData] = useState([]);
   const [budgetHealthScore, setBudgetHealthScore] = useState(0);
@@ -30,10 +26,6 @@ const AI = () => {
   const [totalPengeluaran, setTotalPengeluaran] = useState(0);
   const [totalTabungan, setTotalTabungan] = useState(0);
   const [trendData, setTrendData] = useState([]);
-<<<<<<< HEAD
-=======
-
->>>>>>> 39299f0a18fca75eaeaccca034650ad6c53f8781
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
   const handleLogout = () => {
     navigate("/login");
