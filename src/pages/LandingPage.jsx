@@ -125,12 +125,12 @@ const LandingPage = () => {
       {/* --- NAVBAR --- */}
       <nav className="fixed w-full top-4 md:top-6 z-50 flex justify-center px-4 sm:px-6">
         <div
-          className={`w-full max-w-6xl bg-white/90 backdrop-blur-md shadow-xl px-5 md:px-8 py-3 md:py-4 flex flex-col md:flex-row justify-between items-center border border-white/50 transition-all duration-300 ${
+          className={`w-full max-w-6xl bg-white/90 backdrop-blur-md shadow-xl px-5 md:px-8 py-3 md:py-4 flex flex-col md:grid md:grid-cols-3 items-center border border-white/50 transition-all duration-300 ${
             isMenuOpen ? "rounded-3xl" : "rounded-full"
           }`}
         >
-          {/* Header Mobile & Logo Desktop */}
-          <div className="flex w-full md:w-auto justify-between items-center">
+          {/* 1. KOLOM KIRI: Logo & Hamburger Button */}
+          <div className="flex w-full md:w-auto justify-between items-center md:justify-start">
             <div className="flex items-center gap-2 md:gap-3">
               <img
                 src="/gambar/logo.png"
@@ -172,11 +172,11 @@ const LandingPage = () => {
             </button>
           </div>
 
-          {/* Deretan Menu & Tombol Daftar (Merespons isMenuOpen di HP) */}
+          {/* 2. KOLOM TENGAH: Deretan Menu Navigasi */}
           <div
             className={`${
               isMenuOpen ? "flex" : "hidden"
-            } md:flex flex-col md:flex-row items-center w-full md:w-auto gap-4 md:gap-5 lg:gap-8 mt-4 md:mt-0 pb-2 md:pb-0 font-semibold text-gray-600 text-sm lg:text-base`}
+            } md:flex flex-col md:flex-row items-center justify-center w-full mt-4 md:mt-0 font-semibold text-gray-600 text-sm lg:text-base`}
           >
             <ul className="flex flex-col md:flex-row gap-4 lg:gap-8 w-full md:w-auto text-center">
               <li>
@@ -206,15 +206,17 @@ const LandingPage = () => {
                   Fitur
                 </a>
               </li>
-              <li>
-                {/* Cari link navigasimu dan tambahkan class ini */}
+
+              {/* PERBAIKAN DI SINI: Class hidden md:block dipindah ke tag li */}
+              <li className="hidden md:block">
                 <a
                   href="#dashboard"
-                  className="hidden md:block text-gray-600 hover:text-blue-600"
+                  className="text-gray-600 hover:text-blue-600"
                 >
                   Dashboard
                 </a>
               </li>
+
               <li>
                 <a
                   href="#tim"
@@ -234,19 +236,26 @@ const LandingPage = () => {
                 </a>
               </li>
             </ul>
+          </div>
+
+          {/* 3. KOLOM KANAN: Tombol Daftar */}
+          <div
+            className={`${
+              isMenuOpen ? "flex" : "hidden"
+            } md:flex flex-col md:flex-row items-center md:justify-end w-full mt-4 md:mt-0 pb-2 md:pb-0`}
+          >
             <button
               onClick={() => {
                 setIsMenuOpen(false);
                 navigate("/Register");
               }}
-              className="bg-[#8477e4] text-white text-sm font-bold px-6 py-2.5 md:px-8 md:py-2.5 rounded-full shadow-lg hover:scale-105 transition-all w-full md:w-auto mt-2 md:mt-0"
+              className="bg-[#8477e4] text-white text-sm font-bold px-6 py-2.5 md:px-8 md:py-2.5 rounded-full shadow-lg hover:scale-105 transition-all w-full md:w-auto"
             >
               Daftar
             </button>
           </div>
         </div>
       </nav>
-
       {/* --- HERO (ZOOMED) --- */}
       <section
         id="beranda"
@@ -283,7 +292,7 @@ const LandingPage = () => {
                     ▶
                   </span>
                 </div>
-                Live Demo <span>❯</span>
+                Lihat Demo <span>❯</span>
               </button>
             </div>
 
@@ -627,27 +636,29 @@ const LandingPage = () => {
         className="py-16 md:py-24 font-poppins selection:bg-[#8477e4] selection:text-white px-4 sm:px-6 md:px-12 lg:px-20"
       >
         <style>{`
-          #tim .swiper { padding: 30px 10px 50px 10px !important; overflow: visible !important; }
-          @media (min-width: 768px) {
-            #tim .swiper { padding: 50px 20px !important; }
-          }
-          .team-item { 
-            position: relative; border-radius: 25px; overflow: hidden; 
-            aspect-ratio: 3/4; cursor: grab; transition: all 0.5s ease;
-            box-shadow: 0 20px 40px rgba(0, 0, 0, 0.15); border: 1px solid rgba(0,0,0,0.05);
-          }
-          .team-item img { width: 100%; height: 100%; object-fit: cover; transition: transform 0.6s ease; }
-          .team-item:hover img { transform: scale(1.1); }
-          .team-text-overlay { 
-            position: absolute; inset: 0; 
-            background: linear-gradient(to top, rgba(0, 0, 0, 0.9) 0%, rgba(0, 0, 0, 0.3) 50%, transparent 100%); 
-            display: flex; flex-direction: column; justify-content: flex-end; padding: 20px; 
-          }
-          @media (min-width: 768px) {
-            .team-text-overlay { padding: 25px; }
-          }
-          .social-icon { width: 32px; height: 32px; background: rgba(255, 255, 255, 0.2); backdrop-filter: blur(4px); border-radius: 50%; display: flex; align-items: center; justify-content: center; color: white; font-size: 0.9rem; transition: all 0.3s ease; border: 1px solid rgba(255, 255, 255, 0.1); }
-        `}</style>
+    #tim .swiper { padding: 30px 10px 50px 10px !important; overflow: visible !important; }
+    @media (min-width: 768px) {
+      #tim .swiper { padding: 50px 20px !important; }
+    }
+    .team-item { 
+      position: relative; border-radius: 25px; overflow: hidden; 
+      aspect-ratio: 3/4; cursor: grab; transition: all 0.5s ease;
+      box-shadow: 0 20px 40px rgba(0, 0, 0, 0.15); border: 1px solid rgba(0,0,0,0.05);
+    }
+    .team-item img { width: 100%; height: 100%; object-fit: cover; transition: transform 0.6s ease; }
+    .team-item:hover img { transform: scale(1.1); }
+    .team-text-overlay { 
+      position: absolute; inset: 0; 
+      background: linear-gradient(to top, rgba(0, 0, 0, 0.9) 0%, rgba(0, 0, 0, 0.3) 50%, transparent 100%); 
+      display: flex; flex-direction: column; justify-content: flex-end; padding: 20px; 
+    }
+    @media (min-width: 768px) {
+      .team-text-overlay { padding: 25px; }
+    }
+    /* Mengubah cursor pointer pada social-icon agar terlihat bisa diklik */
+    .social-icon { width: 32px; height: 32px; background: rgba(255, 255, 255, 0.2); backdrop-filter: blur(4px); border-radius: 50%; display: flex; align-items: center; justify-content: center; color: white; font-size: 0.9rem; transition: all 0.3s ease; border: 1px solid rgba(255, 255, 255, 0.1); cursor: pointer; }
+    .social-icon:hover { background: #8477e4; transform: scale(1.1); color: white; }
+  `}</style>
 
         <div className="text-center mb-8 md:mb-12">
           <h2 className="text-3xl sm:text-5xl font-bold text-gray-900">
@@ -683,28 +694,48 @@ const LandingPage = () => {
             {[...Array(2)].map((_, loopIdx) => (
               <React.Fragment key={loopIdx}>
                 {[
-                  { n: "Anisa", r: "Back-end Developer", i: "Anisa.png" },
+                  {
+                    n: "Anisa",
+                    r: "Back-end Developer",
+                    i: "Anisa.png",
+                    ig: "https://www.instagram.com/nisaa107_/",
+                    li: "https://www.linkedin.com/in/anisa-nisa-534a50287/",
+                  },
                   {
                     n: "Shifa Anjani Desha",
                     r: "Front-end Developer",
                     i: "Shifa.jpeg",
+                    ig: "https://www.instagram.com/shifaanjanii/",
+                    li: "https://www.linkedin.com/in/shifa-anjani-desha-9163683a6/",
                   },
                   {
                     n: "Mohammad El Abror Sholeh",
                     r: "AI Engineer",
                     i: "Abror.jpeg",
+                    ig: "https://instagram.com/username_abror",
+                    li: "https://linkedin.com/in/username_abror",
                   },
                   {
                     n: "Hamasah Fazal Aqsha",
                     r: "AI Engineer",
                     i: "Aqso.jpeg",
+                    ig: "https://instagram.com/hamaaasah_",
+                    li: "https://www.linkedin.com/in/hamasah-fazal-aqsha-b61b86274/",
                   },
                   {
                     n: "Icha Aulia Putri",
                     r: "Data Scientist",
                     i: "Ichaa.png",
+                    ig: "https://instagram.com/ichaauliaptrii_",
+                    li: "https://www.linkedin.com/in/icha-aulia-putri-253ba5330",
                   },
-                  { n: "Nanda Hidayah", r: "Data Scientist", i: "Nanda.jpeg" },
+                  {
+                    n: "Nanda Hidayah",
+                    r: "Data Scientist",
+                    i: "Nanda.jpeg",
+                    ig: "https://instagram.com/nndhdyh",
+                    li: "https://www.linkedin.com/in/nanda-hidayah-87a7423ab/",
+                  },
                 ].map((member, index) => (
                   <SwiperSlide key={`${loopIdx}-${index}`}>
                     <div className="team-item">
@@ -716,13 +747,25 @@ const LandingPage = () => {
                         <p className="text-white/80 text-xs sm:text-sm mb-3">
                           {member.r}
                         </p>
-                        <div className="flex gap-2">
-                          <div className="social-icon">
+
+                        {/* PERBAIKAN DI SINI: Mengubah div menjadi tag <a> */}
+                        <div className="flex gap-2 relative z-20">
+                          <a
+                            href={member.ig}
+                            target="_blank"
+                            rel="noopener noreferrer"
+                            className="social-icon"
+                          >
                             <i className="fab fa-instagram"></i>
-                          </div>
-                          <div className="social-icon">
+                          </a>
+                          <a
+                            href={member.li}
+                            target="_blank"
+                            rel="noopener noreferrer"
+                            className="social-icon"
+                          >
                             <i className="fab fa-linkedin-in"></i>
-                          </div>
+                          </a>
                         </div>
                       </div>
                     </div>
@@ -831,29 +874,27 @@ const LandingPage = () => {
       </section>
 
       <footer className="py-12 md:py-16 bg-white/80 border-t border-gray-100 px-6 md:px-20 text-center">
-        <div className="max-w-7xl mx-auto grid grid-cols-1 md:grid-cols-3 gap-12 md:gap-16 justify-items-center">
-          <div className="flex flex-col items-center space-y-4 md:space-y-6 max-w-xs md:max-w-sm">
-            <div className="flex items-center gap-3 justify-center">
+        <div className="max-w-7xl mx-auto grid grid-cols-1 md:grid-cols-3 gap-12 justify-items-center">
+          {/* KOLOM 1: Logo & Deskripsi */}
+          <div className="flex flex-col items-center space-y-4 max-w-xs">
+            <div className="flex items-center gap-3">
               <img
                 src="/gambar/logo.png"
-                className="w-10 md:w-12"
+                className="w-10"
                 alt="FinTrack AI Logo"
               />
-              <span className="font-bold text-2xl md:text-3xl">
-                FinTrack AI
-              </span>
+              <span className="font-bold text-2xl">FinTrack AI</span>
             </div>
-            <p className="text-gray-500 leading-relaxed text-base md:text-lg">
+            <p className="text-gray-500 leading-relaxed text-sm">
               Solusi manajemen keuangan modern untuk generasi masa kini. Cerdas,
               efisien, dan transparan.
             </p>
           </div>
 
+          {/* KOLOM 2: Navigasi Utama */}
           <div className="flex flex-col items-center">
-            <h4 className="font-bold text-lg md:text-xl mb-6 md:mb-8">
-              Navigation
-            </h4>
-            <ul className="space-y-3 md:space-y-4 text-gray-500 text-base md:text-lg">
+            <h4 className="font-bold text-lg mb-6">Menu Utama</h4>
+            <ul className="space-y-3 text-gray-500 text-sm">
               <li>
                 <a
                   href="#beranda"
@@ -864,26 +905,33 @@ const LandingPage = () => {
               </li>
               <li>
                 <a
+                  href="#fitur"
+                  className="hover:text-[#8477e4] transition-colors"
+                >
+                  Features
+                </a>
+              </li>
+              <li>
+                <a
                   href="#tentang"
                   className="hover:text-[#8477e4] transition-colors"
                 >
                   About Us
                 </a>
               </li>
-              <li>
-                <a
-                  href="#fitur"
-                  className="hover:text-[#8477e4] transition-colors"
-                >
-                  Our Features
-                </a>
-              </li>
+            </ul>
+          </div>
+
+          {/* KOLOM 3: Navigasi Lainnya */}
+          <div className="flex flex-col items-center">
+            <h4 className="font-bold text-lg mb-6">Informasi</h4>
+            <ul className="space-y-3 text-gray-500 text-sm">
               <li>
                 <a
                   href="#tim"
                   className="hover:text-[#8477e4] transition-colors"
                 >
-                  Meet the Team
+                  Our Team
                 </a>
               </li>
               <li>
@@ -894,23 +942,18 @@ const LandingPage = () => {
                   FAQ
                 </a>
               </li>
+              <li>
+                <a href="#" className="hover:text-[#8477e4] transition-colors">
+                  Blog
+                </a>
+              </li>
             </ul>
-          </div>
-
-          <div className="flex flex-col items-center">
-            <h4 className="font-bold text-lg md:text-xl mb-6 md:mb-8">
-              Follow Us
-            </h4>
-            <div className="flex gap-6 text-2xl md:text-3xl text-gray-400 justify-center">
-              <i className="fab fa-instagram hover:text-[#e584ee] cursor-pointer transition-colors"></i>
-              <i className="fab fa-twitter hover:text-[#8477e4] cursor-pointer transition-colors"></i>
-              <i className="fab fa-linkedin hover:text-blue-600 cursor-pointer transition-colors"></i>
-            </div>
           </div>
         </div>
 
-        <div className="text-center mt-12 md:mt-20 pt-6 md:pt-8 border-t border-gray-100 text-gray-400 font-medium text-sm md:text-base">
-          &copy; 2026 FinTrack AI. Coding Camp Team.
+        {/* Copyright */}
+        <div className="mt-12 pt-8 border-t border-gray-100 text-gray-400 font-medium text-xs">
+          &copy; {new Date().getFullYear()} FinTrack AI. All rights reserved.
         </div>
       </footer>
     </div>

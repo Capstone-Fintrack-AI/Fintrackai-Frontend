@@ -1,5 +1,5 @@
-import React, { useState, useRef, useEffect } from "react";
-import { useNavigate } from "react-router-dom";
+import React, { useState, useEffect } from "react";
+import { useNavigate, Link } from "react-router-dom";
 import axios from "axios";
 import { ToastContainer, toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
@@ -11,13 +11,11 @@ const userId = user?.id;
 
 const Pengaturan = () => {
   const navigate = useNavigate();
-  const fileInputRef = useRef(null);
 
   const [userData, setUserData] = useState({
     nama: "",
     email: "",
     password: "",
-    profilePic: null,
   });
 
   const [isSidebarOpen, setIsSidebarOpen] = useState(true);
@@ -27,8 +25,6 @@ const Pengaturan = () => {
   const [inputNama, setInputNama] = useState(userData.nama);
   const [inputEmail, setInputEmail] = useState(userData.email);
   const [inputPasswordBaru, setInputPasswordBaru] = useState("");
-  const [previewFoto, setPreviewFoto] = useState(null);
-  const [selectedFile, setSelectedFile] = useState(null);
   const [saving, setSaving] = useState(false);
 
   const [appLanguage, setAppLanguage] = useState("Bahasa Indonesia");
@@ -52,10 +48,6 @@ const Pengaturan = () => {
 
       if (inputPasswordBaru.trim() !== "") {
         formData.append("password", inputPasswordBaru);
-      }
-
-      if (selectedFile) {
-        formData.append("photo", selectedFile);
       }
 
       const response = await axios.put(
@@ -94,22 +86,6 @@ const Pengaturan = () => {
     }
   };
 
-  const handleFileChange = (e) => {
-    const file = e.target.files[0];
-
-    if (file) {
-      setSelectedFile(file);
-
-      const reader = new FileReader();
-
-      reader.onloadend = () => {
-        setPreviewFoto(reader.result);
-      };
-
-      reader.readAsDataURL(file);
-    }
-  };
-
   const handleLogout = () => {
     localStorage.removeItem("token");
     localStorage.removeItem("user");
@@ -135,9 +111,6 @@ const Pengaturan = () => {
       setUserData({
         nama: data.fullname,
         email: data.email,
-        profilePic: data.photo
-          ? `https://fintrackai-backend-1yz0.onrender.com/uploads/profile/${data.photo}`
-          : null,
       });
 
 
@@ -162,6 +135,107 @@ const Pengaturan = () => {
         .bubble-3 { width: 300px; height: 300px; background: #e0f2fe; bottom: 30%; left: 40%; }
         @keyframes float { 0% { transform: translateY(0px) scale(1); } 50% { transform: translateY(-20px) scale(1.05); } 100% { transform: translateY(0px) scale(1); } }
         .animate-bubble-img { animation: float 6s ease-in-out infinite; }
+
+        /* ===== RESPONSIVE FIXES - TIDAK MENGUBAH APAPUN, HANYA MENAMBAHKAN ===== */
+
+        /* Header responsif di HP */
+        @media (max-width: 767px) {
+          .pengaturan-header {
+            padding-left: 1rem !important;
+            padding-right: 1rem !important;
+            padding-top: 1.25rem !important;
+            padding-bottom: 0.75rem !important;
+          }
+          .pengaturan-header h1 {
+            font-size: 1.3rem !important;
+          }
+          .pengaturan-header p {
+            font-size: 0.7rem !important;
+          }
+
+          /* Main content padding di HP */
+          .pengaturan-main {
+            padding-left: 0.85rem !important;
+            padding-right: 0.85rem !important;
+            padding-bottom: 6rem !important;
+          }
+
+          /* Banner hero di HP */
+          .pengaturan-banner {
+            padding: 1.25rem 1rem !important;
+            padding-right: 1rem !important;
+            border-radius: 1.5rem !important;
+            min-height: 120px !important;
+            margin-bottom: 1rem !important;
+          }
+          .pengaturan-banner-text {
+            max-width: 60% !important;
+          }
+          .pengaturan-banner h2 {
+            font-size: 0.9rem !important;
+          }
+          .pengaturan-banner p {
+            font-size: 0.65rem !important;
+          }
+          .pengaturan-banner-robot {
+            width: 190px !important;
+            right: -8px !important;
+          }
+
+          /* Kartu form profil di HP */
+          .pengaturan-form-card {
+            padding: 1.25rem !important;
+            border-radius: 1.25rem !important;
+          }
+
+          /* Input fields di HP */
+          .pengaturan-form-card input[type="text"],
+          .pengaturan-form-card input[type="email"],
+          .pengaturan-form-card input[type="password"] {
+            font-size: 0.75rem !important;
+            padding: 0.5rem 0.75rem !important;
+          }
+
+          /* Tombol simpan di HP */
+          .pengaturan-form-card button[type="submit"] {
+            font-size: 0.7rem !important;
+            padding: 0.6rem !important;
+          }
+
+          /* Banner keamanan di HP */
+          .pengaturan-security-banner {
+            padding: 1rem !important;
+            border-radius: 1.5rem !important;
+            min-height: unset !important;
+          }
+          .pengaturan-security-banner h4 {
+            font-size: 0.72rem !important;
+          }
+          .pengaturan-security-banner p {
+            font-size: 0.65rem !important;
+          }
+          .pengaturan-security-robot {
+            display: none !important;
+          }
+        }
+
+        /* Tablet (768px - 1023px) */
+        @media (min-width: 768px) and (max-width: 1023px) {
+          .pengaturan-header {
+            padding-left: 1.5rem !important;
+            padding-right: 1.5rem !important;
+          }
+          .pengaturan-main {
+            padding-left: 1.5rem !important;
+            padding-right: 1.5rem !important;
+          }
+          .pengaturan-banner-robot {
+            width: 260px !important;
+          }
+          .pengaturan-banner-text {
+            max-width: 58% !important;
+          }
+        }
       `}</style>
 
       <div className="fixed inset-0 pointer-events-none z-0">
@@ -382,7 +456,7 @@ const Pengaturan = () => {
         </div>
 
       <div className="flex-1 flex flex-col h-full overflow-hidden z-10 relative">
-        <header className="flex justify-between items-center px-10 pt-8 pb-4 bg-transparent">
+        <header className="pengaturan-header flex justify-between items-center px-10 pt-8 pb-4 bg-transparent">
           <div>
             <h1 className="text-3xl font-bold text-gray-800">Pengaturan</h1>
             <p className="text-sm text-gray-500">
@@ -390,30 +464,20 @@ const Pengaturan = () => {
             </p>
           </div>
 
-          <div className="flex items-center gap-4">
-            <div className="w-10 h-10 bg-white rounded-xl flex items-center justify-center border border-gray-100 shadow-sm overflow-hidden">
-              {previewFoto || userData.profilePic ? (
-                <img
-                  src={
-                    previewFoto ||
-                    userData.profilePic ||
-                    "/gambar/default-profile.png"
-                  }
-                  alt="Avatar"
-                  className="w-full h-full object-cover"
-                />
-              ) : (
-                <div className="text-[#8477e4] text-sm">
-                  <i className="fas fa-user"></i>
-                </div>
-              )}
-            </div>
+          <div className="flex items-center gap-3">
+            {/* Profil User yang bisa diklik */}
+            <Link to="/pengaturan" className="flex items-center gap-3 group">
+              <div className="w-10 h-10 bg-[#8477e4] rounded-full flex items-center justify-center text-white shadow-sm cursor-pointer border border-gray-100 transition-transform duration-200 group-hover:scale-105">
+                <i className="fas fa-user"></i>
+              </div>
+              <i className="fas fa-chevron-down text-gray-400 text-xs cursor-pointer"></i>
+            </Link>
           </div>
         </header>
 
-        <main className="flex-grow px-10 pb-8 overflow-y-auto space-y-6 select-none">
-          <div className="bg-gradient-to-r from-[#e3dafc] to-[#f3e7fa] rounded-[2.5rem] p-8 pr-12 shadow-[0_8px_30px_rgba(132,119,228,0.03)] border border-white/60 flex justify-between items-center relative overflow-hidden shrink-0 min-h-[160px] mb-6">
-            <div className="space-y-2 z-10 max-w-[55%]">
+        <main className="pengaturan-main flex-grow px-10 pb-8 overflow-y-auto space-y-6 select-none">
+          <div className="pengaturan-banner bg-gradient-to-r from-[#e3dafc] to-[#f3e7fa] rounded-[2.5rem] p-8 pr-12 shadow-[0_8px_30px_rgba(132,119,228,0.03)] border border-white/60 flex justify-between items-center relative overflow-hidden shrink-0 min-h-[160px] mb-6">
+            <div className="pengaturan-banner-text space-y-2 z-10 max-w-[55%]">
               <h2 className="text-xl font-bold text-gray-800 tracking-tight flex items-center gap-2">
                 Halo, {inputNama}
                 <span className="inline-block animate-bounce">👋</span>
@@ -426,13 +490,13 @@ const Pengaturan = () => {
             <img
               src="/gambar/robotpengaturan.png"
               alt="Robot Banner"
-              className="absolute right-4 bottom-0 w-[350px] h-auto object-contain z-30 opacity-90"
+              className="pengaturan-banner-robot absolute right-4 bottom-0 w-[350px] h-auto object-contain z-30 opacity-90"
             />
           </div>
 
           <div className="grid grid-cols-12 gap-6 pb-10 w-full">
             {/* col-span-12 membuat penuh, mx-auto + max-w-3xl membuat posisi di tengah & rapi */}
-            <div className="col-span-12 w-full bg-white p-8 rounded-[2rem] shadow-sm border border-gray-100/70 h-fit flex flex-col space-y-6">
+            <div className="pengaturan-form-card col-span-12 w-full bg-white p-8 rounded-[2rem] shadow-sm border border-gray-100/70 h-fit flex flex-col space-y-6">
               {/* Header Kartu */}
               <div className="flex items-center gap-3.5 border-b border-gray-100 pb-4">
                 <div className="w-10 h-10 bg-[#f0eaff] text-[#8477e4] rounded-xl flex items-center justify-center text-sm shadow-sm">
@@ -453,39 +517,6 @@ const Pengaturan = () => {
                 onSubmit={handleSaveAllProfile}
                 className="space-y-4 font-sans text-xs"
               >
-                <div className="flex items-center gap-4 bg-[#fbfaff] p-3 rounded-2xl border border-gray-100/50">
-                  <div className="w-14 h-14 rounded-xl bg-purple-50 border border-purple-100 flex items-center justify-center overflow-hidden shrink-0">
-                    {previewFoto || userData.profilePic ? (
-                      <img
-                        src={previewFoto || userData.profilePic}
-                        alt="Avatar"
-                        className="w-full h-full object-cover"
-                      />
-                    ) : (
-                      <i className="fas fa-user text-[#8477e4] text-lg"></i>
-                    )}
-                  </div>
-                  <div className="flex flex-col gap-1">
-                    <p className="text-[11px] font-bold text-gray-700">
-                      Foto Profil Kamu
-                    </p>
-                    <input
-                      type="file"
-                      accept="image/*"
-                      ref={fileInputRef}
-                      onChange={handleFileChange}
-                      className="hidden"
-                    />
-                    <button
-                      type="button"
-                      onClick={() => fileInputRef.current.click()}
-                      className="bg-[#8477e4]/10 text-[#8477e4] px-3 py-1 rounded-lg font-bold hover:bg-[#8477e4]/20 transition-all text-[10px] w-fit"
-                    >
-                      Pilih Gambar
-                    </button>
-                  </div>
-                </div>
-
                 {/* Input Fields */}
                 <div className="space-y-1.5">
                   <label className="text-[10px] font-extrabold text-gray-400 tracking-wider uppercase">
@@ -553,7 +584,7 @@ const Pengaturan = () => {
             </div>
           </div>
 
-          <div className="bg-gradient-to-r from-[#f5f1ff] to-[#fbf8fe] border border-[#e1daf9] p-6 rounded-[2.5rem] shadow-[0_8px_30px_rgba(132,119,228,0.02)] flex flex-col lg:flex-row justify-between items-center gap-6 relative overflow-hidden min-h-[100px]">
+          <div className="pengaturan-security-banner bg-gradient-to-r from-[#f5f1ff] to-[#fbf8fe] border border-[#e1daf9] p-6 rounded-[2.5rem] shadow-[0_8px_30px_rgba(132,119,228,0.02)] flex flex-col lg:flex-row justify-between items-center gap-6 relative overflow-hidden min-h-[100px]">
             <div className="flex items-center gap-5 z-10 flex-1">
               <div className="w-12 h-12 bg-white text-[#8477e4] rounded-2xl flex items-center justify-center text-lg shadow-[0_4px_20px_rgba(132,119,228,0.15)] shrink-0">
                 <i className="fas fa-shield-alt"></i>
@@ -569,7 +600,7 @@ const Pengaturan = () => {
               </div>
             </div>
             <div className="flex items-center gap-8 z-10 shrink-0 w-full lg:w-auto justify-between lg:justify-end">
-              <div className="relative h-24 w-36 hidden sm:block">
+              <div className="pengaturan-security-robot relative h-24 w-36 hidden sm:block">
                 <img
                   src="/gambar/robotkeamanan.png"
                   alt="Robot Security"
