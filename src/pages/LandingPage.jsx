@@ -283,7 +283,7 @@ const LandingPage = () => {
                     ▶
                   </span>
                 </div>
-                Lihat Fitur <span>❯</span>
+                Live Demo <span>❯</span>
               </button>
             </div>
 

@@ -19,6 +19,7 @@ const AI = () => {
   const navigate = useNavigate();
   const [isSidebarOpen, setIsSidebarOpen] = useState(true);
   const activeMenu = "AI"; // Set active menu ke AI
+<<<<<<< HEAD
   const [aiPrediction, setAiPrediction] = useState(null);
   const [goalsData, setGoalsData] = useState([]);
   const [budgetHealthScore, setBudgetHealthScore] = useState(0);
@@ -27,6 +28,9 @@ const AI = () => {
   const [totalTabungan, setTotalTabungan] = useState(0);
   const [trendData, setTrendData] = useState([]);
 
+=======
+  const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
+>>>>>>> d281ead93b2141d5f6c9790e0b02575c47f4b157
   const handleLogout = () => {
     // Tambahkan logika hapus token/session di sini jika ada
     navigate("/login");
@@ -384,93 +388,195 @@ const AI = () => {
       </div>
 
       {/* =========================================================
-          2. SIDEBAR KIRI DENGAN TOMBOL ROBOT NGINTIP (PERSIS BERANDA)
-      ========================================================= */}
-      <div
-        className={`${isSidebarOpen ? "w-64" : "w-20"} bg-white border-r border-[#f0f0f0] px-6 py-8 flex flex-col z-10 shadow-[4px_0_24px_rgba(0,0,0,0.02)] relative transition-all duration-300`}
-      >
-        <div className="flex flex-col items-center mb-10 relative">
-          <img src="/gambar/logo.png" className="w-16 mb-2" alt="Logo" />
+      2. SIDEBAR KIRI (KHUSUS TAMPILAN DESKTOP - OTOMATIS HILANG DI HP)
+            ========================================================= */}
+        <div
+          className={`${isSidebarOpen ? "w-64" : "w-20"} hidden md:flex absolute md:relative z-[60] md:z-10 h-full bg-white border-r border-[#f0f0f0] px-4 md:px-6 py-6 md:py-8 flex-col shadow-[4px_0_24px_rgba(0,0,0,0.02)] transition-all duration-300`}
+        >
+          {/* Bagian Atas: Logo & Tombol Toggle Desktop */}
+          <div className="flex flex-col items-center mb-10 relative">
+            <img src="/gambar/logo.png" className="w-16 mb-2" alt="Logo" />
+            <button
+              onClick={() => setIsSidebarOpen(!isSidebarOpen)}
+              className="absolute -right-10 top-2 z-[60] w-16 h-16 transition-transform duration-300 hover:scale-105 focus:outline-none"
+            >
+              <img
+                src="/gambar/robotngintip.png"
+                alt="Toggle Sidebar"
+                className="w-full h-full object-contain"
+              />
+            </button>
+          </div>
+
+          {/* Menu Navigasi Utama Desktop */}
+          <nav className="relative flex-grow font-medium flex flex-col gap-4">
+            <div
+              className="absolute left-0 w-full h-[52px] bg-[#f0eaff] rounded-2xl shadow-sm transition-transform duration-500 ease-[cubic-bezier(0.4,0,0.2,1)]"
+              style={{
+                transform: `translateY(${["Beranda", "Transaksi", "Budget", "Goals", "AI"].indexOf(activeMenu) * 68}px)`,
+                display: [
+                  "Beranda",
+                  "Transaksi",
+                  "Budget",
+                  "Goals",
+                  "AI",
+                ].includes(activeMenu)
+                  ? "block"
+                  : "none",
+              }}
+            ></div>
+
+            {[
+              { n: "Beranda", img: "/gambar/beranda.png", path: "/beranda" },
+              {
+                n: "Transaksi",
+                img: "/gambar/transaksi.png",
+                path: "/transaksi",
+              },
+              { n: "Budget", img: "/gambar/budget.png", path: "/budget" },
+              { n: "Goals", img: "/gambar/goals.png", path: "/goals" },
+              { n: "AI", img: "/gambar/ai.png", path: "/ai" },
+            ].map((item) => (
+              <div
+                key={item.n}
+                onClick={() => {
+                  navigate(item.path);
+                }}
+                className={`relative z-10 flex items-center ${isSidebarOpen ? "gap-4 px-3.5" : "justify-center px-0"} cursor-pointer h-[52px] rounded-2xl transition-all duration-300 ${
+                  activeMenu === item.n
+                    ? "text-[#8477e4] font-bold"
+                    : "text-gray-400 hover:text-gray-900"
+                }`}
+              >
+                <img
+                  src={item.img}
+                  className={`w-6 h-6 object-contain transition-all ${activeMenu !== item.n ? "grayscale opacity-70" : ""}`}
+                  alt={item.n}
+                />
+                {isSidebarOpen && <span className="text-sm">{item.n}</span>}
+              </div>
+            ))}
+          </nav>
+
+          {/* Menu Bawah Desktop: Pengaturan & Logout */}
+          <div className="border-t border-gray-100 pt-6 space-y-4 font-medium relative z-10 bg-white">
+            <div
+              onClick={() => navigate("/pengaturan")}
+              className={`flex items-center ${isSidebarOpen ? "gap-4 p-3.5" : "justify-center p-0 h-[52px]"} cursor-pointer rounded-2xl ${activeMenu === "Pengaturan" ? "bg-[#f0eaff] text-[#8477e4] font-bold" : "text-gray-400 hover:text-gray-900"} transition-all`}
+            >
+              <img
+                src="/gambar/pengaturan.png"
+                className={`w-6 h-6 object-contain ${activeMenu !== "Pengaturan" ? "grayscale opacity-70" : ""}`}
+                alt="Setting"
+              />
+              {isSidebarOpen && <span className="text-sm">Pengaturan</span>}
+            </div>
+            <div
+              onClick={handleLogout}
+              className={`flex items-center ${isSidebarOpen ? "gap-4 p-3.5" : "justify-center p-0 h-[52px]"} cursor-pointer rounded-2xl text-gray-400 hover:bg-red-50 hover:text-red-500 transition-all`}
+            >
+              <img
+                src="/gambar/logout.png"
+                className="w-6 h-6 object-contain grayscale opacity-70"
+                alt="Logout"
+              />
+              {isSidebarOpen && <span className="text-sm">Logout</span>}
+            </div>
+          </div>
+        </div>
+
+        {/* =========================================================
+      3. MOBILE NAVBAR (BERDIRI SENDIRI DI LUAR - KHUSUS LAYAR HP)
+  ========================================================= */}
+        <div className="fixed bottom-6 right-6 z-50 md:hidden flex flex-col items-center gap-3">
+          {/* Pop-up Menu Logo saat Robot Mobile Ditekan */}
+          {isMobileMenuOpen && (
+            <div className="bg-white/90 backdrop-blur-md border border-purple-100 p-3 rounded-2xl shadow-xl flex flex-col gap-4 items-center animate-bounce-short">
+              {/* List Menu Utama Mobile */}
+              {[
+                { n: "Beranda", img: "/gambar/beranda.png", path: "/beranda" },
+                {
+                  n: "Transaksi",
+                  img: "/gambar/transaksi.png",
+                  path: "/transaksi",
+                },
+                { n: "Budget", img: "/gambar/budget.png", path: "/budget" },
+                { n: "Goals", img: "/gambar/goals.png", path: "/goals" },
+                { n: "AI", img: "/gambar/ai.png", path: "/ai" },
+              ].map((item) => (
+                <div
+                  key={item.n}
+                  onClick={() => {
+                    navigate(item.path);
+                    setIsMobileMenuOpen(false); // Otomatis tutup pop-up setelah diklik
+                  }}
+                  className={`p-2 rounded-xl transition-all duration-200 cursor-pointer ${
+                    activeMenu === item.n
+                      ? "bg-[#f0eaff] scale-110"
+                      : "opacity-60"
+                  }`}
+                >
+                  <img
+                    src={item.img}
+                    className={`w-6 h-6 object-contain ${activeMenu !== item.n ? "grayscale" : ""}`}
+                    alt={item.n}
+                  />
+                </div>
+              ))}
+
+              {/* Garis Pembatas Tipis */}
+              <div className="w-full border-t border-gray-200 my-1"></div>
+
+              {/* Pengaturan Versi Mobile */}
+              <div
+                onClick={() => {
+                  navigate("/pengaturan");
+                  setIsMobileMenuOpen(false);
+                }}
+                className={`p-2 rounded-xl transition-all duration-200 cursor-pointer ${
+                  activeMenu === "Pengaturan"
+                    ? "bg-[#f0eaff] scale-110"
+                    : "opacity-60"
+                }`}
+              >
+                <img
+                  src="/gambar/pengaturan.png"
+                  className={`w-6 h-6 object-contain ${activeMenu !== "Pengaturan" ? "grayscale" : ""}`}
+                  alt="Pengaturan"
+                />
+              </div>
+
+              {/* Logout Versi Mobile */}
+              <div
+                onClick={() => {
+                  handleLogout();
+                  setIsMobileMenuOpen(false);
+                }}
+                className="p-2 rounded-xl transition-all duration-200 cursor-pointer opacity-60 hover:bg-red-50 text-red-500"
+              >
+                <img
+                  src="/gambar/logout.png"
+                  className="w-6 h-6 object-contain grayscale opacity-70"
+                  alt="Logout"
+                />
+              </div>
+            </div>
+          )}
+
+          {/* Tombol Utama Robot Ngintip di HP */}
           <button
-            onClick={() => setIsSidebarOpen(!isSidebarOpen)}
-            className="absolute -right-10 top-2 z-[60] w-16 h-16 transition-transform duration-300 hover:scale-105 focus:outline-none"
+            onClick={() => setIsMobileMenuOpen(!isMobileMenuOpen)}
+            className="w-16 h-16 bg-transparent flex items-center justify-center hover:scale-110 active:scale-95 transition-all duration-300 focus:outline-none"
           >
             <img
               src="/gambar/robotngintip.png"
-              alt="Toggle Sidebar"
-              className="w-full h-full object-contain"
+              // Ditambahkan '-rotate-90' supaya robotnya berputar menghadap ke atas
+              // Ukuran dinaikkan ke 'w-14 h-14' agar tetap proporsional dan tegas
+              className="w-14 h-14 object-contain transform -rotate-90 hover:translate-y-[-4px] transition-transform"
+              alt="FinTrack AI Assistant"
             />
           </button>
         </div>
-
-        <nav className="relative flex-grow font-medium flex flex-col gap-4">
-          <div
-            className="absolute left-0 w-full h-[52px] bg-[#f0eaff] rounded-2xl shadow-sm transition-transform duration-500 ease-[cubic-bezier(0.4,0,0.2,1)]"
-            style={{
-              transform: `translateY(${["Beranda", "Transaksi", "Budget", "Goals", "AI", "Laporan"].indexOf(activeMenu) * 68}px)`,
-              display: [
-                "Beranda",
-                "Transaksi",
-                "Budget",
-                "Goals",
-                "AI",
-              ].includes(activeMenu)
-                ? "block"
-                : "none",
-            }}
-          ></div>
-
-          {[
-            { n: "Beranda", img: "/gambar/beranda.png", path: "/beranda" },
-            {
-              n: "Transaksi",
-              img: "/gambar/transaksi.png",
-              path: "/transaksi",
-            },
-            { n: "Budget", img: "/gambar/budget.png", path: "/budget" },
-            { n: "Goals", img: "/gambar/goals.png", path: "/goals" },
-            { n: "AI", img: "/gambar/ai.png", path: "/ai" },
-          ].map((item) => (
-            <div
-              key={item.n}
-              onClick={() => navigate(item.path)}
-              className={`relative z-10 flex items-center ${isSidebarOpen ? "gap-4 px-3.5" : "justify-center px-0"} cursor-pointer h-[52px] rounded-2xl transition-all duration-300 ${activeMenu === item.n ? "text-[#8477e4] font-bold" : "text-gray-400 hover:text-gray-900"}`}
-            >
-              <img
-                src={item.img}
-                className={`w-6 h-6 object-contain transition-all ${activeMenu !== item.n ? "grayscale opacity-70" : ""}`}
-                alt={item.n}
-              />
-              {isSidebarOpen && <span className="text-sm">{item.n}</span>}
-            </div>
-          ))}
-        </nav>
-
-        <div className="border-t border-gray-100 pt-6 space-y-4 font-medium relative z-10 bg-white">
-          <div
-            onClick={() => navigate("/pengaturan")}
-            className={`flex items-center ${isSidebarOpen ? "gap-4 p-3.5" : "justify-center p-0 h-[52px]"} cursor-pointer rounded-2xl ${activeMenu === "Pengaturan" ? "bg-[#f0eaff] text-[#8477e4] font-bold" : "text-gray-400 hover:text-gray-900"} transition-all`}
-          >
-            <img
-              src="/gambar/pengaturan.png"
-              className={`w-6 h-6 object-contain ${activeMenu !== "Pengaturan" ? "grayscale opacity-70" : ""}`}
-              alt="Setting"
-            />
-            {isSidebarOpen && <span className="text-sm">Pengaturan</span>}
-          </div>
-          <div
-            onClick={handleLogout}
-            className={`flex items-center ${isSidebarOpen ? "gap-4 p-3.5" : "justify-center p-0 h-[52px]"} cursor-pointer rounded-2xl text-gray-400 hover:bg-red-50 hover:text-red-500 transition-all`}
-          >
-            <img
-              src="/gambar/logout.png"
-              className="w-6 h-6 object-contain grayscale opacity-70"
-              alt="Logout"
-            />
-            {isSidebarOpen && <span className="text-sm">Logout</span>}
-          </div>
-        </div>
-      </div>
 
       {/* =========================================================
           3. KONTEN UTAMA DASHBOARD AI (DI SEBELAH KANAN SIDEBAR)
