@@ -45,33 +45,6 @@ const AI = () => {
     { name: "Tabungan", value: 18, color: "#10b981", amount: "Rp 550.000" },
   ];
 
-  // const goalsData = [
-  //   {
-  //     name: "Laptop ASUS",
-  //     current: "Rp 700.000",
-  //     target: "Rp 8.000.000",
-  //     progress: 42,
-  //     img: "💻",
-  //     color: "#8b5cf6",
-  //   },
-  //   {
-  //     name: "HP Baru",
-  //     current: "Rp 300.000",
-  //     target: "Rp 4.000.000",
-  //     progress: 30,
-  //     img: "📱",
-  //     color: "#f59e0b",
-  //   },
-  //   {
-  //     name: "Buku Kuliah",
-  //     current: "Rp 200.000",
-  //     target: "Rp 1.000.000",
-  //     progress: 76,
-  //     img: "📚",
-  //     color: "#10b981",
-  //   },
-  // ];
-
   const [activeTab, setActiveTab] = useState("Semua");
   const tabs = ["Semua", "Dashboard", "Budget", "Goals",];
   const formatRupiah = (angka) => {
@@ -354,6 +327,63 @@ const AI = () => {
         .bubble-3 { width: 300px; height: 300px; background: #e0f2fe; bottom: 30%; left: 40%; }
         @keyframes float { 0% { transform: translateY(0px) scale(1); } 50% { transform: translateY(-20px) scale(1.05); } 100% { transform: translateY(0px) scale(1); } }
         .animate-bubble-img { animation: float 6s ease-in-out infinite; }
+
+        /* ===== RESPONSIVE FIX - HANYA TAMBAHAN CSS, TIDAK MENGUBAH LOGIKA ===== */
+        @media (max-width: 767px) {
+          /* Banner: stack vertikal, robot tidak nabrak teks */
+          .banner-robot-img {
+            position: static !important;
+            height: 90px !important;
+            align-self: flex-end;
+            margin-top: -8px;
+          }
+          .banner-left-wrapper {
+            width: 100% !important;
+            flex-direction: row !important;
+            align-items: flex-end !important;
+            justify-content: space-between !important;
+            min-height: unset !important;
+            padding-bottom: 0 !important;
+          }
+          .banner-left-text {
+            width: auto !important;
+          }
+          .banner-cards-wrapper {
+            width: 100% !important;
+          }
+
+          /* TopCard: font & padding lebih kecil di HP */
+          .topcard-value {
+            font-size: 13px !important;
+          }
+          .topcard-title {
+            font-size: 9px !important;
+          }
+
+          /* Chart section: stack vertikal */
+          .chart-row-card {
+            flex-direction: column !important;
+          }
+          .chart-left-section {
+            width: 100% !important;
+          }
+          .chart-right-section {
+            width: 100% !important;
+          }
+
+          /* Estimasi saldo: stack vertikal */
+          .estimasi-left {
+            width: 100% !important;
+          }
+          .estimasi-right {
+            width: 100% !important;
+          }
+
+          /* Goals AI section: stack vertikal */
+          .goals-ai-grid {
+            grid-template-columns: 1fr !important;
+          }
+        }
       `}</style>
 
       <div className="fixed inset-0 pointer-events-none z-0">
@@ -562,8 +592,6 @@ const AI = () => {
         >
           <img
             src="/gambar/robotngintip.png"
-            // Ditambahkan '-rotate-90' supaya robotnya berputar menghadap ke atas
-            // Ukuran dinaikkan ke 'w-14 h-14' agar tetap proporsional dan tegas
             className="w-14 h-14 object-contain transform -rotate-90 hover:translate-y-[-4px] transition-transform"
             alt="FinTrack AI Assistant"
           />
@@ -574,13 +602,13 @@ const AI = () => {
           3. KONTEN UTAMA DASHBOARD AI (DI SEBELAH KANAN SIDEBAR)
       */}
       <div className="flex-1 overflow-y-auto relative z-10 scrollbar-hide">
-        <div className="flex-1 overflow-y-auto p-6 md:p-8 space-y-6 z-10 relative">
+        <div className="flex-1 overflow-y-auto p-4 md:p-8 space-y-6 z-10 relative pb-24 md:pb-8">
           {/* WRAPPER HEADER UTAMA */}
           <div className="flex justify-between items-center">
             {/* KIRI: HEADER TITLE */}
             <div>
-              <h1 className="text-3xl font-bold text-gray-800">AI Assistant</h1>
-              <p className="text-sm text-gray-500">
+              <h1 className="text-2xl md:text-3xl font-bold text-gray-800">AI Assistant</h1>
+              <p className="text-xs md:text-sm text-gray-500">
                 Pusat analisis pintar untuk membantumu membuat keputusan
                 terbaik.
               </p>
@@ -601,8 +629,8 @@ const AI = () => {
           {/* ROW 1: BANNER & 4 CARDS */}
           <div className="bg-[#f2ebff] rounded-[24px] p-4 flex flex-col xl:flex-row items-stretch gap-4 w-full shadow-[0_2px_10px_rgba(0,0,0,0.02)] relative overflow-visible border-4 border-white mb-8 z-20">
             {/* KIRI - Teks & Robot AI */}
-            <div className="xl:w-[35%] relative flex flex-col justify-center pl-4 py-2 min-h-[140px]">
-              <div className="relative z-10 w-[60%]">
+            <div className="banner-left-wrapper xl:w-[35%] relative flex flex-col justify-center pl-4 py-2 min-h-[140px]">
+              <div className="banner-left-text relative z-10 w-[60%]">
                 <h2 className="text-[#1e1b4b] text-[18px] font-extrabold mb-1.5 tracking-tight">
                   AI siap membantumu
                 </h2>
@@ -613,12 +641,12 @@ const AI = () => {
               <img
                 src="/gambar/robotpintar.png"
                 alt="Robot AI"
-                className="absolute right-0 bottom-[-28px] h-[125%] object-contain drop-shadow-lg z-0"
+                className="banner-robot-img absolute right-0 bottom-[-28px] h-[125%] object-contain drop-shadow-lg z-0"
               />
             </div>
 
             {/* KANAN - 4 Kartu Data */}
-            <div className="xl:w-[65%] grid grid-cols-2 md:grid-cols-3 gap-3 relative z-10">
+            <div className="banner-cards-wrapper xl:w-[65%] grid grid-cols-3 gap-2 relative z-10">
               <TopCard
                 title="Prediksi Pengeluaran Besok"
                 value={`Rp ${formatRupiah(
@@ -641,15 +669,6 @@ const AI = () => {
                 iconColor="text-blue-500"
                 icon="💳"
               />
-              {/* <TopCard
-                title="Goals Aktif"
-                value="3 Goals"
-                badge="Sedang berjalan"
-                badgeColor="text-[#8477e4] bg-[#f0eaff]"
-                iconBg="bg-red-50"
-                iconColor="text-red-500"
-                icon="🎯"
-              /> */}
               <TopCard
                 title="Budget Health Score"
                 value={`${budgetHealthScore} / 100`}
@@ -666,36 +685,36 @@ const AI = () => {
           {/* ROW 2: CHART & ESTIMASI */}
           <div className="grid grid-cols-1 xl:grid-cols-2 gap-4 mb-6 relative z-20">
             {/* Prediksi Area Chart */}
-            <div className="bg-white rounded-[24px] p-6 shadow-[0_2px_10px_rgba(0,0,0,0.02)] border border-gray-100 flex flex-col md:flex-row gap-6">
+            <div className="bg-white rounded-[24px] p-4 md:p-6 shadow-[0_2px_10px_rgba(0,0,0,0.02)] border border-gray-100 flex flex-col gap-4 chart-row-card md:flex-row md:gap-6">
               {/* Kiri: Info & Insight */}
-              <div className="w-full md:w-[40%] flex flex-col justify-between">
+              <div className="chart-left-section w-full md:w-[40%] flex flex-col justify-between">
                 <div>
                   <h3 className="text-[14px] font-bold text-[#1e1b4b]">
                     Prediksi Pengeluaran Besok
                   </h3>
-                  <h2 className="text-[28px] font-extrabold text-[#8b5cf6] mt-1 tracking-tight">
+                  <h2 className="text-[22px] md:text-[28px] font-extrabold text-[#8b5cf6] mt-1 tracking-tight">
                     Rp {formatRupiah(aiPrediction?.prediksi_pengeluaran_besok)}
                   </h2>
                 </div>
-                <div className="bg-[#faf5ff] p-4 rounded-[16px] mt-6">
+                <div className="bg-[#faf5ff] p-3 md:p-4 rounded-[16px] mt-4 md:mt-6">
                   <div className="flex items-center gap-2 mb-2">
                     <span className="text-lg">💡</span>
                     <span className="font-bold text-[13px] text-[#1e1b4b]">
                       Insight
                     </span>
                   </div>
-                  <p className="text-[12px] text-[#1e1b4b]/80 leading-relaxed font-medium">
+                  <p className="text-[11px] md:text-[12px] text-[#1e1b4b]/80 leading-relaxed font-medium">
                     {aiPrediction?.insight || "Belum ada insight"}
                   </p>
                 </div>
               </div>
 
               {/* Kanan: Chart */}
-              <div className="w-full md:w-[60%] flex flex-col relative pt-1">
+              <div className="chart-right-section w-full md:w-[60%] flex flex-col relative pt-1">
                 <p className="text-[10px] text-gray-400 font-medium absolute top-0 left-[45px]">
                   Tren Pengeluaran (7 Hari Terakhir)
                 </p>
-                <div className="h-[180px] w-full mt-4">
+                <div className="h-[160px] md:h-[180px] w-full mt-4">
                   <ResponsiveContainer width="100%" height="100%">
                     <AreaChart
                       data={trendData}
@@ -728,14 +747,14 @@ const AI = () => {
                       />
                       <XAxis
                         dataKey="name"
-                        tick={{ fontSize: 10, fill: "#9ca3af" }}
+                        tick={{ fontSize: 9, fill: "#9ca3af" }}
                         axisLine={false}
                         tickLine={false}
                         dy={10}
                       />
                       <YAxis
                         tickFormatter={(val) => `${val / 1000}rb`}
-                        tick={{ fontSize: 10, fill: "#9ca3af" }}
+                        tick={{ fontSize: 9, fill: "#9ca3af" }}
                         axisLine={false}
                         tickLine={false}
                       />
@@ -773,14 +792,14 @@ const AI = () => {
             </div>
 
             {/* Estimasi Saldo */}
-            <div className="bg-white rounded-[24px] p-6 shadow-[0_2px_10px_rgba(0,0,0,0.02)] border border-gray-100 flex flex-col md:flex-row gap-6">
+            <div className="bg-white rounded-[24px] p-4 md:p-6 shadow-[0_2px_10px_rgba(0,0,0,0.02)] border border-gray-100 flex flex-col gap-4 chart-row-card md:flex-row md:gap-6">
               {/* Kiri: Nominal & Progress Bar */}
-              <div className="w-full md:w-[55%] flex flex-col justify-between">
+              <div className="estimasi-left w-full md:w-[55%] flex flex-col justify-between">
                 <div>
                   <h3 className="text-[14px] font-bold text-[#1e1b4b]">
                     Estimasi Saldo Besok
                   </h3>
-                  <h2 className="text-[28px] font-extrabold text-[#3b82f6] mt-1 tracking-tight mb-6">
+                  <h2 className="text-[22px] md:text-[28px] font-extrabold text-[#3b82f6] mt-1 tracking-tight mb-4 md:mb-6">
                     Rp {formatRupiah(aiPrediction?.estimasi_saldo_besok)}
                   </h2>
                 </div>
@@ -790,7 +809,7 @@ const AI = () => {
                     <span className="text-[11px] font-medium text-[#1e1b4b]/60 block mb-1">
                       Saldo Saat Ini
                     </span>
-                    <p className="font-bold text-[14px] text-[#1e1b4b] mb-2">
+                    <p className="font-bold text-[13px] md:text-[14px] text-[#1e1b4b] mb-2">
                       Rp {formatRupiah(aiPrediction?.saldo_saat_ini)}
                     </p>
                     <div className="w-full h-[8px] bg-gray-100 rounded-full overflow-hidden">
@@ -801,7 +820,7 @@ const AI = () => {
                     <span className="text-[11px] font-medium text-[#1e1b4b]/60 block mb-1">
                       Estimasi Saldo Besok
                     </span>
-                    <p className="font-bold text-[14px] text-[#1e1b4b] mb-2">
+                    <p className="font-bold text-[13px] md:text-[14px] text-[#1e1b4b] mb-2">
                       Rp {formatRupiah(aiPrediction?.estimasi_saldo_besok)}
                     </p>
                     <div className="w-full h-[8px] bg-gray-100 rounded-full overflow-hidden">
@@ -814,15 +833,15 @@ const AI = () => {
               </div>
 
               {/* Kanan: Insight */}
-              <div className="w-full md:w-[45%] flex items-stretch">
-                <div className="bg-[#f8fafc] p-5 rounded-[16px] w-full flex flex-col justify-center">
+              <div className="estimasi-right w-full md:w-[45%] flex items-stretch">
+                <div className="bg-[#f8fafc] p-4 md:p-5 rounded-[16px] w-full flex flex-col justify-center">
                   <div className="flex items-center gap-2 mb-3">
                     <span className="text-blue-500 text-lg">💼</span>
                     <span className="font-bold text-[13px] text-[#3b82f6]">
                       Insight
                     </span>
                   </div>
-                  <p className="text-[12px] text-[#1e1b4b]/80 leading-relaxed font-medium">
+                  <p className="text-[11px] md:text-[12px] text-[#1e1b4b]/80 leading-relaxed font-medium">
                     Dengan prediksi pengeluaran sebesar{" "}
                     <span className="font-bold">
                       Rp {formatRupiah(aiPrediction?.prediksi_pengeluaran_besok)}
@@ -840,26 +859,26 @@ const AI = () => {
 
           {/* ROW 3: BUDGET & GOALS (Dibuat Full-Width) */}
           <div className="mb-6 relative z-20">
-            <div className="bg-white rounded-[28px] p-8 border border-gray-100 shadow-sm">
+            <div className="bg-white rounded-[28px] p-5 md:p-8 border border-gray-100 shadow-sm">
 
               <div className="flex justify-between items-center mb-6">
                 <div>
-                  <h3 className="font-bold text-[18px] text-[#1e1b4b]">
+                  <h3 className="font-bold text-[16px] md:text-[18px] text-[#1e1b4b]">
                     AI Savings Assistant
                   </h3>
-                  <p className="text-[12px] text-gray-400">
+                  <p className="text-[11px] md:text-[12px] text-gray-400">
                     Ringkasan progress target tabunganmu
                   </p>
                 </div>
 
-                <div className="bg-[#f0eaff] px-4 py-2 rounded-xl">
+                <div className="bg-[#f0eaff] px-3 py-1.5 md:px-4 md:py-2 rounded-xl">
                   <span className="text-[#8b5cf6] text-xs font-bold">
                     {goalsData.length} Goals Aktif
                   </span>
                 </div>
               </div>
 
-              <div className="grid lg:grid-cols-1 gap-5">
+              <div className="grid lg:grid-cols-1 gap-5 goals-ai-grid">
 
                 {/* Kiri */}
                 <div className="lg:col-span-2">
@@ -868,11 +887,11 @@ const AI = () => {
                     {goalsData.map((goal) => (
                       <div
                         key={goal.id}
-                        className="bg-white border border-gray-100 rounded-3xl p-5 shadow-sm"
+                        className="bg-white border border-gray-100 rounded-3xl p-4 md:p-5 shadow-sm"
                       >
                         <div className="flex justify-between items-start mb-4">
                           <div>
-                            <h3 className="font-bold text-[#1e1b4b] text-lg">
+                            <h3 className="font-bold text-[#1e1b4b] text-base md:text-lg">
                               {goal.name}
                             </h3>
 
@@ -895,7 +914,7 @@ const AI = () => {
                         </div>
 
                         {/* Progress */}
-                        <div className="w-full h-3 bg-gray-100 rounded-full overflow-hidden mb-5">
+                        <div className="w-full h-3 bg-gray-100 rounded-full overflow-hidden mb-4 md:mb-5">
                           <div
                             className="h-full bg-[#8b5cf6]"
                             style={{
@@ -905,9 +924,9 @@ const AI = () => {
                         </div>
 
                         {/* AI Section */}
-                        <div className="grid md:grid-cols-2 gap-4">
+                        <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 md:gap-4">
 
-                          <div className="bg-[#faf5ff] rounded-2xl p-4">
+                          <div className="bg-[#faf5ff] rounded-2xl p-3 md:p-4">
                             <div className="flex items-center gap-2 mb-2">
                               <span>📅</span>
                               <p className="font-bold text-sm text-[#8b5cf6]">
@@ -924,7 +943,7 @@ const AI = () => {
                             </p>
                           </div>
 
-                          <div className="bg-[#fff9eb] rounded-2xl p-4">
+                          <div className="bg-[#fff9eb] rounded-2xl p-3 md:p-4">
                             <div className="flex items-center gap-2 mb-2">
                               <span>💡</span>
                               <p className="font-bold text-sm text-orange-600">
@@ -943,39 +962,6 @@ const AI = () => {
                   </div>
 
                 </div>
-
-                {/* Kanan */}
-                {/* <div className="space-y-4">
-
-                  <div className="bg-gradient-to-br from-[#8b5cf6] to-[#7c3aed] text-white rounded-3xl p-5">
-                    <p className="text-white/70 text-xs mb-2">
-                      Goal Terdekat Selesai
-                    </p>
-
-                    <h3 className="font-bold text-xl">
-                      Laptop ASUS
-                    </h3>
-
-                    <p className="text-sm mt-3">
-                      Diperkirakan selesai dalam
-                      <span className="font-bold"> 5 hari </span>
-                      lagi 🚀
-                    </p>
-                  </div>
-
-                  <div className="bg-[#fff9eb] border border-[#fde68a] rounded-3xl p-5">
-                    <h4 className="font-bold text-orange-700 mb-2">
-                      💡 Insight AI
-                    </h4>
-
-                    <p className="text-[12px] text-orange-700 leading-relaxed">
-                      2 dari 3 goals berada di jalur yang baik.
-                      Pertahankan tabungan harian agar target
-                      selesai tepat waktu.
-                    </p>
-                  </div>
-
-                </div> */}
 
               </div>
             </div>
@@ -997,20 +983,20 @@ const TopCard = ({
   iconBg,
   iconColor,
 }) => (
-  <div className="bg-white rounded-[18px] p-4 border border-gray-100 shadow-sm flex flex-col justify-between hover:shadow-md transition-shadow">
+  <div className="bg-white rounded-[14px] md:rounded-[18px] p-2.5 md:p-4 border border-gray-100 shadow-sm flex flex-col justify-between hover:shadow-md transition-shadow">
     {/* Ikon Bulat */}
     <div
-      className={`w-9 h-9 rounded-full flex items-center justify-center text-[16px] mb-3 ${iconBg} ${iconColor}`}
+      className={`w-7 h-7 md:w-9 md:h-9 rounded-full flex items-center justify-center text-[13px] md:text-[16px] mb-2 md:mb-3 ${iconBg} ${iconColor}`}
     >
       {icon}
     </div>
 
     {/* Judul & Nominal */}
-    <div className="mb-3">
-      <p className="text-[10px] font-bold text-[#1e1b4b]/80 mb-1 leading-tight">
+    <div className="mb-2 md:mb-3">
+      <p className="topcard-title text-[8px] md:text-[10px] font-bold text-[#1e1b4b]/80 mb-1 leading-tight">
         {title}
       </p>
-      <h3 className="text-[18px] font-extrabold text-[#1e1b4b] tracking-tight">
+      <h3 className="topcard-value text-[11px] md:text-[18px] font-extrabold text-[#1e1b4b] tracking-tight leading-tight">
         {value}
       </h3>
     </div>
@@ -1018,7 +1004,7 @@ const TopCard = ({
     {/* Badge */}
     <div>
       <span
-        className={`inline-block text-[9px] font-bold px-2.5 py-1 rounded-md ${badgeColor}`}
+        className={`inline-block text-[7px] md:text-[9px] font-bold px-1.5 md:px-2.5 py-0.5 md:py-1 rounded-md ${badgeColor}`}
       >
         {badge}
       </span>

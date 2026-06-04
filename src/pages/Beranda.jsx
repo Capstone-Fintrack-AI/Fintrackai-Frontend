@@ -711,7 +711,7 @@ const Beranda = () => {
                 </h3>
                 <button
                   type="button"
-                  onClick={() => navigate("/ai")} 
+                  onClick={() => navigate("/ai")}
                   className="text-[9px] sm:text-[10px] font-bold text-gray-400 flex items-center gap-1.5 border border-gray-100 px-2 sm:px-3 py-1.5 rounded-lg hover:text-[#8477e4] transition-all shrink-0"
                 >
                   Detail Lengkap <i className="fas fa-plus"></i>
@@ -923,68 +923,100 @@ const Beranda = () => {
                 </div>
               </div>
             </div>
-
-            {/* GOALS SETTING */}
-            <div className="bg-white p-4 sm:p-6 rounded-3xl border border-gray-100 shadow-sm text-center relative flex-1 flex flex-col justify-between">
-              {/* SEBARIS: Judul Goals Setting dan Tombol Detail Lengkap */}
-              <div className="flex justify-between items-center gap-2 mb-3">
-                <h3 className="text-sm font-bold text-gray-900 truncate">
-                  Goals Setting
-                </h3>
+            {/* RIWAYAT TRANSAKSI TERAKHIR */}
+            <div className="bg-white p-4 sm:p-6 rounded-[2rem] border border-gray-100 shadow-sm flex flex-col shrink-0">
+              <div className="flex justify-between items-center mb-4 sm:mb-5">
+                <div>
+                  <h3 className="text-sm sm:text-base font-bold text-gray-900">
+                    Transaksi Terakhir
+                  </h3>
+                  <p className="text-[10px] text-gray-400 mt-0.5">
+                    5 transaksi terbaru
+                  </p>
+                </div>
                 <button
                   type="button"
-                  onClick={() => navigate("/goals")}
-                  className="text-[10px] font-bold text-gray-400 flex items-center gap-1.5 border border-gray-100 px-2.5 py-1.5 sm:px-3 sm:py-1.5 rounded-lg hover:text-[#8477e4] transition-all shrink-0 whitespace-nowrap"
+                  onClick={() => navigate("/transaksi")}
+                  className="text-[9px] sm:text-[10px] font-bold text-gray-400 flex items-center gap-1.5 border border-gray-100 px-2 sm:px-3 py-1.5 rounded-lg hover:text-[#8477e4] transition-all"
                 >
                   Detail Lengkap <i className="fas fa-plus"></i>
                 </button>
               </div>
 
-              <div className="my-auto py-2 flex flex-col justify-center">
-                <div className="flex items-center justify-center gap-4 sm:gap-6 mb-3">
-                  <i className="fas fa-chevron-left text-gray-400 cursor-pointer hover:text-gray-900 p-2"></i>
+              {pengeluaran.length === 0 ? (
+                <div className="flex flex-col items-center justify-center py-6 gap-3">
                   <img
-                    src={activeGoal.image || "/gambar/goals.png"}
-                    className="w-10 h-10 sm:w-12 sm:h-12 object-contain"
-                    alt="Icon Goals"
+                    src="/gambar/robotdada.png"
+                    alt="Kosong"
+                    className="w-14 h-14 object-contain opacity-50"
                   />
-                  <i className="fas fa-chevron-right text-gray-400 cursor-pointer hover:text-gray-900 p-2"></i>
-                </div>
-
-                <div className="text-center mb-4">
-                  <p className="text-xs font-bold text-gray-800 truncate">
-                    {activeGoal.title || "Target Kamu"}
+                  <p className="text-[11px] text-gray-400 font-medium text-center">
+                    Belum ada transaksi.
+                    <br />
+                    Catat pengeluaran pertamamu!
                   </p>
-                  <p className="text-[10px] text-gray-400 mt-0.5">
-                    <span className="font-semibold text-[#8477e4]">
-                      Rp{" "}
-                      {(activeGoal.currentAmount || 0).toLocaleString("id-ID")}
-                    </span>
-                    {" / "}
-                    <span>
-                      Rp{" "}
-                      {(activeGoal.targetAmount || 0).toLocaleString("id-ID")}
-                    </span>
-                  </p>
+                  <button
+                    onClick={() => navigate("/transaksi")}
+                    className="text-[10px] font-bold text-[#8477e4] border border-[#e0d9ff] px-4 py-1.5 rounded-xl hover:bg-[#f3f0ff] transition-all"
+                  >
+                    + Tambah Transaksi
+                  </button>
                 </div>
-              </div>
-
-              <div className="w-full mt-auto">
-                <AnimatedProgressBar
-                  value={percentage}
-                  maxValue={100}
-                  color="#8477e4"
-                />
-                <div className="flex justify-between items-center mt-2">
-                  <p className="text-[9px] font-bold text-gray-600">
-                    {percentage}% Menuju Target!
-                  </p>
-                  {/* Status kecil pemanis di pojok kanan bawah */}
-                  <span className="text-[8px] px-1.5 py-0.5 bg-purple-50 text-[#8477e4] rounded font-medium">
-                    {percentage === 100 ? "Selesai" : "On Progress"}
-                  </span>
+              ) : (
+                <div className="flex flex-col divide-y divide-gray-50">
+                  {pengeluaran.slice(0, 5).map((item, idx) => {
+                    const kategoriConfig = {
+                      Kebutuhan: {
+                        bg: "bg-[#f3f0ff]",
+                        color: "text-[#8477e4]",
+                        icon: "fa-home",
+                      },
+                      Keinginan: {
+                        bg: "bg-[#ecfdf5]",
+                        color: "text-[#10b981]",
+                        icon: "fa-shopping-bag",
+                      },
+                      Tabungan: {
+                        bg: "bg-[#fff7ed]",
+                        color: "text-[#f59e0b]",
+                        icon: "fa-piggy-bank",
+                      },
+                    };
+                    const cfg = kategoriConfig[item.kategori] || {
+                      bg: "bg-gray-100",
+                      color: "text-gray-500",
+                      icon: "fa-receipt",
+                    };
+                    return (
+                      <div key={idx} className="flex items-center gap-3 py-2.5">
+                        <div
+                          className={`w-8 h-8 sm:w-9 sm:h-9 rounded-xl flex items-center justify-center shrink-0 ${cfg.bg} ${cfg.color}`}
+                        >
+                          <i className={`fas ${cfg.icon} text-xs`}></i>
+                        </div>
+                        <div className="flex-1 min-w-0">
+                          <p className="text-[11px] font-bold text-gray-800 truncate">
+                            {item.keterangan || item.kategori}
+                          </p>
+                          <p className="text-[9px] text-gray-400 mt-0.5">
+                            {item.kategori} ·{" "}
+                            {item.tanggal
+                              ? new Date(item.tanggal).toLocaleDateString(
+                                  "id-ID",
+                                  { day: "numeric", month: "short" },
+                                )
+                              : "-"}
+                          </p>
+                        </div>
+                        <p className="text-[11px] font-black text-red-400 shrink-0 whitespace-nowrap">
+                          - Rp{" "}
+                          {Number(item.jumlah || 0).toLocaleString("id-ID")}
+                        </p>
+                      </div>
+                    );
+                  })}
                 </div>
-              </div>
+              )}
             </div>
           </div>
         </div>
