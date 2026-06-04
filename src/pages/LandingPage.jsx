@@ -830,7 +830,7 @@ const LandingPage = () => {
         </div>
       </section>
 
-      <footer className="py-16 md:py-24 bg-white/80 border-t border-gray-100 px-6 md:px-20 text-center">
+      <footer className="py-12 md:py-16 bg-white/80 border-t border-gray-100 px-6 md:px-20 text-center">
         <div className="max-w-7xl mx-auto grid grid-cols-1 md:grid-cols-3 gap-12 md:gap-16 justify-items-center">
           <div className="flex flex-col items-center space-y-4 md:space-y-6 max-w-xs md:max-w-sm">
             <div className="flex items-center gap-3 justify-center">
@@ -909,7 +909,7 @@ const LandingPage = () => {
           </div>
         </div>
 
-        <div className="text-center mt-12 md:mt-20 pt-8 md:pt-10 border-t border-gray-100 text-gray-400 font-medium text-sm md:text-base">
+        <div className="text-center mt-12 md:mt-20 pt-6 md:pt-8 border-t border-gray-100 text-gray-400 font-medium text-sm md:text-base">
           &copy; 2026 FinTrack AI. Coding Camp Team.
         </div>
       </footer>
