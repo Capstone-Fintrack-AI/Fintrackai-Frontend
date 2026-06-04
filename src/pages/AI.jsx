@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import { Link } from "react-router-dom";
 import {
@@ -19,22 +19,26 @@ const AI = () => {
   const navigate = useNavigate();
   const [isSidebarOpen, setIsSidebarOpen] = useState(true);
   const activeMenu = "AI"; // Set active menu ke AI
+  const [aiPrediction, setAiPrediction] = useState(null);
+  const [goalsData, setGoalsData] = useState([]);
+  const [budgetHealthScore, setBudgetHealthScore] = useState(0);
+  const [totalPemasukan, setTotalPemasukan] = useState(0);
+  const [totalPengeluaran, setTotalPengeluaran] = useState(0);
+  const [totalTabungan, setTotalTabungan] = useState(0);
+  const [trendData, setTrendData] = useState([]);
 
   const handleLogout = () => {
     // Tambahkan logika hapus token/session di sini jika ada
     navigate("/login");
   };
 
-  // --- DATA DUMMY DASHBOARD AI ---
-  const trendData = [
-    { name: "16 Mei", val: 350000 },
-    { name: "17 Mei", val: 370000 },
-    { name: "18 Mei", val: 390000 },
-    { name: "19 Mei", val: 410000 },
-    { name: "20 Mei", val: 390000 },
-    { name: "21 Mei", val: 420000 },
-    { name: "22 Mei\n(Besok)", val: 364624 },
-  ];
+  const saldoPercent =
+    aiPrediction?.saldo_saat_ini > 0
+      ? (aiPrediction.estimasi_saldo_besok /
+        aiPrediction.saldo_saat_ini) *
+      100
+      : 0;
+
 
   const budgetData = [
     { name: "Kebutuhan", value: 54, color: "#8b5cf6", amount: "Rp 1.620.000" },
@@ -42,35 +46,301 @@ const AI = () => {
     { name: "Tabungan", value: 18, color: "#10b981", amount: "Rp 550.000" },
   ];
 
-  const goalsData = [
-    {
-      name: "Laptop ASUS",
-      current: "Rp 700.000",
-      target: "Rp 8.000.000",
-      progress: 42,
-      img: "💻",
-      color: "#8b5cf6",
-    },
-    {
-      name: "HP Baru",
-      current: "Rp 300.000",
-      target: "Rp 4.000.000",
-      progress: 30,
-      img: "📱",
-      color: "#f59e0b",
-    },
-    {
-      name: "Buku Kuliah",
-      current: "Rp 200.000",
-      target: "Rp 1.000.000",
-      progress: 76,
-      img: "📚",
-      color: "#10b981",
-    },
-  ];
+  // const goalsData = [
+  //   {
+  //     name: "Laptop ASUS",
+  //     current: "Rp 700.000",
+  //     target: "Rp 8.000.000",
+  //     progress: 42,
+  //     img: "💻",
+  //     color: "#8b5cf6",
+  //   },
+  //   {
+  //     name: "HP Baru",
+  //     current: "Rp 300.000",
+  //     target: "Rp 4.000.000",
+  //     progress: 30,
+  //     img: "📱",
+  //     color: "#f59e0b",
+  //   },
+  //   {
+  //     name: "Buku Kuliah",
+  //     current: "Rp 200.000",
+  //     target: "Rp 1.000.000",
+  //     progress: 76,
+  //     img: "📚",
+  //     color: "#10b981",
+  //   },
+  // ];
 
   const [activeTab, setActiveTab] = useState("Semua");
-  const tabs = ["Semua", "Dashboard", "Budget", "Goals", "Laporan"];
+  const tabs = ["Semua", "Dashboard", "Budget", "Goals",];
+  const formatRupiah = (angka) => {
+    return new Intl.NumberFormat("id-ID").format(angka || 0);
+  };
+
+  const getHealthStatus = (score) => {
+    if (score >= 85)
+      return {
+        text: "Sangat Baik",
+        color: "text-green-700 bg-green-100",
+      };
+
+    if (score >= 70)
+      return {
+        text: "Baik",
+        color: "text-green-600 bg-green-50",
+      };
+
+    if (score >= 50)
+      return {
+        text: "Cukup",
+        color: "text-yellow-600 bg-yellow-50",
+      };
+
+    return {
+      text: "Perlu Perbaikan",
+      color: "text-red-600 bg-red-50",
+    };
+  };
+
+  useEffect(() => {
+    const fetchPrediction = async () => {
+      try {
+        const user = JSON.parse(localStorage.getItem("user"));
+
+        const response = await fetch(
+          `https://fintrackai-backend-1yz0.onrender.com/api/ai/predict-spend/${user.id}`
+        );
+
+        const result = await response.json();
+
+        if (result.success) {
+          setAiPrediction(result);
+        }
+      } catch (error) {
+        console.error("Gagal mengambil prediksi AI:", error);
+      }
+    };
+
+    fetchPrediction();
+  }, []);
+
+  useEffect(() => {
+    fetchGoals();
+  }, []);
+
+  const fetchGoals = async () => {
+    try {
+      const userId = JSON.parse(localStorage.getItem("user"))?.id;
+
+      const res = await fetch(
+        `https://fintrackai-backend-1yz0.onrender.com/target-tabungan/user/${userId}`
+      );
+
+      const data = await res.json();
+
+      if (data.success) {
+        const goalsWithPrediction = await Promise.all(
+          data.data.map(async (item) => {
+            try {
+              const predictRes = await fetch(
+                `https://fintrackai-backend-1yz0.onrender.com/api/tabungan/${item.id}/predict`
+              );
+
+              const predictData = await predictRes.json();
+
+              const current = Number(item.jumlah_terkumpul);
+              const target = Number(item.jumlah_target);
+
+              const progress =
+                target > 0
+                  ? Math.min(
+                    Math.round((current / target) * 100),
+                    100
+                  )
+                  : 0;
+
+              const remainingDays =
+                predictData?.prediction?.predict_remaining_days ?? 0;
+
+              return {
+                id: item.id,
+                name: item.nama_target,
+                current,
+                target,
+                progress,
+                remainingDays,
+                status: item.status,
+              };
+            } catch (err) {
+              return {
+                id: item.id,
+                name: item.nama_target,
+                current: Number(item.jumlah_terkumpul),
+                target: Number(item.jumlah_target),
+                progress: 0,
+                remainingDays: 0,
+                status: item.status,
+              };
+            }
+          })
+        );
+        const totalSaving = goalsWithPrediction.reduce(
+          (sum, goal) => sum + goal.current,
+          0
+        );
+
+        setTotalTabungan(totalSaving);
+
+        setGoalsData(goalsWithPrediction);
+      }
+    } catch (error) {
+      console.error(error);
+    }
+  };
+
+  const getInsight = (goal) => {
+    const sisa = goal.target - goal.current;
+
+    if (goal.remainingDays === 0) {
+      return "🎉 Target sudah berhasil tercapai.";
+    }
+
+    const perHari = Math.ceil(sisa / goal.remainingDays);
+
+    return `Jika menabung Rp${perHari.toLocaleString(
+      "id-ID"
+    )}/hari, target akan tercapai tepat waktu.`;
+  };
+
+  const fetchFinancialData = async () => {
+    try {
+      const userId = JSON.parse(localStorage.getItem("user"))?.id;
+
+      const [resPemasukan, resPengeluaran] = await Promise.all([
+        fetch(
+          `https://fintrackai-backend-1yz0.onrender.com/pemasukan/user/${userId}`
+        ),
+        fetch(
+          `https://fintrackai-backend-1yz0.onrender.com/pengeluaran/user/${userId}`
+        ),
+      ]);
+
+      const pemasukanData = await resPemasukan.json();
+      const pengeluaranData = await resPengeluaran.json();
+
+      const totalMasuk =
+        pemasukanData.data?.reduce(
+          (sum, item) => sum + Number(item.nominal || item.jumlah || 0),
+          0
+        ) || 0;
+
+      const totalKeluar =
+        pengeluaranData.data?.reduce(
+          (sum, item) => sum + Number(item.nominal || item.jumlah || 0),
+          0
+        ) || 0;
+
+      setTotalPemasukan(totalMasuk);
+      setTotalPengeluaran(totalKeluar);
+    } catch (error) {
+      console.error(error);
+    }
+  };
+
+  const calculateBudgetHealthScore = () => {
+    if (totalPemasukan === 0) return 0;
+
+    const savingRate =
+      (totalTabungan / totalPemasukan) * 100;
+
+    const spendingRate =
+      (totalPengeluaran / totalPemasukan) * 100;
+
+    const goalsCompletion =
+      goalsData.length > 0
+        ? goalsData.reduce(
+          (sum, goal) => sum + goal.progress,
+          0
+        ) / goalsData.length
+        : 0;
+
+    const score =
+      savingRate * 0.4 +
+      (100 - spendingRate) * 0.3 +
+      goalsCompletion * 0.3;
+
+    return Math.min(Math.round(score), 100);
+  };
+
+  useEffect(() => {
+    const score = calculateBudgetHealthScore();
+    setBudgetHealthScore(score);
+  }, [
+    totalPemasukan,
+    totalPengeluaran,
+    totalTabungan,
+    goalsData,
+  ]);
+
+
+  const fetchTrendPengeluaran = async () => {
+    try {
+      const userId = JSON.parse(localStorage.getItem("user"))?.id;
+
+      const res = await fetch(
+        `https://fintrackai-backend-1yz0.onrender.com/pengeluaran/user/${userId}`
+      );
+
+      const result = await res.json();
+
+      if (!result.success) return;
+
+      const transactions = result.data;
+
+      // 7 hari terakhir
+      const last7Days = [];
+
+      for (let i = 6; i >= 0; i--) {
+        const date = new Date();
+        date.setDate(date.getDate() - i);
+
+        const dateString = date.toISOString().split("T")[0];
+
+        const totalPerDay = transactions
+          .filter((item) => {
+            const trxDate = new Date(item.tanggal)
+              .toISOString()
+              .split("T")[0];
+
+            return trxDate === dateString;
+          })
+          .reduce(
+            (sum, item) =>
+              sum + Number(item.jumlah || item.nominal || 0),
+            0
+          );
+
+        last7Days.push({
+          name: date.toLocaleDateString("id-ID", {
+            day: "numeric",
+            month: "short",
+          }),
+          val: totalPerDay,
+        });
+      }
+
+      setTrendData(last7Days);
+    } catch (error) {
+      console.error(error);
+    }
+  };
+
+  useEffect(() => {
+    fetchFinancialData();
+    fetchTrendPengeluaran();
+  }, []);
 
   return (
     <div className="h-screen bg-[#f8f6ff] font-poppins flex overflow-hidden relative">
@@ -250,10 +520,12 @@ const AI = () => {
             </div>
 
             {/* KANAN - 4 Kartu Data */}
-            <div className="xl:w-[65%] grid grid-cols-2 md:grid-cols-4 gap-3 relative z-10">
+            <div className="xl:w-[65%] grid grid-cols-2 md:grid-cols-3 gap-3 relative z-10">
               <TopCard
                 title="Prediksi Pengeluaran Besok"
-                value="Rp 364.624"
+                value={`Rp ${formatRupiah(
+                  aiPrediction?.prediksi_pengeluaran_besok
+                )}`}
                 badge="Aman"
                 badgeColor="text-green-600 bg-[#e6f8f0]"
                 iconBg="bg-[#f0eaff]"
@@ -262,14 +534,16 @@ const AI = () => {
               />
               <TopCard
                 title="Estimasi Saldo Besok"
-                value="Rp 2.610.376"
+                value={`Rp ${formatRupiah(
+                  aiPrediction?.estimasi_saldo_besok
+                )}`}
                 badge="Stabil"
                 badgeColor="text-green-600 bg-[#e6f8f0]"
                 iconBg="bg-blue-50"
                 iconColor="text-blue-500"
                 icon="💳"
               />
-              <TopCard
+              {/* <TopCard
                 title="Goals Aktif"
                 value="3 Goals"
                 badge="Sedang berjalan"
@@ -277,16 +551,17 @@ const AI = () => {
                 iconBg="bg-red-50"
                 iconColor="text-red-500"
                 icon="🎯"
-              />
+              /> */}
               <TopCard
                 title="Budget Health Score"
-                value="87 / 100"
-                badge="Baik"
-                badgeColor="text-green-600 bg-[#e6f8f0]"
+                value={`${budgetHealthScore} / 100`}
+                badge={getHealthStatus(budgetHealthScore).text}
+                badgeColor={getHealthStatus(budgetHealthScore).color}
                 iconBg="bg-green-50"
                 iconColor="text-green-500"
                 icon="🛡️"
               />
+
             </div>
           </div>
 
@@ -301,7 +576,7 @@ const AI = () => {
                     Prediksi Pengeluaran Besok
                   </h3>
                   <h2 className="text-[28px] font-extrabold text-[#8b5cf6] mt-1 tracking-tight">
-                    Rp 364.624
+                    Rp {formatRupiah(aiPrediction?.prediksi_pengeluaran_besok)}
                   </h2>
                 </div>
                 <div className="bg-[#faf5ff] p-4 rounded-[16px] mt-6">
@@ -312,7 +587,7 @@ const AI = () => {
                     </span>
                   </div>
                   <p className="text-[12px] text-[#1e1b4b]/80 leading-relaxed font-medium">
-                    Pengeluaran besok diperkirakan masih dalam batas aman.
+                    {aiPrediction?.insight || "Belum ada insight"}
                   </p>
                 </div>
               </div>
@@ -408,7 +683,7 @@ const AI = () => {
                     Estimasi Saldo Besok
                   </h3>
                   <h2 className="text-[28px] font-extrabold text-[#3b82f6] mt-1 tracking-tight mb-6">
-                    Rp 2.610.376
+                    Rp {formatRupiah(aiPrediction?.estimasi_saldo_besok)}
                   </h2>
                 </div>
 
@@ -418,7 +693,7 @@ const AI = () => {
                       Saldo Saat Ini
                     </span>
                     <p className="font-bold text-[14px] text-[#1e1b4b] mb-2">
-                      Rp 2.975.000
+                      Rp {formatRupiah(aiPrediction?.saldo_saat_ini)}
                     </p>
                     <div className="w-full h-[8px] bg-gray-100 rounded-full overflow-hidden">
                       <div className="w-[100%] h-full bg-[#8b5cf6] rounded-full"></div>
@@ -429,10 +704,12 @@ const AI = () => {
                       Estimasi Saldo Besok
                     </span>
                     <p className="font-bold text-[14px] text-[#1e1b4b] mb-2">
-                      Rp 2.610.376
+                      Rp {formatRupiah(aiPrediction?.estimasi_saldo_besok)}
                     </p>
                     <div className="w-full h-[8px] bg-gray-100 rounded-full overflow-hidden">
-                      <div className="w-[85%] h-full bg-[#3b82f6] rounded-full"></div>
+                      <div className="w-[85%] h-full bg-[#3b82f6] rounded-full" style={{
+                        width: `${Math.min(saldoPercent, 100)}%`,
+                      }}></div>
                     </div>
                   </div>
                 </div>
@@ -448,8 +725,15 @@ const AI = () => {
                     </span>
                   </div>
                   <p className="text-[12px] text-[#1e1b4b]/80 leading-relaxed font-medium">
-                    Jika pola pengeluaran saat ini tetap terjaga, saldo besok
-                    kamu diperkirakan cukup aman.
+                    Dengan prediksi pengeluaran sebesar{" "}
+                    <span className="font-bold">
+                      Rp {formatRupiah(aiPrediction?.prediksi_pengeluaran_besok)}
+                    </span>
+                    , saldo kamu diperkirakan menjadi{" "}
+                    <span className="font-bold">
+                      Rp {formatRupiah(aiPrediction?.estimasi_saldo_besok)}
+                    </span>{" "}
+                    besok.
                   </p>
                 </div>
               </div>
@@ -457,57 +741,147 @@ const AI = () => {
           </div>
 
           {/* ROW 3: BUDGET & GOALS (Dibuat Full-Width) */}
-<div className="mb-6 relative z-20">
-  <div className="bg-white/90 backdrop-blur-sm p-8 rounded-[24px] border border-gray-100/50 shadow-sm flex flex-col md:flex-row gap-8">
-    
-    {/* Kiri: Daftar Progress Tabungan */}
-    <div className="flex-1">
-      <h3 className="font-bold text-[16px] text-[#1e1b4b] mb-6">
-        Target Tabungan
-      </h3>
-      <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
-        {goalsData.map((goal, idx) => (
-          <div key={idx} className="flex gap-4 items-center bg-gray-50/50 p-4 rounded-2xl border border-gray-100">
-            <div className="w-12 h-12 bg-white rounded-xl border border-gray-100 flex items-center justify-center shadow-sm text-[24px]">
-              {goal.img}
-            </div>
-            <div className="flex-1">
-              <p className="text-[13px] font-bold text-[#1e1b4b]">{goal.name}</p>
-              <p className="text-[10px] text-gray-400 mb-2 font-medium">
-                {goal.current} / {goal.target}
-              </p>
-              <div className="w-full h-[6px] bg-gray-200 rounded-full overflow-hidden">
-                <div className="h-full rounded-full" style={{ width: `${goal.progress}%`, backgroundColor: goal.color }}></div>
+          <div className="mb-6 relative z-20">
+            <div className="bg-white rounded-[28px] p-8 border border-gray-100 shadow-sm">
+
+              <div className="flex justify-between items-center mb-6">
+                <div>
+                  <h3 className="font-bold text-[18px] text-[#1e1b4b]">
+                    AI Savings Assistant
+                  </h3>
+                  <p className="text-[12px] text-gray-400">
+                    Ringkasan progress target tabunganmu
+                  </p>
+                </div>
+
+                <div className="bg-[#f0eaff] px-4 py-2 rounded-xl">
+                  <span className="text-[#8b5cf6] text-xs font-bold">
+                    {goalsData.length} Goals Aktif
+                  </span>
+                </div>
+              </div>
+
+              <div className="grid lg:grid-cols-1 gap-5">
+
+                {/* Kiri */}
+                <div className="lg:col-span-2">
+
+                  <div className="space-y-4">
+                    {goalsData.map((goal) => (
+                      <div
+                        key={goal.id}
+                        className="bg-white border border-gray-100 rounded-3xl p-5 shadow-sm"
+                      >
+                        <div className="flex justify-between items-start mb-4">
+                          <div>
+                            <h3 className="font-bold text-[#1e1b4b] text-lg">
+                              {goal.name}
+                            </h3>
+
+                            <p className="text-xs text-gray-400">
+                              Rp {goal.current.toLocaleString("id-ID")} /
+                              Rp {goal.target.toLocaleString("id-ID")}
+                            </p>
+                          </div>
+
+                          <div className="bg-[#f0eaff] px-3 py-1 rounded-full">
+                            <div
+                              className={`px-3 py-1 rounded-full text-xs font-bold ${goal.status === "selesai"
+                                ? "bg-green-100 text-green-600"
+                                : "bg-purple-100 text-purple-600"
+                                }`}
+                            >
+                              {goal.status === "selesai" ? "Selesai" : "Proses"}
+                            </div>
+                          </div>
+                        </div>
+
+                        {/* Progress */}
+                        <div className="w-full h-3 bg-gray-100 rounded-full overflow-hidden mb-5">
+                          <div
+                            className="h-full bg-[#8b5cf6]"
+                            style={{
+                              width: `${goal.progress}%`,
+                            }}
+                          />
+                        </div>
+
+                        {/* AI Section */}
+                        <div className="grid md:grid-cols-2 gap-4">
+
+                          <div className="bg-[#faf5ff] rounded-2xl p-4">
+                            <div className="flex items-center gap-2 mb-2">
+                              <span>📅</span>
+                              <p className="font-bold text-sm text-[#8b5cf6]">
+                                Prediksi AI
+                              </p>
+                            </div>
+
+                            <p className="text-sm text-gray-700">
+                              Target ini diperkirakan selesai dalam
+                              <span className="font-bold text-[#8b5cf6]">
+                                {" "}
+                                {goal.remainingDays} hari
+                              </span>
+                            </p>
+                          </div>
+
+                          <div className="bg-[#fff9eb] rounded-2xl p-4">
+                            <div className="flex items-center gap-2 mb-2">
+                              <span>💡</span>
+                              <p className="font-bold text-sm text-orange-600">
+                                Insight AI
+                              </p>
+                            </div>
+
+                            <p className="text-sm text-gray-700">
+                              {getInsight(goal)}
+                            </p>
+                          </div>
+
+                        </div>
+                      </div>
+                    ))}
+                  </div>
+
+                </div>
+
+                {/* Kanan */}
+                {/* <div className="space-y-4">
+
+                  <div className="bg-gradient-to-br from-[#8b5cf6] to-[#7c3aed] text-white rounded-3xl p-5">
+                    <p className="text-white/70 text-xs mb-2">
+                      Goal Terdekat Selesai
+                    </p>
+
+                    <h3 className="font-bold text-xl">
+                      Laptop ASUS
+                    </h3>
+
+                    <p className="text-sm mt-3">
+                      Diperkirakan selesai dalam
+                      <span className="font-bold"> 5 hari </span>
+                      lagi 🚀
+                    </p>
+                  </div>
+
+                  <div className="bg-[#fff9eb] border border-[#fde68a] rounded-3xl p-5">
+                    <h4 className="font-bold text-orange-700 mb-2">
+                      💡 Insight AI
+                    </h4>
+
+                    <p className="text-[12px] text-orange-700 leading-relaxed">
+                      2 dari 3 goals berada di jalur yang baik.
+                      Pertahankan tabungan harian agar target
+                      selesai tepat waktu.
+                    </p>
+                  </div>
+
+                </div> */}
+
               </div>
             </div>
           </div>
-        ))}
-      </div>
-    </div>
-
-    {/* Kanan: Insight (Sampingan) */}
-    <div className="w-full md:w-[350px] flex flex-col gap-4">
-      <div className="bg-[#f0eaff] border border-[#e0d4fc] p-5 rounded-[20px] flex-1">
-        <div className="flex items-center gap-2 mb-3">
-          <span className="text-purple-600 text-lg">📅</span>
-          <span className="font-bold text-[13px] text-purple-800">Prediksi Tabungan</span>
-        </div>
-        <p className="text-[12px] text-purple-900 leading-relaxed font-medium">
-          Jika pola pengeluaran tetap terjaga, target tabungan <span className="font-bold">LAPTOP ASUS</span> dapat tercapai sesuai jadwal.
-        </p>
-      </div>
-
-      <div className="bg-[#fff9eb] border border-[#fef0c7] p-5 rounded-[20px]">
-        <p className="font-bold text-[12px] text-orange-800 leading-tight mb-2">
-          LAPTOP ASUS akan selesai dalam 5 hari lagi! 🚀
-        </p>
-        <p className="text-[10px] text-orange-800/80 font-medium italic">
-          Tetap konsisten ya, Sipa Cantik!
-        </p>
-      </div>
-    </div>
-  </div>
-</div>
         </div>
       </div>
     </div>
