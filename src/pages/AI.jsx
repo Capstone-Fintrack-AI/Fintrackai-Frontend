@@ -19,7 +19,6 @@ const AI = () => {
   const navigate = useNavigate();
   const [isSidebarOpen, setIsSidebarOpen] = useState(true);
   const activeMenu = "AI"; // Set active menu ke AI
-<<<<<<< HEAD
   const [aiPrediction, setAiPrediction] = useState(null);
   const [goalsData, setGoalsData] = useState([]);
   const [budgetHealthScore, setBudgetHealthScore] = useState(0);
@@ -27,12 +26,8 @@ const AI = () => {
   const [totalPengeluaran, setTotalPengeluaran] = useState(0);
   const [totalTabungan, setTotalTabungan] = useState(0);
   const [trendData, setTrendData] = useState([]);
-
-=======
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
->>>>>>> d281ead93b2141d5f6c9790e0b02575c47f4b157
   const handleLogout = () => {
-    // Tambahkan logika hapus token/session di sini jika ada
     navigate("/login");
   };
 

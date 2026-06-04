@@ -33,11 +33,10 @@ const Goals = () => {
   const [sudahDialokasikan, setSudahDialokasikan] = useState(0);
   const [isDeleting, setIsDeleting] = useState(false);
 
-
   const getGoalsUser = async () => {
     try {
       const response = await axios.get(
-        `https://fintrackai-backend-1yz0.onrender.com/target-tabungan/user/${userId}`
+        `https://fintrackai-backend-1yz0.onrender.com/target-tabungan/user/${userId}`,
       );
       console.log(response.data.data);
 
@@ -49,16 +48,12 @@ const Goals = () => {
         progress:
           Number(item.jumlah_target) > 0
             ? Math.round(
-              (Number(item.jumlah_terkumpul) /
-                Number(item.jumlah_target)) *
-              100
-            )
+                (Number(item.jumlah_terkumpul) / Number(item.jumlah_target)) *
+                  100,
+              )
             : 0,
         status: item.status,
-        color:
-          item.status === "selesai"
-            ? "#10b981"
-            : "#8b5cf6",
+        color: item.status === "selesai" ? "#10b981" : "#8b5cf6",
       }));
 
       setGoals(data);
@@ -66,9 +61,6 @@ const Goals = () => {
       console.log(error);
     }
   };
-
-
-
 
   const pieData = goals.map((goal) => ({
     name: goal.name,
@@ -108,7 +100,7 @@ const Goals = () => {
       setIsDeleting(true);
 
       await axios.delete(
-        `https://fintrackai-backend-1yz0.onrender.com/target-tabungan/${selectedGoal.id}`
+        `https://fintrackai-backend-1yz0.onrender.com/target-tabungan/${selectedGoal.id}`,
       );
 
       await getGoalsUser();
@@ -141,28 +133,30 @@ const Goals = () => {
       try {
         // ambil pemasukan
         const pemasukanRes = await fetch(
-          `https://fintrackai-backend-1yz0.onrender.com/pemasukan/user/${userId}`
+          `https://fintrackai-backend-1yz0.onrender.com/pemasukan/user/${userId}`,
         );
         const pemasukanJson = await pemasukanRes.json();
         const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
         const totalPemasukanCalc = pemasukanJson.data.reduce(
           (sum, item) => sum + Number(item.jumlah),
-          0
+          0,
         );
 
         setTotalPemasukan(totalPemasukanCalc);
 
         // ambil total pengeluaran
         const pengeluaranTotalRes = await fetch(
-          `https://fintrackai-backend-1yz0.onrender.com/pengeluaran/total/${userId}`
+          `https://fintrackai-backend-1yz0.onrender.com/pengeluaran/total/${userId}`,
         );
         const pengeluaranTotalJson = await pengeluaranTotalRes.json();
 
-        setTotalPengeluaran(Number(pengeluaranTotalJson.total_pengeluaran || 0));
+        setTotalPengeluaran(
+          Number(pengeluaranTotalJson.total_pengeluaran || 0),
+        );
 
         // ambil list pengeluaran
         const pengeluaranRes = await fetch(
-          `https://fintrackai-backend-1yz0.onrender.com/pengeluaran/user/${userId}`
+          `https://fintrackai-backend-1yz0.onrender.com/pengeluaran/user/${userId}`,
         );
         const pengeluaranJson = await pengeluaranRes.json();
 
@@ -175,20 +169,17 @@ const Goals = () => {
     fetchData();
   }, [userId]);
 
-
   const getTotalDialokasikan = async () => {
     try {
       console.log("USER ID:", userId);
 
       const response = await axios.get(
-        `https://fintrackai-backend-1yz0.onrender.com/api/tabungan/${userId}/total`
+        `https://fintrackai-backend-1yz0.onrender.com/api/tabungan/${userId}/total`,
       );
 
       console.log("RESPONSE:", response.data);
 
-      setSudahDialokasikan(
-        Number(response?.data?.data?.total || 0)
-      );
+      setSudahDialokasikan(Number(response?.data?.data?.total || 0));
     } catch (error) {
       console.log(error);
     }
@@ -201,8 +192,6 @@ const Goals = () => {
     }
   }, [userId]);
 
-
-
   const targetTabungan = totalPemasukan * 0.2;
 
   const totalTabungan = pengeluaran
@@ -213,8 +202,6 @@ const Goals = () => {
   useEffect(() => {
     console.log("Sudah Dialokasikan:", sudahDialokasikan);
   }, [sudahDialokasikan]);
-
-
 
   return (
     <div className="h-screen bg-[#f8f6ff] font-poppins flex overflow-hidden relative">
@@ -257,45 +244,112 @@ const Goals = () => {
         </div>
       </div>
 
-       {/* =========================================================
+      {/* =========================================================
       2. SIDEBAR KIRI (KHUSUS TAMPILAN DESKTOP - OTOMATIS HILANG DI HP)
             ========================================================= */}
-        <div
-          className={`${isSidebarOpen ? "w-64" : "w-20"} hidden md:flex absolute md:relative z-[60] md:z-10 h-full bg-white border-r border-[#f0f0f0] px-4 md:px-6 py-6 md:py-8 flex-col shadow-[4px_0_24px_rgba(0,0,0,0.02)] transition-all duration-300`}
-        >
-          {/* Bagian Atas: Logo & Tombol Toggle Desktop */}
-          <div className="flex flex-col items-center mb-10 relative">
-            <img src="/gambar/logo.png" className="w-16 mb-2" alt="Logo" />
-            <button
-              onClick={() => setIsSidebarOpen(!isSidebarOpen)}
-              className="absolute -right-10 top-2 z-[60] w-16 h-16 transition-transform duration-300 hover:scale-105 focus:outline-none"
+      <div
+        className={`${isSidebarOpen ? "w-64" : "w-20"} hidden md:flex absolute md:relative z-[60] md:z-10 h-full bg-white border-r border-[#f0f0f0] px-4 md:px-6 py-6 md:py-8 flex-col shadow-[4px_0_24px_rgba(0,0,0,0.02)] transition-all duration-300`}
+      >
+        {/* Bagian Atas: Logo & Tombol Toggle Desktop */}
+        <div className="flex flex-col items-center mb-10 relative">
+          <img src="/gambar/logo.png" className="w-16 mb-2" alt="Logo" />
+          <button
+            onClick={() => setIsSidebarOpen(!isSidebarOpen)}
+            className="absolute -right-10 top-2 z-[60] w-16 h-16 transition-transform duration-300 hover:scale-105 focus:outline-none"
+          >
+            <img
+              src="/gambar/robotngintip.png"
+              alt="Toggle Sidebar"
+              className="w-full h-full object-contain"
+            />
+          </button>
+        </div>
+
+        {/* Menu Navigasi Utama Desktop */}
+        <nav className="relative flex-grow font-medium flex flex-col gap-4">
+          <div
+            className="absolute left-0 w-full h-[52px] bg-[#f0eaff] rounded-2xl shadow-sm transition-transform duration-500 ease-[cubic-bezier(0.4,0,0.2,1)]"
+            style={{
+              transform: `translateY(${["Beranda", "Transaksi", "Budget", "Goals", "AI"].indexOf(activeMenu) * 68}px)`,
+              display: [
+                "Beranda",
+                "Transaksi",
+                "Budget",
+                "Goals",
+                "AI",
+              ].includes(activeMenu)
+                ? "block"
+                : "none",
+            }}
+          ></div>
+
+          {[
+            { n: "Beranda", img: "/gambar/beranda.png", path: "/beranda" },
+            {
+              n: "Transaksi",
+              img: "/gambar/transaksi.png",
+              path: "/transaksi",
+            },
+            { n: "Budget", img: "/gambar/budget.png", path: "/budget" },
+            { n: "Goals", img: "/gambar/goals.png", path: "/goals" },
+            { n: "AI", img: "/gambar/ai.png", path: "/ai" },
+          ].map((item) => (
+            <div
+              key={item.n}
+              onClick={() => {
+                navigate(item.path);
+              }}
+              className={`relative z-10 flex items-center ${isSidebarOpen ? "gap-4 px-3.5" : "justify-center px-0"} cursor-pointer h-[52px] rounded-2xl transition-all duration-300 ${
+                activeMenu === item.n
+                  ? "text-[#8477e4] font-bold"
+                  : "text-gray-400 hover:text-gray-900"
+              }`}
             >
               <img
-                src="/gambar/robotngintip.png"
-                alt="Toggle Sidebar"
-                className="w-full h-full object-contain"
+                src={item.img}
+                className={`w-6 h-6 object-contain transition-all ${activeMenu !== item.n ? "grayscale opacity-70" : ""}`}
+                alt={item.n}
               />
-            </button>
+              {isSidebarOpen && <span className="text-sm">{item.n}</span>}
+            </div>
+          ))}
+        </nav>
+
+        {/* Menu Bawah Desktop: Pengaturan & Logout */}
+        <div className="border-t border-gray-100 pt-6 space-y-4 font-medium relative z-10 bg-white">
+          <div
+            onClick={() => navigate("/pengaturan")}
+            className={`flex items-center ${isSidebarOpen ? "gap-4 p-3.5" : "justify-center p-0 h-[52px]"} cursor-pointer rounded-2xl ${activeMenu === "Pengaturan" ? "bg-[#f0eaff] text-[#8477e4] font-bold" : "text-gray-400 hover:text-gray-900"} transition-all`}
+          >
+            <img
+              src="/gambar/pengaturan.png"
+              className={`w-6 h-6 object-contain ${activeMenu !== "Pengaturan" ? "grayscale opacity-70" : ""}`}
+              alt="Setting"
+            />
+            {isSidebarOpen && <span className="text-sm">Pengaturan</span>}
           </div>
+          <div
+            onClick={handleLogout}
+            className={`flex items-center ${isSidebarOpen ? "gap-4 p-3.5" : "justify-center p-0 h-[52px]"} cursor-pointer rounded-2xl text-gray-400 hover:bg-red-50 hover:text-red-500 transition-all`}
+          >
+            <img
+              src="/gambar/logout.png"
+              className="w-6 h-6 object-contain grayscale opacity-70"
+              alt="Logout"
+            />
+            {isSidebarOpen && <span className="text-sm">Logout</span>}
+          </div>
+        </div>
+      </div>
 
-          {/* Menu Navigasi Utama Desktop */}
-          <nav className="relative flex-grow font-medium flex flex-col gap-4">
-            <div
-              className="absolute left-0 w-full h-[52px] bg-[#f0eaff] rounded-2xl shadow-sm transition-transform duration-500 ease-[cubic-bezier(0.4,0,0.2,1)]"
-              style={{
-                transform: `translateY(${["Beranda", "Transaksi", "Budget", "Goals", "AI"].indexOf(activeMenu) * 68}px)`,
-                display: [
-                  "Beranda",
-                  "Transaksi",
-                  "Budget",
-                  "Goals",
-                  "AI",
-                ].includes(activeMenu)
-                  ? "block"
-                  : "none",
-              }}
-            ></div>
-
+      {/* =========================================================
+      3. MOBILE NAVBAR (BERDIRI SENDIRI DI LUAR - KHUSUS LAYAR HP)
+  ========================================================= */}
+      <div className="fixed bottom-6 right-6 z-50 md:hidden flex flex-col items-center gap-3">
+        {/* Pop-up Menu Logo saat Robot Mobile Ditekan */}
+        {isMobileMenuOpen && (
+          <div className="bg-white/90 backdrop-blur-md border border-purple-100 p-3 rounded-2xl shadow-xl flex flex-col gap-4 items-center animate-bounce-short">
+            {/* List Menu Utama Mobile */}
             {[
               { n: "Beranda", img: "/gambar/beranda.png", path: "/beranda" },
               {
@@ -311,152 +365,87 @@ const Goals = () => {
                 key={item.n}
                 onClick={() => {
                   navigate(item.path);
+                  setIsMobileMenuOpen(false); // Otomatis tutup pop-up setelah diklik
                 }}
-                className={`relative z-10 flex items-center ${isSidebarOpen ? "gap-4 px-3.5" : "justify-center px-0"} cursor-pointer h-[52px] rounded-2xl transition-all duration-300 ${
+                className={`p-2 rounded-xl transition-all duration-200 cursor-pointer ${
                   activeMenu === item.n
-                    ? "text-[#8477e4] font-bold"
-                    : "text-gray-400 hover:text-gray-900"
+                    ? "bg-[#f0eaff] scale-110"
+                    : "opacity-60"
                 }`}
               >
                 <img
                   src={item.img}
-                  className={`w-6 h-6 object-contain transition-all ${activeMenu !== item.n ? "grayscale opacity-70" : ""}`}
+                  className={`w-6 h-6 object-contain ${activeMenu !== item.n ? "grayscale" : ""}`}
                   alt={item.n}
                 />
-                {isSidebarOpen && <span className="text-sm">{item.n}</span>}
               </div>
             ))}
-          </nav>
 
-          {/* Menu Bawah Desktop: Pengaturan & Logout */}
-          <div className="border-t border-gray-100 pt-6 space-y-4 font-medium relative z-10 bg-white">
+            {/* Garis Pembatas Tipis */}
+            <div className="w-full border-t border-gray-200 my-1"></div>
+
+            {/* Pengaturan Versi Mobile */}
             <div
-              onClick={() => navigate("/pengaturan")}
-              className={`flex items-center ${isSidebarOpen ? "gap-4 p-3.5" : "justify-center p-0 h-[52px]"} cursor-pointer rounded-2xl ${activeMenu === "Pengaturan" ? "bg-[#f0eaff] text-[#8477e4] font-bold" : "text-gray-400 hover:text-gray-900"} transition-all`}
+              onClick={() => {
+                navigate("/pengaturan");
+                setIsMobileMenuOpen(false);
+              }}
+              className={`p-2 rounded-xl transition-all duration-200 cursor-pointer ${
+                activeMenu === "Pengaturan"
+                  ? "bg-[#f0eaff] scale-110"
+                  : "opacity-60"
+              }`}
             >
               <img
                 src="/gambar/pengaturan.png"
-                className={`w-6 h-6 object-contain ${activeMenu !== "Pengaturan" ? "grayscale opacity-70" : ""}`}
-                alt="Setting"
+                className={`w-6 h-6 object-contain ${activeMenu !== "Pengaturan" ? "grayscale" : ""}`}
+                alt="Pengaturan"
               />
-              {isSidebarOpen && <span className="text-sm">Pengaturan</span>}
             </div>
+
+            {/* Logout Versi Mobile */}
             <div
-              onClick={handleLogout}
-              className={`flex items-center ${isSidebarOpen ? "gap-4 p-3.5" : "justify-center p-0 h-[52px]"} cursor-pointer rounded-2xl text-gray-400 hover:bg-red-50 hover:text-red-500 transition-all`}
+              onClick={() => {
+                handleLogout();
+                setIsMobileMenuOpen(false);
+              }}
+              className="p-2 rounded-xl transition-all duration-200 cursor-pointer opacity-60 hover:bg-red-50 text-red-500"
             >
               <img
                 src="/gambar/logout.png"
                 className="w-6 h-6 object-contain grayscale opacity-70"
                 alt="Logout"
               />
-              {isSidebarOpen && <span className="text-sm">Logout</span>}
             </div>
           </div>
-        </div>
+        )}
 
-        {/* =========================================================
-      3. MOBILE NAVBAR (BERDIRI SENDIRI DI LUAR - KHUSUS LAYAR HP)
-  ========================================================= */}
-        <div className="fixed bottom-6 right-6 z-50 md:hidden flex flex-col items-center gap-3">
-          {/* Pop-up Menu Logo saat Robot Mobile Ditekan */}
-          {isMobileMenuOpen && (
-            <div className="bg-white/90 backdrop-blur-md border border-purple-100 p-3 rounded-2xl shadow-xl flex flex-col gap-4 items-center animate-bounce-short">
-              {/* List Menu Utama Mobile */}
-              {[
-                { n: "Beranda", img: "/gambar/beranda.png", path: "/beranda" },
-                {
-                  n: "Transaksi",
-                  img: "/gambar/transaksi.png",
-                  path: "/transaksi",
-                },
-                { n: "Budget", img: "/gambar/budget.png", path: "/budget" },
-                { n: "Goals", img: "/gambar/goals.png", path: "/goals" },
-                { n: "AI", img: "/gambar/ai.png", path: "/ai" },
-              ].map((item) => (
-                <div
-                  key={item.n}
-                  onClick={() => {
-                    navigate(item.path);
-                    setIsMobileMenuOpen(false); // Otomatis tutup pop-up setelah diklik
-                  }}
-                  className={`p-2 rounded-xl transition-all duration-200 cursor-pointer ${
-                    activeMenu === item.n
-                      ? "bg-[#f0eaff] scale-110"
-                      : "opacity-60"
-                  }`}
-                >
-                  <img
-                    src={item.img}
-                    className={`w-6 h-6 object-contain ${activeMenu !== item.n ? "grayscale" : ""}`}
-                    alt={item.n}
-                  />
-                </div>
-              ))}
-
-              {/* Garis Pembatas Tipis */}
-              <div className="w-full border-t border-gray-200 my-1"></div>
-
-              {/* Pengaturan Versi Mobile */}
-              <div
-                onClick={() => {
-                  navigate("/pengaturan");
-                  setIsMobileMenuOpen(false);
-                }}
-                className={`p-2 rounded-xl transition-all duration-200 cursor-pointer ${
-                  activeMenu === "Pengaturan"
-                    ? "bg-[#f0eaff] scale-110"
-                    : "opacity-60"
-                }`}
-              >
-                <img
-                  src="/gambar/pengaturan.png"
-                  className={`w-6 h-6 object-contain ${activeMenu !== "Pengaturan" ? "grayscale" : ""}`}
-                  alt="Pengaturan"
-                />
-              </div>
-
-              {/* Logout Versi Mobile */}
-              <div
-                onClick={() => {
-                  handleLogout();
-                  setIsMobileMenuOpen(false);
-                }}
-                className="p-2 rounded-xl transition-all duration-200 cursor-pointer opacity-60 hover:bg-red-50 text-red-500"
-              >
-                <img
-                  src="/gambar/logout.png"
-                  className="w-6 h-6 object-contain grayscale opacity-70"
-                  alt="Logout"
-                />
-              </div>
-            </div>
-          )}
-
-          {/* Tombol Utama Robot Ngintip di HP */}
-          <button
-            onClick={() => setIsMobileMenuOpen(!isMobileMenuOpen)}
-            className="w-16 h-16 bg-transparent flex items-center justify-center hover:scale-110 active:scale-95 transition-all duration-300 focus:outline-none"
-          >
-            <img
-              src="/gambar/robotngintip.png"
-              // Ditambahkan '-rotate-90' supaya robotnya berputar menghadap ke atas
-              // Ukuran dinaikkan ke 'w-14 h-14' agar tetap proporsional dan tegas
-              className="w-14 h-14 object-contain transform -rotate-90 hover:translate-y-[-4px] transition-transform"
-              alt="FinTrack AI Assistant"
-            />
-          </button>
-        </div>
+        {/* Tombol Utama Robot Ngintip di HP */}
+        <button
+          onClick={() => setIsMobileMenuOpen(!isMobileMenuOpen)}
+          className="w-16 h-16 bg-transparent flex items-center justify-center hover:scale-110 active:scale-95 transition-all duration-300 focus:outline-none"
+        >
+          <img
+            src="/gambar/robotngintip.png"
+            // Ditambahkan '-rotate-90' supaya robotnya berputar menghadap ke atas
+            // Ukuran dinaikkan ke 'w-14 h-14' agar tetap proporsional dan tegas
+            className="w-14 h-14 object-contain transform -rotate-90 hover:translate-y-[-4px] transition-transform"
+            alt="FinTrack AI Assistant"
+          />
+        </button>
+      </div>
 
       {/* =========================================================
           3. KONTEN UTAMA HALAMAN GOALS (Bisa di-scroll mandiri)
       ========================================================= */}
-      <div className="flex-1 overflow-y-auto p-6 md:p-8 space-y-6 z-10 relative">
+      <div className="flex-1 overflow-y-auto p-4 md:p-6 lg:p-8 space-y-4 md:space-y-6 z-10 relative pb-24 md:pb-8">
         {/* HEADER */}
         <div className="flex justify-between items-center">
           <div>
-            <h1 className="text-3xl font-bold text-gray-800">Goals</h1>
-            <p className="text-sm text-gray-500">
+            <h1 className="text-2xl md:text-3xl font-bold text-gray-800">
+              Goals
+            </h1>
+            <p className="text-xs md:text-sm text-gray-500">
               Atur dana tabunganmu untuk mencapai target keuangan yang kamu
               impikan.
             </p>
@@ -477,11 +466,11 @@ const Goals = () => {
         {/* =========================================================
               BANNER DANA GOALS (ROBOT PRESISI MENYENTUH ATAS BAWAH)
             ========================================================= */}
-        <div className="bg-[#EEE8FD] rounded-2xl border border-[#e9dff9] p-3 flex flex-row items-center justify-between gap-2 w-full h-[160px] shadow-sm relative overflow-hidden">
+        <div className="bg-[#EEE8FD] rounded-2xl border border-[#e9dff9] p-3 flex flex-col sm:flex-row items-center justify-between gap-3 w-full min-h-auto sm:h-[160px] shadow-sm relative overflow-hidden">
           {/* KIRI: Teks Judul & Deskripsi */}
           <div className="z-10 max-w-md text-center xl:text-left">
             {/* JUDUL: Menggunakan warna deep indigo/purple dan font yang lebih tegas */}
-            <h4 className="text-2xl font-black text-[#3e3a94] flex items-center justify-center xl:justify-start mb-2 tracking-tight">
+            <h4 className="text-xl md:text-2xl font-black text-[#3e3a94] flex items-center justify-center xl:justify-start mb-2 tracking-tight">
               Dana Goals
             </h4>
 
@@ -497,7 +486,7 @@ const Goals = () => {
           </div>
 
           {/* TENGAH: Maskot Robot (Menyentuh Atas & Bawah Container) */}
-          <div className="z-10 w-40 xl:w-52 xl:self-stretch xl:-my-6 flex items-end justify-center flex-shrink-0">
+          <div className="hidden sm:flex z-10 w-40 xl:w-52 xl:self-stretch xl:-my-6 items-end justify-center flex-shrink-0">
             <img
               src="/gambar/robotgoals.png"
               alt="Robot Goals"
@@ -506,52 +495,52 @@ const Goals = () => {
           </div>
 
           {/* KANAN: Blok Kartu Finansial & Tombol */}
-          <div className="flex flex-col gap-3 z-10 w-full ">
+          <div className="flex flex-col gap-2 z-10 w-full">
             {/* Baris 3 Kartu */}
             <div className="flex flex-col sm:flex-row gap-2">
               {/* Kartu 1: Total Tabungan */}
-              <div className="bg-white py-2.5 px-4 rounded-xl border border-purple-50 shadow-sm flex items-center gap-3 flex-1 min-w-[180px] xl:min-w-[195px]">
-                <div className="w-9 h-9 rounded-lg bg-[#f3f0ff] flex items-center justify-center text-[#8b5cf6] text-base flex-shrink-0">
+              <div className="bg-white py-2 px-3 rounded-xl border border-purple-50 shadow-sm flex items-center gap-2 flex-1 min-w-0">
+                <div className="w-8 h-8 rounded-lg bg-[#f3f0ff] flex items-center justify-center text-[#8b5cf6] text-sm flex-shrink-0">
                   <i className="fas fa-wallet"></i>
                 </div>
-                <div className="min-w-0">
-                  <p className="text-[10px] font-bold text-slate-400 flex items-center gap-1 whitespace-nowrap">
+                <div className="min-w-0 overflow-hidden">
+                  <p className="text-[9px] font-bold text-slate-400 flex items-center gap-1 whitespace-nowrap">
                     Total Tabungan{" "}
                     <span className="text-[9px] text-slate-300 font-normal">
                       (20%)
                     </span>
                   </p>
-                  <p className="text-base font-extrabold text-[#1e1b4b] mt-0.5 whitespace-nowrap">
+                  <p className="text-sm font-extrabold text-[#1e1b4b] mt-0.5 truncate">
                     Rp {targetTabungan.toLocaleString("id-ID")}
                   </p>
                 </div>
               </div>
 
               {/* Kartu 2: Sudah Dialokasikan */}
-              <div className="bg-white py-2.5 px-4 rounded-xl border border-orange-50 shadow-sm flex items-center gap-3 flex-1 min-w-[180px] xl:min-w-[195px]">
-                <div className="w-9 h-9 rounded-lg bg-[#fff7ed] flex items-center justify-center text-[#f59e0b] text-base flex-shrink-0">
+              <div className="bg-white py-2 px-3 rounded-xl border border-orange-50 shadow-sm flex items-center gap-2 flex-1 min-w-0">
+                <div className="w-8 h-8 rounded-lg bg-[#fff7ed] flex items-center justify-center text-[#f59e0b] text-sm flex-shrink-0">
                   <i className="fas fa-chart-pie"></i>
                 </div>
-                <div className="min-w-0">
-                  <p className="text-[10px] font-bold text-[#f59e0b] whitespace-nowrap">
+                <div className="min-w-0 overflow-hidden">
+                  <p className="text-[9px] font-bold text-[#f59e0b] whitespace-nowrap">
                     Sudah Dialokasikan
                   </p>
-                  <p className="text-base font-extrabold text-[#f59e0b] mt-0.5 whitespace-nowrap">
+                  <p className="text-sm font-extrabold text-[#f59e0b] mt-0.5 truncate">
                     Rp {sudahDialokasikan.toLocaleString("id-ID")}
                   </p>
                 </div>
               </div>
 
               {/* Kartu 3: Tersedia */}
-              <div className="bg-white py-2.5 px-4 rounded-xl border border-emerald-50 shadow-sm flex items-center gap-3 flex-1 min-w-[180px] xl:min-w-[195px]">
-                <div className="w-9 h-9 rounded-lg bg-[#ecfdf5] flex items-center justify-center text-[#10b981] text-base flex-shrink-0">
+              <div className="bg-white py-2 px-3 rounded-xl border border-emerald-50 shadow-sm flex items-center gap-2 flex-1 min-w-0">
+                <div className="w-8 h-8 rounded-lg bg-[#ecfdf5] flex items-center justify-center text-[#10b981] text-sm flex-shrink-0">
                   <i className="fas fa-money-bill-wave"></i>
                 </div>
-                <div className="min-w-0">
-                  <p className="text-[10px] font-bold text-[#10b981] whitespace-nowrap">
+                <div className="min-w-0 overflow-hidden">
+                  <p className="text-[9px] font-bold text-[#10b981] whitespace-nowrap">
                     Tersedia
                   </p>
-                  <p className="text-base font-extrabold text-[#10b981] mt-0.5 whitespace-nowrap">
+                  <p className="text-sm font-extrabold text-[#10b981] mt-0.5 truncate">
                     Rp {tersedia.toLocaleString("id-ID")}
                   </p>
                 </div>
@@ -571,7 +560,7 @@ const Goals = () => {
         </div>
 
         {/* SUMMARY CARDS (4 Kolom) */}
-        <div className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-4 mb-6">
+        <div className="grid grid-cols-1 sm:grid-cols-3 xl:grid-cols-3 gap-3 md:gap-4 mb-6">
           {[
             {
               title: "Total Goals",
@@ -597,51 +586,45 @@ const Goals = () => {
               color: "text-[#f59e0b]",
               bg: "bg-[#fff7ed]",
             },
-            // {
-            //   title: "Dana Tersedia",
-            //   value: "Rp 200.000",
-            //   desc: "Belum dialokasikan",
-            //   icon: "fa-check-circle",
-            //   color: "text-[#8b5cf6]",
-            //   bg: "bg-[#f3f0ff]",
-            // },
           ].map((card, idx) => (
             <div
               key={idx}
-              className="bg-white p-5 rounded-3xl border border-gray-100 shadow-sm flex items-center gap-4 relative z-10"
+              className="bg-white p-4 md:p-5 rounded-3xl border border-gray-100 shadow-sm flex items-center gap-3 md:gap-4 relative z-10"
             >
               <div
-                className={`w-12 h-12 rounded-2xl flex items-center justify-center text-xl ${card.bg} ${card.color}`}
+                className={`w-10 h-10 md:w-12 md:h-12 rounded-2xl flex items-center justify-center text-lg md:text-xl flex-shrink-0 ${card.bg} ${card.color}`}
               >
                 <i className={`fas ${card.icon}`}></i>
               </div>
-              <div>
-                <p className="text-[11px] font-bold text-gray-500">
+              <div className="min-w-0">
+                <p className="text-[10px] md:text-[11px] font-bold text-gray-500 truncate">
                   {card.title}
                 </p>
-                <p className="text-lg font-black text-[#1e1b4b]">
+                <p className="text-base md:text-lg font-black text-[#1e1b4b]">
                   {card.value}
                 </p>
-                <p className="text-[10px] text-gray-400">{card.desc}</p>
+                <p className="text-[9px] md:text-[10px] text-gray-400 truncate">
+                  {card.desc}
+                </p>
               </div>
             </div>
           ))}
         </div>
 
         {/* MAIN CONTENT: LIST & INSIGHT (Grid 2:1) */}
-        <div className="grid grid-cols-1 xl:grid-cols-3 gap-6">
+        <div className="grid grid-cols-1 xl:grid-cols-3 gap-4 md:gap-6">
           {/* Kiri: Daftar Goals Aktif */}
-          <div className="xl:col-span-2 bg-white p-6 rounded-3xl border border-gray-100 shadow-sm flex flex-col relative z-10">
-            <h3 className="font-black text-[#1e1b4b] mb-6 text-lg">
+          <div className="xl:col-span-2 bg-white p-4 md:p-6 rounded-3xl border border-gray-100 shadow-sm flex flex-col relative z-10">
+            <h3 className="font-black text-[#1e1b4b] mb-4 md:mb-6 text-base md:text-lg">
               Daftar Goals Aktif
             </h3>
 
             {/* List Container */}
-            <div className="space-y-6 flex-1">
+            <div className="space-y-4 md:space-y-6 flex-1">
               {goals.map((goal) => (
                 <div
                   key={goal.id}
-                  className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 pb-6 border-b border-gray-100 last:border-0 last:pb-0"
+                  className="flex flex-col sm:flex-row sm:items-center justify-between gap-3 pb-4 md:pb-6 border-b border-gray-100 last:border-0 last:pb-0"
                 >
                   {/* Bagian Kiri: Gambar + Detail Teks */}
                   <div className="flex items-center gap-4 flex-1">
@@ -656,7 +639,7 @@ const Goals = () => {
 
                     {/* Detail Informasi */}
                     <div className="flex flex-col gap-0.5">
-                      <h4 className="font-bold text-[#1e1b4b] text-sm">
+                      <h4 className="font-bold text-[#1e1b4b] text-xs md:text-sm">
                         {goal.name}
                       </h4>
                       {/* <p className="text-[11px] text-[#1e1b4b] line-clamp-1">
@@ -672,8 +655,8 @@ const Goals = () => {
                   </div>
 
                   {/* Bagian Tengah: Informasi Progres Tabungan (Sejajar ke Samping) */}
-                  <div className="flex flex-col gap-1 w-full sm:w-56 flex-shrink-0">
-                    <div className="text-[11px] text-gray-400 font-medium">
+                  <div className="flex flex-col gap-1 w-full sm:w-48 flex-shrink-0">
+                    <div className="text-[10px] text-gray-400 font-medium">
                       <span className="font-bold text-[#1e1b4b]">
                         {/* Ubah 'goal.current' menjadi 'goal.allocation' */}
                         Rp {(goal.allocation || 0).toLocaleString("id-ID")}
@@ -683,7 +666,7 @@ const Goals = () => {
                     </div>
 
                     {/* Progress Bar & Persentase Sejajar */}
-                    <div className="flex items-center gap-3">
+                    <div className="flex items-center gap-2">
                       <div className="flex-1 bg-gray-100 h-2 rounded-full overflow-hidden">
                         <div
                           className="h-2 rounded-full transition-all duration-500"
@@ -694,13 +677,13 @@ const Goals = () => {
                         ></div>
                       </div>
                       <span
-                        className="text-[11px] font-bold w-8 text-right"
+                        className="text-[10px] font-bold w-8 text-right"
                         style={{ color: goal.color }}
                       >
                         {goal.progress}%
                       </span>
                     </div>
-                    <p className="text-[10px] font-medium text-gray-400">
+                    <p className="text-[9px] font-medium text-gray-400">
                       {/* Hitung sisa secara otomatis di sini */}
                       Sisa Rp{" "}
                       {(goal.targetPrice - goal.allocation || 0).toLocaleString(
@@ -710,7 +693,7 @@ const Goals = () => {
                   </div>
 
                   {/* Bagian Kanan: Aksi Edit & Hapus */}
-                  <div className="flex gap-2 sm:ml-2 justify-end">
+                  <div className="flex gap-2 justify-end sm:ml-2">
                     <button
                       onClick={() => handleOpenEdit(goal)} // Hubungkan ke fungsi buka popup
                       className="w-8 h-8 rounded-lg border border-purple-100 text-[#8b5cf6] flex items-center justify-center hover:bg-purple-50 transition shadow-sm"
@@ -731,17 +714,17 @@ const Goals = () => {
             {/* Tombol Berubah Menjadi Solid Border Sesuai Figma */}
             <button
               onClick={() => setIsPopupOpen(true)} // Tambahkan baris ini
-              className="w-full mt-6 py-2.5 border border-purple-200 text-[#8b5cf6] bg-white rounded-xl text-xs font-bold hover:bg-[#fcfbff] transition flex items-center justify-center gap-2 shadow-sm"
+              className="w-full mt-4 md:mt-6 py-2.5 border border-purple-200 text-[#8b5cf6] bg-white rounded-xl text-xs font-bold hover:bg-[#fcfbff] transition flex items-center justify-center gap-2 shadow-sm"
             >
               <i className="fas fa-plus text-[10px]"></i> Tambah Goals
             </button>
           </div>
 
           {/* Kanan: Insight AI */}
-          <div className="bg-[#EEE8FD] p-6 rounded-3xl border border-[#e0d6f9] shadow-sm flex flex-col relative z-10 overflow-visible">
+          <div className="bg-[#EEE8FD] p-4 md:p-6 rounded-3xl border border-[#e0d6f9] shadow-sm flex flex-col relative z-10 overflow-visible">
             {/* Header dengan Maskot Robot AI */}
-            <div className="flex justify-between items-center mb-6 relative">
-              <h3 className="font-black text-[#1e1b4b] text-lg flex items-center gap-1.5">
+            <div className="flex justify-between items-center mb-4 md:mb-6 relative">
+              <h3 className="font-black text-[#1e1b4b] text-base md:text-lg flex items-center gap-1.5">
                 Insight AI <span className="text-[#8b5cf6] text-sm">✨</span>
               </h3>
 
@@ -758,11 +741,11 @@ const Goals = () => {
             {/* List Insight - Kartu Putih Bersih */}
             <div className="space-y-3 flex-1">
               {/* Kartu 1 */}
-              <div className="bg-white p-4 rounded-2xl shadow-sm flex gap-4 items-center border border-white">
-                <div className="w-10 h-10 rounded-full bg-[#f3f0ff] text-[#8b5cf6] flex items-center justify-center flex-shrink-0">
+              <div className="bg-white p-3 md:p-4 rounded-2xl shadow-sm flex gap-3 md:gap-4 items-center border border-white">
+                <div className="w-9 h-9 rounded-full bg-[#f3f0ff] text-[#8b5cf6] flex items-center justify-center flex-shrink-0">
                   <i className="fas fa-bullseye text-sm"></i>
                 </div>
-                <p className="text-[11px] leading-relaxed text-[#1e1b4b] font-medium">
+                <p className="text-[10px] md:text-[11px] leading-relaxed text-[#1e1b4b] font-medium">
                   Goal <span className="font-bold">"Laptop Asus Vivobook"</span>{" "}
                   telah mencapai <span className="font-bold">8%</span> dari
                   target. Dengan rata-rata penambahan dana saat ini, target
@@ -772,11 +755,11 @@ const Goals = () => {
               </div>
 
               {/* Kartu 2 */}
-              <div className="bg-white p-4 rounded-2xl shadow-sm flex gap-4 items-center border border-white">
-                <div className="w-10 h-10 rounded-full bg-[#fff7ed] text-[#f59e0b] flex items-center justify-center flex-shrink-0">
+              <div className="bg-white p-3 md:p-4 rounded-2xl shadow-sm flex gap-3 md:gap-4 items-center border border-white">
+                <div className="w-9 h-9 rounded-full bg-[#fff7ed] text-[#f59e0b] flex items-center justify-center flex-shrink-0">
                   <i className="fas fa-wallet text-sm"></i>
                 </div>
-                <p className="text-[11px] leading-relaxed text-[#1e1b4b] font-medium">
+                <p className="text-[10px] md:text-[11px] leading-relaxed text-[#1e1b4b] font-medium">
                   Dana tabungan yang belum dialokasikan masih sebesar{" "}
                   <span className="font-bold text-[#f59e0b]">Rp200.000</span>.
                   Kamu dapat mengalokasikannya ke Goal yang sedang
@@ -785,11 +768,11 @@ const Goals = () => {
               </div>
 
               {/* Kartu 3 */}
-              <div className="bg-white p-4 rounded-2xl shadow-sm flex gap-4 items-center border border-white">
-                <div className="w-10 h-10 rounded-full bg-[#ecfdf5] text-[#10b981] flex items-center justify-center flex-shrink-0">
+              <div className="bg-white p-3 md:p-4 rounded-2xl shadow-sm flex gap-3 md:gap-4 items-center border border-white">
+                <div className="w-9 h-9 rounded-full bg-[#ecfdf5] text-[#10b981] flex items-center justify-center flex-shrink-0">
                   <i className="fas fa-chart-line text-sm"></i>
                 </div>
-                <p className="text-[11px] leading-relaxed text-[#1e1b4b] font-medium">
+                <p className="text-[10px] md:text-[11px] leading-relaxed text-[#1e1b4b] font-medium">
                   Goal <span className="font-bold">"Buku Kuliah"</span> memiliki
                   progres paling cepat dibanding Goal lainnya. Pertahankan
                   konsistensimu!
@@ -798,7 +781,7 @@ const Goals = () => {
             </div>
 
             {/* Tombol Lihat Rekomendasi */}
-            <button className="w-full mt-6 py-3 border border-[#d1c4f5] text-[#8b5cf6] bg-white rounded-xl text-xs font-bold hover:bg-[#fcfbff] transition flex items-center justify-center gap-2 shadow-sm">
+            <button className="w-full mt-4 md:mt-6 py-3 border border-[#d1c4f5] text-[#8b5cf6] bg-white rounded-xl text-xs font-bold hover:bg-[#fcfbff] transition flex items-center justify-center gap-2 shadow-sm">
               Lihat Rekomendasi AI{" "}
               <span className="text-sm font-medium">→</span>
             </button>
@@ -806,10 +789,10 @@ const Goals = () => {
         </div>
 
         {/* CHARTS SECTION (Grid 1:2) */}
-        <div className="grid grid-cols-1 xl:grid-cols-3 gap-6">
+        <div className="grid grid-cols-1 xl:grid-cols-3 gap-4 md:gap-6">
           {/* Distribusi Dana Goals */}
-          <div className="bg-white p-6 rounded-3xl border border-gray-100 shadow-sm flex flex-col">
-            <h3 className="font-black text-[#1e1b4b] mb-4">
+          <div className="bg-white p-4 md:p-6 rounded-3xl border border-gray-100 shadow-sm flex flex-col">
+            <h3 className="font-black text-[#1e1b4b] mb-4 text-sm md:text-base">
               Distribusi Dana Goals
             </h3>
             <div className="h-40 w-full min-h-[160px] flex items-center justify-center relative overflow-hidden">
@@ -856,18 +839,20 @@ const Goals = () => {
                 >
                   <span className="flex items-center">
                     <span
-                      className="w-3 h-3 rounded-full mr-2"
+                      className="w-3 h-3 rounded-full mr-2 flex-shrink-0"
                       style={{ backgroundColor: item.color }}
                     />
-                    {item.name}
+                    <span className="truncate max-w-[120px]">{item.name}</span>
                   </span>
-                  <span>Rp {(item.value || 0).toLocaleString("id-ID")}</span>
+                  <span className="ml-2 whitespace-nowrap">
+                    Rp {(item.value || 0).toLocaleString("id-ID")}
+                  </span>
                 </div>
               ))}
             </div>
 
             {/* STATUS EFISIENSI */}
-            <div className="mt-6 pt-4 border-t border-gray-100 text-center">
+            <div className="mt-4 md:mt-6 pt-4 border-t border-gray-100 text-center">
               <p className="text-[10px] text-gray-400 uppercase">
                 Status Efisiensi
               </p>
@@ -876,17 +861,19 @@ const Goals = () => {
           </div>
 
           {/* Progress Goals Line Chart */}
-          <div className="xl:col-span-2 bg-white p-6 rounded-3xl border border-gray-100 shadow-sm flex flex-col relative z-10 w-full min-w-0">
-            <div className="flex justify-between items-center mb-6">
-              <h3 className="font-black text-[#1e1b4b]">Progress Goals</h3>
-              <div className="border border-gray-200 px-3 py-1.5 rounded-lg flex items-center gap-2 text-[11px] font-bold text-gray-600 cursor-pointer">
+          <div className="xl:col-span-2 bg-white p-4 md:p-6 rounded-3xl border border-gray-100 shadow-sm flex flex-col relative z-10 w-full min-w-0">
+            <div className="flex justify-between items-center mb-4 md:mb-6">
+              <h3 className="font-black text-[#1e1b4b] text-sm md:text-base">
+                Progress Goals
+              </h3>
+              <div className="border border-gray-200 px-2 md:px-3 py-1 md:py-1.5 rounded-lg flex items-center gap-1 md:gap-2 text-[10px] md:text-[11px] font-bold text-gray-600 cursor-pointer">
                 6 Bulan Terakhir{" "}
                 <i className="fas fa-chevron-down text-[10px]"></i>
               </div>
             </div>
 
             {/* Bungkus ResponsiveContainer dengan div yang memiliki tinggi tetap */}
-            <div className="w-full h-72 min-h-[288px] flex-shrink-0">
+            <div className="w-full h-56 md:h-72 min-h-[224px] flex-shrink-0">
               <ResponsiveContainer width="100%" height="100%">
                 <LineChart data={lineData}>
                   <CartesianGrid
@@ -898,13 +885,14 @@ const Goals = () => {
                     dataKey="name"
                     axisLine={false}
                     tickLine={false}
-                    tick={{ fontSize: 10, fill: "#94a3b8", fontWeight: 600 }}
+                    tick={{ fontSize: 9, fill: "#94a3b8", fontWeight: 600 }}
                     dy={10}
                   />
                   <YAxis
                     axisLine={false}
                     tickLine={false}
-                    tick={{ fontSize: 10, fill: "#94a3b8", fontWeight: 600 }}
+                    tick={{ fontSize: 9, fill: "#94a3b8", fontWeight: 600 }}
+                    width={45}
                   />
                   <Tooltip
                     contentStyle={{
