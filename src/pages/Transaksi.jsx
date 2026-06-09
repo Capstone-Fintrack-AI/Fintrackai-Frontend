@@ -192,20 +192,10 @@ const Transaksi = () => {
     if (!selectedItem?.id) return;
 
     try {
-      const response = await fetch(
-        `https://fintrackai-backend-1yz0.onrender.com/pemasukan/${selectedItem.id}`,
-        {
-          method: "DELETE",
-        }
+      await axios.delete(
+        `https://fintrackai-backend-1yz0.onrender.com/pemasukan/${selectedItem.id}`
       );
 
-      const result = await response.json();
-
-      if (!response.ok) {
-        throw new Error(result.message || "Gagal menghapus pemasukan");
-      }
-
-      // Hapus data dari state agar UI langsung update
       setIncome((prev) =>
         prev.filter((item) => item.id !== selectedItem.id)
       );
@@ -215,8 +205,8 @@ const Transaksi = () => {
 
       alert("Pemasukan berhasil dihapus");
     } catch (error) {
-      console.error("Error delete pemasukan:", error);
-      alert(error.message || "Terjadi kesalahan saat menghapus data");
+      console.error(error);
+      alert("Gagal menghapus pemasukan");
     }
   };
 
@@ -1031,7 +1021,10 @@ const Transaksi = () => {
                       </button>
                       <button
                         type="button"
-                        onClick={handleConfirmDelete}
+                        onClick={() => {
+                          setSelectedItem(item);
+                          setIsDeleteOpen(true);
+                        }}
                         className="flex-1 py-3.5 rounded-xl bg-[#F44336] text-white text-sm font-bold shadow-lg shadow-red-500/20 hover:bg-[#e53935] transition-colors"
                       >
                         Ya, Hapus
