@@ -188,9 +188,36 @@ const Transaksi = () => {
     setIsEditOpen(false);
   };
 
-  const handleConfirmDelete = () => {
-    console.log("Data berhasil dihapus:", selectedItem);
-    setIsDeleteOpen(false);
+  const handleConfirmDelete = async () => {
+    if (!selectedItem?.id) return;
+
+    try {
+      const response = await fetch(
+        `https://fintrackai-backend-1yz0.onrender.com/pemasukan/${selectedItem.id}`,
+        {
+          method: "DELETE",
+        }
+      );
+
+      const result = await response.json();
+
+      if (!response.ok) {
+        throw new Error(result.message || "Gagal menghapus pemasukan");
+      }
+
+      // Hapus data dari state agar UI langsung update
+      setIncome((prev) =>
+        prev.filter((item) => item.id !== selectedItem.id)
+      );
+
+      setIsDeleteOpen(false);
+      setSelectedItem(null);
+
+      alert("Pemasukan berhasil dihapus");
+    } catch (error) {
+      console.error("Error delete pemasukan:", error);
+      alert(error.message || "Terjadi kesalahan saat menghapus data");
+    }
   };
 
   const totalPengeluaran = dataTransaksi
