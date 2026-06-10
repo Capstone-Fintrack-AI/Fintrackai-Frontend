@@ -190,27 +190,44 @@ const Transaksi = () => {
     setIsEditOpen(false);
   };
 
+
   const handleConfirmDelete = async () => {
     if (!selectedItem) return;
 
     try {
-      await axios.delete(
-        `https://fintrackai-backend-1yz0.onrender.com/pemasukan/${selectedItem.originalId}`
-      );
+      const isPemasukan = selectedItem.tipe === "Pemasukan";
 
+      const endpoint = isPemasukan
+        ? `https://fintrackai-backend-1yz0.onrender.com/pemasukan/${selectedItem.originalId}`
+        : `https://fintrackai-backend-1yz0.onrender.com/pengeluaran/delete/${selectedItem.originalId}`;
+
+      await axios.delete(endpoint);
+
+      // update UI langsung
       setDataTransaksi((prev) =>
         prev.filter((item) => item.id !== selectedItem.id)
       );
 
+      // 🔥 update total tanpa fetch tambahan (lebih aman)
+      if (isPemasukan) {
+        setTotalPemasukan((prev) => prev - selectedItem.nominal);
+      }
+
       setIsDeleteOpen(false);
       setSelectedItem(null);
 
-      alert("Pemasukan berhasil dihapus");
+      alert(
+        isPemasukan
+          ? "Pemasukan berhasil dihapus"
+          : "Pengeluaran berhasil dihapus"
+      );
     } catch (error) {
       console.error("Error delete:", error);
-      alert("Gagal menghapus pemasukan");
+      alert("Gagal menghapus data");
     }
   };
+
+
 
   const totalPengeluaran = dataTransaksi
     .filter((item) => item.nominal < 0)
