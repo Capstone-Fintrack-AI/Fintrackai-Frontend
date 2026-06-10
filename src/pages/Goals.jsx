@@ -48,9 +48,9 @@ const Goals = () => {
         progress:
           Number(item.jumlah_target) > 0
             ? Math.round(
-                (Number(item.jumlah_terkumpul) / Number(item.jumlah_target)) *
-                  100,
-              )
+              (Number(item.jumlah_terkumpul) / Number(item.jumlah_target)) *
+              100,
+            )
             : 0,
         status: item.status,
         color: item.status === "selesai" ? "#10b981" : "#8b5cf6",
@@ -76,13 +76,11 @@ const Goals = () => {
   const navigate = useNavigate();
 
   // 2. Fungsi untuk menangani simpan data dari popup
-  const handleAddGoal = (newGoal) => {
-    console.log("Data yang masuk dari popup:", newGoal);
-    // Simpan goal baru ke state
+  const handleAddGoal = async (newGoal) => {
     setGoals((prev) => [...prev, newGoal]);
 
-    // Kurangi saldo otomatis
-    setInitialBalance((prev) => prev - newGoal.allocation);
+    await getGoalsUser();
+    await getTotalDialokasikan();
   };
   const handleOpenEdit = (goal) => {
     setSelectedGoal(goal);
@@ -136,7 +134,7 @@ const Goals = () => {
           `https://fintrackai-backend-1yz0.onrender.com/pemasukan/user/${userId}`,
         );
         const pemasukanJson = await pemasukanRes.json();
-        const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
+        // const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
         const totalPemasukanCalc = pemasukanJson.data.reduce(
           (sum, item) => sum + Number(item.jumlah),
           0,
@@ -194,9 +192,11 @@ const Goals = () => {
 
   const targetTabungan = totalPemasukan * 0.2;
 
-  const totalTabungan = pengeluaran
-    .filter((item) => item.kategori === "Tabungan")
-    .reduce((sum, item) => sum + Number(item.jumlah), 0);
+  // const totalTabungan = pengeluaran
+  //   .filter((item) => item.kategori?.toLowerCase().trim() === "tabungan")
+  //   .reduce((sum, item) => sum + Number(item.jumlah || 0), 0);
+  const totalTabungan = targetTabungan;
+
   const tersedia = targetTabungan - sudahDialokasikan;
 
   useEffect(() => {
@@ -299,11 +299,10 @@ const Goals = () => {
               onClick={() => {
                 navigate(item.path);
               }}
-              className={`relative z-10 flex items-center ${isSidebarOpen ? "gap-4 px-3.5" : "justify-center px-0"} cursor-pointer h-[52px] rounded-2xl transition-all duration-300 ${
-                activeMenu === item.n
-                  ? "text-[#8477e4] font-bold"
-                  : "text-gray-400 hover:text-gray-900"
-              }`}
+              className={`relative z-10 flex items-center ${isSidebarOpen ? "gap-4 px-3.5" : "justify-center px-0"} cursor-pointer h-[52px] rounded-2xl transition-all duration-300 ${activeMenu === item.n
+                ? "text-[#8477e4] font-bold"
+                : "text-gray-400 hover:text-gray-900"
+                }`}
             >
               <img
                 src={item.img}
@@ -367,11 +366,10 @@ const Goals = () => {
                   navigate(item.path);
                   setIsMobileMenuOpen(false); // Otomatis tutup pop-up setelah diklik
                 }}
-                className={`p-2 rounded-xl transition-all duration-200 cursor-pointer ${
-                  activeMenu === item.n
-                    ? "bg-[#f0eaff] scale-110"
-                    : "opacity-60"
-                }`}
+                className={`p-2 rounded-xl transition-all duration-200 cursor-pointer ${activeMenu === item.n
+                  ? "bg-[#f0eaff] scale-110"
+                  : "opacity-60"
+                  }`}
               >
                 <img
                   src={item.img}
@@ -390,11 +388,10 @@ const Goals = () => {
                 navigate("/pengaturan");
                 setIsMobileMenuOpen(false);
               }}
-              className={`p-2 rounded-xl transition-all duration-200 cursor-pointer ${
-                activeMenu === "Pengaturan"
-                  ? "bg-[#f0eaff] scale-110"
-                  : "opacity-60"
-              }`}
+              className={`p-2 rounded-xl transition-all duration-200 cursor-pointer ${activeMenu === "Pengaturan"
+                ? "bg-[#f0eaff] scale-110"
+                : "opacity-60"
+                }`}
             >
               <img
                 src="/gambar/pengaturan.png"
@@ -511,7 +508,7 @@ const Goals = () => {
                     </span>
                   </p>
                   <p className="text-sm font-extrabold text-[#1e1b4b] mt-0.5 truncate">
-                    Rp {targetTabungan.toLocaleString("id-ID")}
+                    Rp {totalTabungan.toLocaleString("id-ID")}
                   </p>
                 </div>
               </div>

@@ -116,6 +116,7 @@ const Transaksi = () => {
         // Mapping Pemasukan
         const pemasukan = pemasukanRes.data.data.map((item) => ({
           id: `p-${item.id}`,
+          originalId: item.id,
           tipe: "Pemasukan",
           tgl: new Date(item.tanggal).toLocaleDateString("id-ID", {
             day: "numeric",
@@ -131,6 +132,7 @@ const Transaksi = () => {
         // Mapping Pengeluaran
         const pengeluaran = pengeluaranRes.data.data.map((item) => ({
           id: `g-${item.id}`,
+          originalId: item.id,
           tipe: "Pengeluaran",
           tgl: new Date(item.tanggal).toLocaleDateString("id-ID", {
             day: "numeric",
@@ -189,14 +191,14 @@ const Transaksi = () => {
   };
 
   const handleConfirmDelete = async () => {
-    if (!selectedItem?.id) return;
+    if (!selectedItem) return;
 
     try {
       await axios.delete(
-        `https://fintrackai-backend-1yz0.onrender.com/pemasukan/${selectedItem.id}`
+        `https://fintrackai-backend-1yz0.onrender.com/pemasukan/${selectedItem.originalId}`
       );
 
-      setIncome((prev) =>
+      setDataTransaksi((prev) =>
         prev.filter((item) => item.id !== selectedItem.id)
       );
 
@@ -205,7 +207,7 @@ const Transaksi = () => {
 
       alert("Pemasukan berhasil dihapus");
     } catch (error) {
-      console.error(error);
+      console.error("Error delete:", error);
       alert("Gagal menghapus pemasukan");
     }
   };
@@ -1021,10 +1023,7 @@ const Transaksi = () => {
                       </button>
                       <button
                         type="button"
-                        onClick={() => {
-                          setSelectedItem(item);
-                          setIsDeleteOpen(true);
-                        }}
+                        onClick={handleConfirmDelete}
                         className="flex-1 py-3.5 rounded-xl bg-[#F44336] text-white text-sm font-bold shadow-lg shadow-red-500/20 hover:bg-[#e53935] transition-colors"
                       >
                         Ya, Hapus
