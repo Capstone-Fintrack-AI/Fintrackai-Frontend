@@ -175,7 +175,7 @@ const Transaksi = () => {
       tgl: item.tgl || "",
       kat: item.kat || "",
       desc: item.desc || "",
-      nominal: Math.abs(item.nominal),
+      nominal: Math.abs(item.nominal || 0),
     });
 
     setIsEditOpen(true);
@@ -189,77 +189,70 @@ const Transaksi = () => {
   const handleConfirmEdit = async (e) => {
     e.preventDefault();
 
-    if (!selectedItem) return;
+    if (!selectedItem?.originalId) {
+      alert("ID transaksi tidak ditemukan");
+      return;
+    }
 
     try {
-      const user = JSON.parse(localStorage.getItem("user") || "{}");
+      const user = JSON.parse(
+        localStorage.getItem("user") || "{}"
+      );
 
-      const isPemasukan = selectedItem.tipe === "Pemasukan";
+      const isPemasukan =
+        selectedItem.tipe === "Pemasukan";
 
-      // endpoint dinamis
       const endpoint = isPemasukan
         ? `https://fintrackai-backend-1yz0.onrender.com/pemasukan/${selectedItem.originalId}`
         : `https://fintrackai-backend-1yz0.onrender.com/pengeluaran/update/${selectedItem.originalId}`;
 
-      // payload dinamis
       const payload = isPemasukan
         ? {
-          user_id: user.id,
-          nama_pemasukan: editForm.desc,
-          sumber_pemasukan: editForm.kat,
-          jumlah: Number(editForm.nominal),
+          user_id: Number(user?.id) || 0,
+          nama_pemasukan: String(editForm?.desc || "").trim(),
+          sumber_pemasukan: String(editForm?.kat || "").trim(),
+          jumlah: Number(editForm?.nominal || 0),
         }
         : {
-          user_id: user.id,
-          nama_pengeluaran: editForm.desc,
-          kategori: editForm.kat,
-          jumlah: Math.abs(Number(editForm.nominal)),
-          tanggal: editForm.tgl,
+          user_id: Number(user?.id) || 0,
+          nama_pengeluaran: String(editForm?.desc || "").trim(),
+          kategori: String(editForm?.kat || "").trim(),
+          jumlah: Math.abs(Number(editForm?.nominal || 0)),
+          tanggal: editForm?.tgl || null,
         };
+
+      console.log("ENDPOINT:", endpoint);
+      console.log("PAYLOAD:", payload);
+      console.log("SELECTED:", selectedItem);
 
       await axios.put(endpoint, payload);
 
-      // update UI langsung tanpa refresh
+      // update data di tabel langsung
       setDataTransaksi((prev) =>
         prev.map((item) => {
           if (item.id !== selectedItem.id) return item;
 
           return {
             ...item,
-            desc: editForm.desc,
-            kat: editForm.kat,
-            nominal: isPemasukan
-              ? Number(editForm.nominal)
-              : -Math.abs(Number(editForm.nominal)),
             tgl: editForm.tgl,
+            kat: editForm.kat,
+            desc: editForm.desc,
+            nominal:
+              item.tipe === "Pemasukan"
+                ? Number(editForm.nominal)
+                : -Math.abs(Number(editForm.nominal)),
           };
         })
       );
 
-      // update total pemasukan realtime
-      if (isPemasukan) {
-        const selisih =
-          Number(editForm.nominal) -
-          Number(selectedItem.nominal);
-
-        setTotalPemasukan((prev) => prev + selisih);
-      }
-
+      // tutup modal
       setIsEditOpen(false);
       setSelectedItem(null);
 
-      alert(
-        isPemasukan
-          ? "Pemasukan berhasil diupdate"
-          : "Pengeluaran berhasil diupdate"
-      );
+      alert("Data berhasil diubah");
     } catch (error) {
-      console.error("Edit gagal:", error);
-
-      alert(
-        error?.response?.data?.message ||
-        "Gagal mengubah data"
-      );
+      console.log("ERROR:", error.response?.data);
+      alert(error.response?.data?.message || "Gagal edit data");
     }
   };
 
@@ -723,7 +716,7 @@ const Transaksi = () => {
 
         {/* 4 METRIC CARDS ROW */}
         <div className="px-4 sm:px-6 md:px-10 w-full">
-  <main className="flex-grow pb-8 grid grid-cols-12 gap-6 progress-clean w-full items-start">
+          <main className="flex-grow pb-8 grid grid-cols-12 gap-6 progress-clean w-full items-start">
             {/* KOLOM TABEL (KIRI - 8/12) */}
             <div className="col-span-12 w-full min-w-0">
               {/* FILTER BAR */}
@@ -973,34 +966,66 @@ const Transaksi = () => {
 
                       <div>
                         <label className="block text-xs font-bold text-gray-400 uppercase tracking-wider mb-2">
-                          Kategori
+                          {selectedItem?.tipe === "Pemasukan"
+                            ? "Sumber Pemasukan"
+                            : "Kategori"}
                         </label>
-                        <div className="flex gap-3">
-                          <button
-                            type="button"
-                            onClick={() =>
-                              setEditForm({ ...editForm, kat: "Kebutuhan" })
+
+                        {selectedItem?.tipe === "Pemasukan" ? (
+                          <select
+                            value={editForm.kat}
+                            onChange={(e) =>
+                              setEditForm({
+                                ...editForm,
+                                kat: e.target.value,
+                              })
                             }
-                            className={`flex-1 py-3 rounded-xl font-bold text-sm transition-all border ${editForm.kat === "Kebutuhan"
-                              ? "bg-purple-50 border-[#8477e4] text-[#8477e4] shadow-sm shadow-purple-500/10"
-                              : "bg-white border-gray-200 text-gray-500 hover:bg-gray-50"
-                              }`}
+                            className="w-full px-4 py-3 rounded-xl border border-gray-200 text-sm font-semibold text-gray-700 focus:outline-none focus:border-[#8477e4]"
+                            required
                           >
-                            💼 Kebutuhan
-                          </button>
-                          <button
-                            type="button"
-                            onClick={() =>
-                              setEditForm({ ...editForm, kat: "Keinginan" })
-                            }
-                            className={`flex-1 py-3 rounded-xl font-bold text-sm transition-all border ${editForm.kat === "Keinginan"
-                              ? "bg-purple-50 border-[#8477e4] text-[#8477e4] shadow-sm shadow-purple-500/10"
-                              : "bg-white border-gray-200 text-gray-500 hover:bg-gray-50"
-                              }`}
-                          >
-                            ✨ Keinginan
-                          </button>
-                        </div>
+                            <option value="">Pilih Sumber Pemasukan</option>
+                            <option value="Gaji">Gaji</option>
+                            <option value="Freelance">Freelance</option>
+                            <option value="Bisnis">Bisnis</option>
+                            <option value="Investasi">Investasi</option>
+                            <option value="Bonus">Bonus</option>
+                            <option value="Lainnya">Lainnya</option>
+                          </select>
+                        ) : (
+                          <div className="flex gap-3">
+                            <button
+                              type="button"
+                              onClick={() =>
+                                setEditForm({
+                                  ...editForm,
+                                  kat: "Kebutuhan",
+                                })
+                              }
+                              className={`flex-1 py-3 rounded-xl font-bold text-sm transition-all border ${editForm.kat === "Kebutuhan"
+                                ? "bg-purple-50 border-[#8477e4] text-[#8477e4] shadow-sm shadow-purple-500/10"
+                                : "bg-white border-gray-200 text-gray-500 hover:bg-gray-50"
+                                }`}
+                            >
+                              💼 Kebutuhan
+                            </button>
+
+                            <button
+                              type="button"
+                              onClick={() =>
+                                setEditForm({
+                                  ...editForm,
+                                  kat: "Keinginan",
+                                })
+                              }
+                              className={`flex-1 py-3 rounded-xl font-bold text-sm transition-all border ${editForm.kat === "Keinginan"
+                                ? "bg-purple-50 border-[#8477e4] text-[#8477e4] shadow-sm shadow-purple-500/10"
+                                : "bg-white border-gray-200 text-gray-500 hover:bg-gray-50"
+                                }`}
+                            >
+                              ✨ Keinginan
+                            </button>
+                          </div>
+                        )}
                       </div>
 
                       <div>
