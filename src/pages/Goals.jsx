@@ -559,58 +559,6 @@ const Goals = () => {
           </div>
         </div>
 
-        {/* SUMMARY CARDS (4 Kolom) */}
-        <div className="grid grid-cols-1 sm:grid-cols-3 xl:grid-cols-3 gap-3 md:gap-4 mb-6">
-          {[
-            {
-              title: "Total Goals",
-              value: "3",
-              desc: "Semua tujuan keuanganmu",
-              icon: "fa-bullseye",
-              color: "text-[#8b5cf6]",
-              bg: "bg-[#f3f0ff]",
-            },
-            {
-              title: "Goals Aktif",
-              value: "3",
-              desc: "Sedang berjalan",
-              icon: "fa-clipboard-check",
-              color: "text-[#10b981]",
-              bg: "bg-[#ecfdf5]",
-            },
-            {
-              title: "Goals Selesai",
-              value: "0",
-              desc: "Telah tercapai",
-              icon: "fa-award",
-              color: "text-[#f59e0b]",
-              bg: "bg-[#fff7ed]",
-            },
-          ].map((card, idx) => (
-            <div
-              key={idx}
-              className="bg-white p-4 md:p-5 rounded-3xl border border-gray-100 shadow-sm flex items-center gap-3 md:gap-4 relative z-10"
-            >
-              <div
-                className={`w-10 h-10 md:w-12 md:h-12 rounded-2xl flex items-center justify-center text-lg md:text-xl flex-shrink-0 ${card.bg} ${card.color}`}
-              >
-                <i className={`fas ${card.icon}`}></i>
-              </div>
-              <div className="min-w-0">
-                <p className="text-[10px] md:text-[11px] font-bold text-gray-500 truncate">
-                  {card.title}
-                </p>
-                <p className="text-base md:text-lg font-black text-[#1e1b4b]">
-                  {card.value}
-                </p>
-                <p className="text-[9px] md:text-[10px] text-gray-400 truncate">
-                  {card.desc}
-                </p>
-              </div>
-            </div>
-          ))}
-        </div>
-
         {/* MAIN CONTENT: DAFTAR GOALS AKTIF */}
         <div className="grid grid-cols-1 gap-4 md:gap-6">
           {/* Daftar Goals Aktif */}
