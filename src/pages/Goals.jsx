@@ -48,9 +48,9 @@ const Goals = () => {
         progress:
           Number(item.jumlah_target) > 0
             ? Math.round(
-              (Number(item.jumlah_terkumpul) / Number(item.jumlah_target)) *
-              100,
-            )
+                (Number(item.jumlah_terkumpul) / Number(item.jumlah_target)) *
+                  100,
+              )
             : 0,
         status: item.status,
         color: item.status === "selesai" ? "#10b981" : "#8b5cf6",
@@ -299,10 +299,11 @@ const Goals = () => {
               onClick={() => {
                 navigate(item.path);
               }}
-              className={`relative z-10 flex items-center ${isSidebarOpen ? "gap-4 px-3.5" : "justify-center px-0"} cursor-pointer h-[52px] rounded-2xl transition-all duration-300 ${activeMenu === item.n
-                ? "text-[#8477e4] font-bold"
-                : "text-gray-400 hover:text-gray-900"
-                }`}
+              className={`relative z-10 flex items-center ${isSidebarOpen ? "gap-4 px-3.5" : "justify-center px-0"} cursor-pointer h-[52px] rounded-2xl transition-all duration-300 ${
+                activeMenu === item.n
+                  ? "text-[#8477e4] font-bold"
+                  : "text-gray-400 hover:text-gray-900"
+              }`}
             >
               <img
                 src={item.img}
@@ -366,10 +367,11 @@ const Goals = () => {
                   navigate(item.path);
                   setIsMobileMenuOpen(false); // Otomatis tutup pop-up setelah diklik
                 }}
-                className={`p-2 rounded-xl transition-all duration-200 cursor-pointer ${activeMenu === item.n
-                  ? "bg-[#f0eaff] scale-110"
-                  : "opacity-60"
-                  }`}
+                className={`p-2 rounded-xl transition-all duration-200 cursor-pointer ${
+                  activeMenu === item.n
+                    ? "bg-[#f0eaff] scale-110"
+                    : "opacity-60"
+                }`}
               >
                 <img
                   src={item.img}
@@ -388,10 +390,11 @@ const Goals = () => {
                 navigate("/pengaturan");
                 setIsMobileMenuOpen(false);
               }}
-              className={`p-2 rounded-xl transition-all duration-200 cursor-pointer ${activeMenu === "Pengaturan"
-                ? "bg-[#f0eaff] scale-110"
-                : "opacity-60"
-                }`}
+              className={`p-2 rounded-xl transition-all duration-200 cursor-pointer ${
+                activeMenu === "Pengaturan"
+                  ? "bg-[#f0eaff] scale-110"
+                  : "opacity-60"
+              }`}
             >
               <img
                 src="/gambar/pengaturan.png"
@@ -608,10 +611,10 @@ const Goals = () => {
           ))}
         </div>
 
-        {/* MAIN CONTENT: LIST & INSIGHT (Grid 2:1) */}
-        <div className="grid grid-cols-1 xl:grid-cols-3 gap-4 md:gap-6">
-          {/* Kiri: Daftar Goals Aktif */}
-          <div className="xl:col-span-2 bg-white p-4 md:p-6 rounded-3xl border border-gray-100 shadow-sm flex flex-col relative z-10">
+        {/* MAIN CONTENT: DAFTAR GOALS AKTIF */}
+        <div className="grid grid-cols-1 gap-4 md:gap-6">
+          {/* Daftar Goals Aktif */}
+          <div className="bg-white p-4 md:p-6 rounded-3xl border border-gray-100 shadow-sm flex flex-col relative z-10">
             <h3 className="font-black text-[#1e1b4b] mb-4 md:mb-6 text-base md:text-lg">
               Daftar Goals Aktif
             </h3>
@@ -714,73 +717,6 @@ const Goals = () => {
               className="w-full mt-4 md:mt-6 py-2.5 border border-purple-200 text-[#8b5cf6] bg-white rounded-xl text-xs font-bold hover:bg-[#fcfbff] transition flex items-center justify-center gap-2 shadow-sm"
             >
               <i className="fas fa-plus text-[10px]"></i> Tambah Goals
-            </button>
-          </div>
-
-          {/* Kanan: Insight AI */}
-          <div className="bg-[#EEE8FD] p-4 md:p-6 rounded-3xl border border-[#e0d6f9] shadow-sm flex flex-col relative z-10 overflow-visible">
-            {/* Header dengan Maskot Robot AI */}
-            <div className="flex justify-between items-center mb-4 md:mb-6 relative">
-              <h3 className="font-black text-[#1e1b4b] text-base md:text-lg flex items-center gap-1.5">
-                Insight AI <span className="text-[#8b5cf6] text-sm">✨</span>
-              </h3>
-
-              {/* Maskot Robot (Posisi mengapung di kanan atas) */}
-              <div className="absolute -top-15 -right-4 z-20">
-                <img
-                  src="/gambar/robotide.png"
-                  alt="Robot AI"
-                  className="w-20 h-20 drop-shadow-lg object-contain"
-                />
-              </div>
-            </div>
-
-            {/* List Insight - Kartu Putih Bersih */}
-            <div className="space-y-3 flex-1">
-              {/* Kartu 1 */}
-              <div className="bg-white p-3 md:p-4 rounded-2xl shadow-sm flex gap-3 md:gap-4 items-center border border-white">
-                <div className="w-9 h-9 rounded-full bg-[#f3f0ff] text-[#8b5cf6] flex items-center justify-center flex-shrink-0">
-                  <i className="fas fa-bullseye text-sm"></i>
-                </div>
-                <p className="text-[10px] md:text-[11px] leading-relaxed text-[#1e1b4b] font-medium">
-                  Goal <span className="font-bold">"Laptop Asus Vivobook"</span>{" "}
-                  telah mencapai <span className="font-bold">8%</span> dari
-                  target. Dengan rata-rata penambahan dana saat ini, target
-                  diperkirakan tercapai dalam{" "}
-                  <span className="font-bold text-[#8b5cf6]">14 bulan</span>.
-                </p>
-              </div>
-
-              {/* Kartu 2 */}
-              <div className="bg-white p-3 md:p-4 rounded-2xl shadow-sm flex gap-3 md:gap-4 items-center border border-white">
-                <div className="w-9 h-9 rounded-full bg-[#fff7ed] text-[#f59e0b] flex items-center justify-center flex-shrink-0">
-                  <i className="fas fa-wallet text-sm"></i>
-                </div>
-                <p className="text-[10px] md:text-[11px] leading-relaxed text-[#1e1b4b] font-medium">
-                  Dana tabungan yang belum dialokasikan masih sebesar{" "}
-                  <span className="font-bold text-[#f59e0b]">Rp200.000</span>.
-                  Kamu dapat mengalokasikannya ke Goal yang sedang
-                  diprioritaskan.
-                </p>
-              </div>
-
-              {/* Kartu 3 */}
-              <div className="bg-white p-3 md:p-4 rounded-2xl shadow-sm flex gap-3 md:gap-4 items-center border border-white">
-                <div className="w-9 h-9 rounded-full bg-[#ecfdf5] text-[#10b981] flex items-center justify-center flex-shrink-0">
-                  <i className="fas fa-chart-line text-sm"></i>
-                </div>
-                <p className="text-[10px] md:text-[11px] leading-relaxed text-[#1e1b4b] font-medium">
-                  Goal <span className="font-bold">"Buku Kuliah"</span> memiliki
-                  progres paling cepat dibanding Goal lainnya. Pertahankan
-                  konsistensimu!
-                </p>
-              </div>
-            </div>
-
-            {/* Tombol Lihat Rekomendasi */}
-            <button className="w-full mt-4 md:mt-6 py-3 border border-[#d1c4f5] text-[#8b5cf6] bg-white rounded-xl text-xs font-bold hover:bg-[#fcfbff] transition flex items-center justify-center gap-2 shadow-sm">
-              Lihat Rekomendasi AI{" "}
-              <span className="text-sm font-medium">→</span>
             </button>
           </div>
         </div>

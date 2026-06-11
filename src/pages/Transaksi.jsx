@@ -584,14 +584,6 @@ const Transaksi = () => {
           </div>
 
           <div className="flex flex-wrap sm:flex-nowrap items-center gap-2 sm:gap-4 w-full md:w-auto">
-            {/* Tombol Scan Struk (Putih tulisan Ungu) */}
-            <button
-              onClick={() => setIsScanModalOpen(true)}
-              className="flex-1 sm:flex-none flex items-center justify-center gap-1.5 sm:gap-2 bg-white text-[#8477e4] border-2 border-[#8477e4] px-3 sm:px-4 py-2 sm:py-2.5 rounded-xl sm:rounded-2xl text-[10px] sm:text-xs font-bold hover:bg-[#8477e4] hover:text-white shadow-sm transition-all duration-300 whitespace-nowrap"
-            >
-              <i className="fas fa-camera"></i> Scan
-            </button>
-
             {/* Tombol Catat Transaksi (Ungu tulisan Putih) */}
             <button
               onClick={() => setIsModalOpen(true)}
@@ -731,9 +723,9 @@ const Transaksi = () => {
 
         {/* 4 METRIC CARDS ROW */}
         <div className="px-4 sm:px-6 md:px-10 w-full">
-          <main className="flex-grow pb-8 grid grid-cols-12 gap-6 progress-clean w-full items-start">
+  <main className="flex-grow pb-8 grid grid-cols-12 gap-6 progress-clean w-full items-start">
             {/* KOLOM TABEL (KIRI - 8/12) */}
-            <div className="col-span-12 xl:col-span-8 w-full min-w-0">
+            <div className="col-span-12 w-full min-w-0">
               {/* FILTER BAR */}
               <div className="bg-white p-3 sm:p-4 rounded-2xl sm:rounded-3xl shadow-sm border border-gray-50 flex flex-col md:flex-row justify-between items-stretch md:items-center gap-3 sm:gap-4 w-full mb-4">
                 {/* Search Input */}
@@ -1122,85 +1114,6 @@ const Transaksi = () => {
                   </div>
                 </div>
               )}
-            </div>
-
-            {/* KOLOM KANAN (KONTEN STRUK & TIPS AI) */}
-            <div className="col-span-12 xl:col-span-4 flex flex-col gap-6 xl:sticky xl:top-8">
-              {/* KARTU SCAN STRUK / NOTA */}
-              <div className="bg-white p-5 sm:p-7 rounded-[2.5rem] shadow-[0_4px_24px_rgba(132,119,228,0.05)] border border-gray-100 flex flex-col space-y-6 relative overflow-hidden">
-                <div className="flex justify-between items-start mb-1 shrink-0 relative z-10">
-                  <div className="space-y-1">
-                    <div className="flex items-center gap-2.5">
-                      <h3 className="text-lg sm:text-xl font-extrabold text-gray-900 tracking-tight">
-                        Scan Struk / Nota
-                      </h3>
-                      <span className="bg-[#ede7fdf2] text-[#8477e4] text-[10px] font-black px-3 py-1 rounded-full border border-[#8477e4]/20 shadow-sm">
-                        AI
-                      </span>
-                    </div>
-                    <p className="text-xs font-medium text-gray-500 leading-relaxed max-w-[240px]">
-                      Foto struk belanja untuk catat otomatis dengan AI
-                    </p>
-                  </div>
-                </div>
-
-                {/* Box Upload */}
-                <div className="border-2 border-dashed border-[#d1c8f3] bg-[#f9f6ff] rounded-[2rem] p-6 sm:p-8 flex flex-col items-center text-center space-y-6 flex-1 justify-center relative z-10 hover:border-[#8477e4]/50 transition-all duration-300">
-                  <img
-                    src="/gambar/robothp.png"
-                    alt="Robot Upload"
-                    className="w-[80px] sm:w-[100px] object-contain animate-bubble-img"
-                  />
-                  <div className="space-y-1">
-                    <p className="text-sm font-bold text-gray-700 tracking-tight">
-                      Upload atau ambil foto struk
-                    </p>
-                    <p className="text-[10px] font-medium text-gray-400">
-                      PNG, JPG maks. 5MB
-                    </p>
-                  </div>
-                  <button
-                    onClick={() => setIsScanModalOpen(true)}
-                    className="bg-gradient-to-r from-[#8477e4] to-[#7466d3] text-white px-6 sm:px-8 py-3.5 rounded-2xl flex items-center gap-3.5 text-xs font-black shadow-lg hover:translate-y-[-2px] transition-all duration-300"
-                  >
-                    <i className="fas fa-camera text-base"></i>
-                    Scan Struck
-                  </button>
-                </div>
-
-                <div className="flex items-center gap-3 bg-[#f4f1fe] p-4.5 px-5 rounded-2xl border-2 border-[#d1c8f3]/20 shadow-sm relative z-10">
-                  <div className="w-5 h-5 bg-white rounded-full flex items-center justify-center shadow-md">
-                    <i className="fas fa-star text-[9px] text-[#8477e4]"></i>
-                  </div>
-                  <p className="text-[10px] font-bold text-[#7a72bc] tracking-tight">
-                    AI akan membaca detail dan mengisi form untukmu!
-                  </p>
-                </div>
-              </div>
-
-              {/* KARTU TIPS AI */}
-              <div className="bg-white p-5 sm:p-7 rounded-[2.5rem] shadow-[0_4px_24px_rgba(132,119,228,0.05)] border border-gray-100 flex flex-col relative overflow-hidden">
-                <div className="flex items-center gap-4.5 mb-7 shrink-0 relative z-10">
-                  <div className="w-11 h-11 bg-[#fffbe6] rounded-xl flex items-center justify-center border-2 border-[#ffec99] shadow-md">
-                    <i className="fas fa-lightbulb text-2xl text-[#fab005]"></i>
-                  </div>
-                  <h3 className="text-base font-extrabold text-gray-900 tracking-tight">
-                    Tips AI
-                  </h3>
-                </div>
-
-                <div className="bg-[#f8f9fb] p-6 rounded-2xl flex items-center relative z-0 border border-gray-50 min-h-[120px] overflow-hidden">
-                  <p className="text-[11px] font-medium text-gray-700 leading-relaxed relative z-10 pr-[130px]">
-                    Gunakan scan struk untuk menghemat waktu dan menghindari
-                    salah ketik. AI akan bantu kamu mencatat dengan akurat!
-                  </p>
-                  <img
-                    src="/gambar/robothewo.png"
-                    alt="Robot Tips"
-                    className="absolute -right-2 -bottom-2 w-[120px] object-contain z-20 pointer-events-none"
-                  />
-                </div>
-              </div>
             </div>
           </main>
         </div>

@@ -927,32 +927,8 @@ const Budget = () => {
 
         {/* BOTTOM ROW: FOOTER INSIGHT AI & TENTANG METODE */}
         <div className="grid grid-cols-1 sm:grid-cols-2 xl:grid-cols-5 gap-3 md:gap-6">
-          {/* KARTU 1: INSIGHT AI */}
-          <div className="sm:col-span-1 xl:col-span-2 bg-[#f4f0ff] p-4 md:p-5 rounded-3xl border border-[#e1d7ff] shadow-sm flex items-center gap-3 md:gap-4 relative overflow-hidden">
-            <img
-              src="/gambar/robotdada.png"
-              alt="Robot AI"
-              className="w-14 h-14 md:w-20 md:h-20 object-contain shrink-0"
-            />
-            <div className="space-y-0.5">
-              <h3 className="text-[11px] md:text-sm font-black text-[#2e2a60]">
-                Insight AI
-              </h3>
-              <p className="text-[10px] md:text-[11px] text-[#5c5494] font-medium leading-relaxed">
-                Pengeluaran pada alokasi{" "}
-                <span className="font-bold">Keinginan</span> telah mencapai{" "}
-                <span className="font-bold">87%</span> dari batas bulanan.
-                Disarankan mengurangi pengeluaran non-prioritas agar alokasi
-                tetap seimbang dan target tabunganmu tercapai lebih optimal.
-              </p>
-            </div>
-            <span className="absolute top-2 right-3 text-lg opacity-70">
-              💡
-            </span>
-          </div>
-
           {/* KARTU 2: TENTANG METODE 50-30-20 */}
-          <div className="sm:col-span-1 xl:col-span-3 bg-white p-4 md:p-5 rounded-3xl border border-gray-100 shadow-sm flex flex-col justify-between">
+          <div className="sm:col-span-1 xl:col-span-5 bg-white p-4 md:p-5 rounded-3xl border border-gray-100 shadow-sm flex flex-col justify-between">
             <h3 className="text-[11px] md:text-sm font-black text-[#2e2a60] mb-3">
               Tentang Metode 50-30-20
             </h3>
