@@ -170,12 +170,14 @@ const Transaksi = () => {
   // --- FUNGSI AKSI (PEMICU MODAL) ---
   const handleEdit = (item) => {
     setSelectedItem(item);
+
     setEditForm({
-      tgl: item.tgl,
-      kat: item.kat,
-      desc: item.desc,
-      nominal: item.nominal,
+      tgl: item.tgl || "",
+      kat: item.kat || "",
+      desc: item.desc || "",
+      nominal: Math.abs(item.nominal),
     });
+
     setIsEditOpen(true);
   };
 
@@ -184,10 +186,81 @@ const Transaksi = () => {
     setIsDeleteOpen(true);
   };
 
-  const handleConfirmEdit = (e) => {
+  const handleConfirmEdit = async (e) => {
     e.preventDefault();
-    console.log("Data berhasil diubah:", editForm);
-    setIsEditOpen(false);
+
+    if (!selectedItem) return;
+
+    try {
+      const user = JSON.parse(localStorage.getItem("user") || "{}");
+
+      const isPemasukan = selectedItem.tipe === "Pemasukan";
+
+      // endpoint dinamis
+      const endpoint = isPemasukan
+        ? `https://fintrackai-backend-1yz0.onrender.com/pemasukan/${selectedItem.originalId}`
+        : `https://fintrackai-backend-1yz0.onrender.com/pengeluaran/update/${selectedItem.originalId}`;
+
+      // payload dinamis
+      const payload = isPemasukan
+        ? {
+          user_id: user.id,
+          nama_pemasukan: editForm.desc,
+          sumber_pemasukan: editForm.kat,
+          jumlah: Number(editForm.nominal),
+        }
+        : {
+          user_id: user.id,
+          nama_pengeluaran: editForm.desc,
+          kategori: editForm.kat,
+          jumlah: Math.abs(Number(editForm.nominal)),
+          tanggal: editForm.tgl,
+        };
+
+      await axios.put(endpoint, payload);
+
+      // update UI langsung tanpa refresh
+      setDataTransaksi((prev) =>
+        prev.map((item) => {
+          if (item.id !== selectedItem.id) return item;
+
+          return {
+            ...item,
+            desc: editForm.desc,
+            kat: editForm.kat,
+            nominal: isPemasukan
+              ? Number(editForm.nominal)
+              : -Math.abs(Number(editForm.nominal)),
+            tgl: editForm.tgl,
+          };
+        })
+      );
+
+      // update total pemasukan realtime
+      if (isPemasukan) {
+        const selisih =
+          Number(editForm.nominal) -
+          Number(selectedItem.nominal);
+
+        setTotalPemasukan((prev) => prev + selisih);
+      }
+
+      setIsEditOpen(false);
+      setSelectedItem(null);
+
+      alert(
+        isPemasukan
+          ? "Pemasukan berhasil diupdate"
+          : "Pengeluaran berhasil diupdate"
+      );
+    } catch (error) {
+      console.error("Edit gagal:", error);
+
+      alert(
+        error?.response?.data?.message ||
+        "Gagal mengubah data"
+      );
+    }
   };
 
 
