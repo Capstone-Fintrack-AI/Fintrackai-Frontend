@@ -51,7 +51,7 @@ const Pengaturan = () => {
       }
 
       const response = await axios.put(
-        `http://localhost:8080/auth/user/${user.id}`,
+        `https://fintrackai-backend-1yz0.onrender.com/auth/user/${user.id}`,
         formData,
         {
           headers: {
