@@ -77,17 +77,21 @@ const Budget = () => {
     realisasi.keinginan +
     realisasi.tabungan;
 
-  const selisihOver = Math.max(0, totalAktual - totalBudget);
+  const remainingBudget =
+    totalBudget - totalAktual;
 
-  const overPercentage =
+  const healthScore =
     totalBudget > 0
-      ? (selisihOver / totalBudget) * 100
+      ? Math.max(
+        0,
+        Math.min(
+          100,
+          Math.round(
+            (remainingBudget / totalBudget) * 100
+          )
+        )
+      )
       : 0;
-
-  const healthScore = Math.max(
-    0,
-    Math.min(100, Math.round(100 - overPercentage))
-  );
 
   const dataGauge = [
     { value: healthScore },
@@ -95,7 +99,9 @@ const Budget = () => {
   ];
 
   const maxDataValue = Math.max(
-    ...dataBudgetVsAktual.flatMap((item) => [item.Target, item.Aktual]),
+    ...dataBudgetVsAktual.flatMap(
+      (item) => [item.Target, item.Aktual]
+    )
   );
 
   const yAxisMax =
